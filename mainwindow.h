@@ -6,8 +6,8 @@
 
 #include <phonon/VideoPlayer>
 
-//#include <camera.h>
-//#include <set.h>
+#include <camera.h>
+#include <set.h>
 
 #define MAX_PLAYERS 16
 
