@@ -8,6 +8,7 @@
 
 #include <camera.h>
 #include <set.h>
+#include <QAbstractSocket>
 
 #define MAX_PLAYERS 16
 
@@ -19,12 +20,20 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+    QAbstractSocket *socket;
+    QList<Camera *> camerasList;
+    QList<Set *> setsList;
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
 private:
     Ui::MainWindow *ui;
+
+    void initData();
+    QString readAnswer();
+
 };
 
 #endif // MAINWINDOW_H

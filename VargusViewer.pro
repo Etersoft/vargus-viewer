@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui phonon
+QT       += core gui phonon network
 
 # FIXME: absolute path to headers
 INCLUDEPATH += /usr/include/kde4

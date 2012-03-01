@@ -8,11 +8,17 @@ class Set : public QObject
 {
     Q_OBJECT
 
-    QString description;
+    QString set_description;
     QList<Camera *> cameraList;
 
 public:
-    explicit Set(QObject *parent = 0);
+    explicit Set();
+    Set(QString desc){set_description = desc;}
+
+    QString description(){return set_description;}
+    void addCamera(Camera* cam);
+    QStringList camerasNames();
+    QList<Camera *> cameras(){return cameraList;}
 
 signals:
 
