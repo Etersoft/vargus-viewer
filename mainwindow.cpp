@@ -89,6 +89,8 @@ void MainWindow::initData()
                     break;
                 }
             }
+        QPushButton *button = new QPushButton(setsList.at(i)->description());
+        ui->setsLayout->addWidget(button);
     }
 
     /*
@@ -110,7 +112,7 @@ QString MainWindow::readAnswer()
 {
     QString answer;
     for(answer.clear(); answer.isEmpty() || answer.contains(">"); socket->waitForReadyRead())
-        answer = socket->readLine().data();
+        answer = trUtf8(socket->readLine().data());
     return answer;
 }
 
