@@ -30,6 +30,13 @@ public:
     void setTripleFrames(QStringList list);
     void setQuadrupleFrames(QStringList list);
 
+    QString description(){return view_description;}
+    int width(){return view_width;}
+    int height(){return view_height;}
+    QList<int> doubleCells(){return view_double;}
+    QList<int> tripleCells(){return view_triple;}
+    QList<int> quadrupleCells(){return view_triple;}
+
     void createIcon();
 };
 
