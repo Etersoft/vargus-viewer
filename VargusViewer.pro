@@ -16,10 +16,12 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     camera.cpp \
-    set.cpp
+    set.cpp \
+    view.cpp
 
 HEADERS  += mainwindow.h \
     camera.h \
-    set.h
+    set.h \
+    view.h
 
 FORMS    += mainwindow.ui

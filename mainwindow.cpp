@@ -45,7 +45,7 @@ void MainWindow::initData()
     // Сеанс связи с сервером
     socket = new QAbstractSocket(QAbstractSocket::TcpSocket, this);
     socket->connectToHost(server, port);
-    if(!socket->waitForConnected())
+    if(!socket->waitForConnected(5000))
         QMessageBox::critical(NULL, tr("Error"), tr("Cannot connect to server"));
 
     // TODO: нужно "сбрасывать" приветствие
@@ -101,6 +101,27 @@ void MainWindow::initData()
     }
     */
 
+    // Инициализация раскладок
+    socket->write("query view;quantity\n");
+    int views = readAnswer().trimmed().toInt();
+    for(int i = 0; i < views; i++)
+    {
+        socket->write(QString("query view;" + QString::number(i+1) + ";description\n").toAscii());
+        viewsList << new View(readAnswer().trimmed());
+        socket->write(QString("query view;" + QString::number(i+1) + ";geometry:width\n").toAscii());
+        viewsList.at(i)->setWidth(readAnswer().trimmed().toInt());
+        socket->write(QString("query view;" + QString::number(i+1) + ";geometry:height\n").toAscii());
+        viewsList.at(i)->setHeight(readAnswer().trimmed().toInt());
+        socket->write(QString("query view;" + QString::number(i+1) + ";geometry:double\n").toAscii());
+        viewsList.at(i)->setDoubleFrames(readAnswer().trimmed().split(','));
+        socket->write(QString("query view;" + QString::number(i+1) + ";geometry:triple\n").toAscii());
+        viewsList.at(i)->setTripleFrames(readAnswer().trimmed().split(','));
+        socket->write(QString("query view;" + QString::number(i+1) + ";geometry:quadruple\n").toAscii());
+        viewsList.at(i)->setQuadrupleFrames(readAnswer().trimmed().split(','));
+
+        viewsList.at(i)->createIcon();
+    }
+
     socket->write("exit\n");
     socket->disconnect();
     delete socket;
@@ -109,7 +130,7 @@ void MainWindow::initData()
 QString MainWindow::readAnswer()
 {
     QString answer;
-    for(answer.clear(); answer.isEmpty() || answer.contains(">"); socket->waitForReadyRead())
+    for(answer.clear(); answer.isEmpty() || answer.contains(">"); socket->waitForReadyRead(3000))
         answer = trUtf8(socket->readLine().data());
     return answer;
 }

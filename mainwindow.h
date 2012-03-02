@@ -8,6 +8,7 @@
 
 #include <camera.h>
 #include <set.h>
+#include <view.h>
 #include <QAbstractSocket>
 
 #define MAX_PLAYERS 16
@@ -23,6 +24,7 @@ class MainWindow : public QMainWindow
     QAbstractSocket *socket;
     QList<Camera *> camerasList;
     QList<Set *> setsList;
+    QList<View *> viewsList;
 
 public:
     explicit MainWindow(QWidget *parent = 0);
