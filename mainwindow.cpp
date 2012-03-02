@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-//#include "netcatclient.h"
 #include <QMessageBox>
 #include <QFile>
 
@@ -9,8 +8,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->setsLayout->setAlignment(Qt::AlignLeft);
-
     initData();
 }
 
@@ -74,6 +71,7 @@ void MainWindow::initData()
     // Инициализация сетов
     socket->write("query set;quantity\n");
     int sets = readAnswer().trimmed().toInt();
+    ui->tabWidget->clear();
     for(int i = 0; i < sets; i++)
     {
         socket->write(QString("query set;" + QString::number(i+1) + ";description\n").toAscii());
@@ -89,8 +87,8 @@ void MainWindow::initData()
                     break;
                 }
             }
-        QPushButton *button = new QPushButton(setsList.at(i)->description());
-        ui->setsLayout->addWidget(button);
+        QWidget *tab = new QWidget;
+        ui->tabWidget->addTab(tab, setsList.at(i)->description());
     }
 
     /*
