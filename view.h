@@ -5,6 +5,10 @@
 #include <QList>
 #include <QPixmap>
 #include <QStringList>
+#include <QIcon>
+
+#define ICON_WIDTH 90
+#define ICON_HEIGHT 60
 
 class View : public QObject
 {
@@ -17,7 +21,7 @@ class View : public QObject
     QList<int> view_triple;
     QList<int> view_quadruple;
 
-    QPixmap *view_icon;
+    QIcon *view_icon;
 
 public:
     View();
@@ -38,6 +42,7 @@ public:
     QList<int> quadrupleCells(){return view_triple;}
 
     void createIcon();
+    QIcon* icon(){return view_icon;}
 };
 
 #endif // VIEW_H

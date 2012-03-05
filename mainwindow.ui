@@ -45,18 +45,7 @@
     <item>
      <layout class="QVBoxLayout" name="controlLayout">
       <item>
-       <layout class="QGridLayout" name="viewLayout">
-        <item row="0" column="0">
-         <widget class="QWidget" name="widget" native="true">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>100</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <layout class="QGridLayout" name="viewLayout"/>
       </item>
       <item>
        <layout class="QHBoxLayout" name="buttonsLayout">

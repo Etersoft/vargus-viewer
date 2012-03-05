@@ -8,7 +8,19 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // Обработка входных данных
     initData();
+
+    // Заполнение панели раскладок
+    for(int i = 0; i < viewsList.count(); i ++)
+    {
+        QPushButton *button = new QPushButton("");
+        button->setFixedSize(ICON_WIDTH, ICON_HEIGHT);
+        button->setIcon(*viewsList.at(i)->icon());
+        button->setIconSize(button->size());
+        ui->viewLayout->addWidget(button, i / 2, i % 2);
+    }
 }
 
 void MainWindow::initData()

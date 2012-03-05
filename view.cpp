@@ -24,6 +24,10 @@ void View::setQuadrupleFrames(QStringList list)
 
 void View::createIcon()
 {
-    // TODO: implementation
+    QPixmap image(ICON_WIDTH, ICON_HEIGHT);
+    image.fill();
+
+
+    view_icon = new QIcon(image);
 }
 
