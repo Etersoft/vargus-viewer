@@ -2,6 +2,7 @@
 #define VIEW_H
 
 #include <QObject>
+#include <QPushButton>
 #include <QList>
 #include <QPixmap>
 #include <QStringList>
@@ -10,7 +11,7 @@
 #define ICON_WIDTH 90
 #define ICON_HEIGHT 60
 
-class View : public QObject
+class View : public QPushButton
 {
     Q_OBJECT
 
@@ -42,7 +43,7 @@ public:
     QList<int> tripleCells(){return view_triple;}
     QList<int> quadrupleCells(){return view_triple;}
 
-    void createIcon();
+    void createIcons();
     QPixmap createIconImage(QColor color, QColor bkColor);
     QIcon* icon(){return view_icon;}
     QIcon* activeIcon(){return view_active_icon;}

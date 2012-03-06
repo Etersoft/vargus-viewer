@@ -14,13 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Заполнение панели раскладок
     for(int i = 0; i < viewsList.count(); i ++)
-    {
-        QPushButton *button = new QPushButton("");
-        button->setFixedSize(ICON_WIDTH, ICON_HEIGHT);
-        button->setIcon(*viewsList.at(i)->icon());
-        button->setIconSize(button->size());
-        ui->viewLayout->addWidget(button, i / 2, i % 2);
-    }
+        ui->viewLayout->addWidget(viewsList.at(i), i / 2, i % 2);
 }
 
 void MainWindow::initData()
@@ -131,7 +125,7 @@ void MainWindow::initData()
         socket->write(QString("query view;" + QString::number(i+1) + ";geometry:quadruple\n").toAscii());
         viewsList.at(i)->setQuadrupleFrames(readAnswer().trimmed().split(','));
 
-        viewsList.at(i)->createIcon();
+        viewsList.at(i)->createIcons();
     }
 
     socket->write("exit\n");

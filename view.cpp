@@ -35,10 +35,14 @@ void View::setQuadrupleFrames(QStringList list)
     }
 }
 
-void View::createIcon()
+void View::createIcons()
 {
     view_icon = new QIcon(createIconImage(Qt::blue, Qt::gray));
     view_active_icon = new QIcon(createIconImage(Qt::blue, Qt::white));
+
+    this->setIcon(*view_icon);
+    this->setFixedSize(ICON_WIDTH, ICON_HEIGHT);
+    this->setIconSize(this->size());
 }
 
 QPixmap View::createIconImage(QColor color, QColor bkColor)
