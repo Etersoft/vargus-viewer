@@ -1,10 +1,10 @@
 #ifndef SET_H
 #define SET_H
 
-#include <QObject>
+#include <QWidget>
 #include "camera.h"
 
-class Set : public QObject
+class Set : public QWidget
 {
     Q_OBJECT
 

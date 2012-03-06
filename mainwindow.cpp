@@ -12,6 +12,10 @@ MainWindow::MainWindow(QWidget *parent) :
     // Обработка входных данных
     initData();
 
+    // Заполнение вкладок-сетов
+    for(int i = 0; i < setsList.count(); i ++)
+        ui->tabWidget->addTab(setsList.at(i), setsList.at(i)->description());
+
     // Заполнение панели раскладок
     for(int i = 0; i < viewsList.count(); i ++)
         ui->viewLayout->addWidget(viewsList.at(i), i / 2, i % 2);
@@ -93,19 +97,7 @@ void MainWindow::initData()
                     break;
                 }
             }
-        QWidget *tab = new QWidget;
-        ui->tabWidget->addTab(tab, setsList.at(i)->description());
     }
-
-    /*
-    // Проверка: корректность заполнения сетов камерами
-    for(int i = 0; i < setsList.count(); i++)
-    {
-        QStringList outList = QStringList() << setsList.at(i)->description();
-        outList << setsList.at(i)->camerasNames().join(":");
-        QMessageBox::information(NULL, tr("info"), outList.join("\n"));
-    }
-    */
 
     // Инициализация раскладок
     socket->write("query view;quantity\n");
