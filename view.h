@@ -25,9 +25,11 @@ class View : public QPushButton
     QIcon *view_icon;
     QIcon *view_active_icon;
 
+    bool active;
+
 public:
     View();
-    View(QString new_value){view_description = new_value;}
+    View(QString new_value);
 
     void setDescription(QString new_value){view_description = new_value;}
     void setWidth(int new_value){view_width = new_value;}
@@ -41,12 +43,14 @@ public:
     int height(){return view_height;}
     QList<int> doubleCells(){return view_double;}
     QList<int> tripleCells(){return view_triple;}
-    QList<int> quadrupleCells(){return view_triple;}
+    QList<int> quadrupleCells(){return view_quadruple;}
 
     void createIcons();
+
+private:
     QPixmap createIconImage(QColor color, QColor bkColor);
-    QIcon* icon(){return view_icon;}
-    QIcon* activeIcon(){return view_active_icon;}
+
+private slots:
 };
 
 #endif // VIEW_H

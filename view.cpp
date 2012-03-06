@@ -3,6 +3,13 @@
 
 View::View()
 {
+    View("");
+}
+
+View::View(QString new_value)
+{
+    view_description = new_value;
+    active = false;
 }
 
 void View::setDoubleFrames(QStringList list)
