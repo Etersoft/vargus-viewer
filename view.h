@@ -22,6 +22,7 @@ class View : public QObject
     QList<int> view_quadruple;
 
     QIcon *view_icon;
+    QIcon *view_active_icon;
 
 public:
     View();
@@ -42,7 +43,9 @@ public:
     QList<int> quadrupleCells(){return view_triple;}
 
     void createIcon();
+    QPixmap createIconImage(QColor color, QColor bkColor);
     QIcon* icon(){return view_icon;}
+    QIcon* activeIcon(){return view_active_icon;}
 };
 
 #endif // VIEW_H
