@@ -12,6 +12,22 @@ View::View(QString new_value)
     active = false;
 }
 
+View::View(View* view)
+{
+    view_description = view->description();
+    view_width = view->width();
+    view_height = view->height();
+    view_double = view->doubleCells();
+    view_triple = view->tripleCells();
+    view_quadruple = view->quadrupleCells();
+    view_icon = new QIcon(*view->passiveIcon());
+    view_active_icon = new QIcon(*view->activeIcon());
+
+    this->setIcon(*view_icon);
+    this->setFixedSize(ICON_WIDTH, ICON_HEIGHT);
+    this->setIconSize(this->size());
+}
+
 void View::setDoubleFrames(QStringList list)
 {
     while(!list.isEmpty())

@@ -30,6 +30,7 @@ class View : public QPushButton
 public:
     View();
     View(QString new_value);
+    View(View* view);
 
     void setDescription(QString new_value){view_description = new_value;}
     void setWidth(int new_value){view_width = new_value;}
@@ -46,6 +47,8 @@ public:
     QList<int> quadrupleCells(){return view_quadruple;}
 
     void createIcons();
+    QIcon* activeIcon(){return view_active_icon;}
+    QIcon* passiveIcon(){return view_icon;}
 
 private:
     QPixmap createIconImage(QColor color, QColor bkColor);

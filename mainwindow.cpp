@@ -14,11 +14,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Заполнение вкладок-сетов
     for(int i = 0; i < setsList.count(); i ++)
+    {
         ui->tabWidget->addTab(setsList.at(i), setsList.at(i)->description());
+        for(int j = 0; j < viewsList.count(); j ++)
+        {
+            setsList.at(i)->addView(viewsList.at(j));
+        }
+    }
 
+    ui->tabWidget->setCurrentIndex(0);
     // Заполнение панели раскладок
     for(int i = 0; i < viewsList.count(); i ++)
-        ui->viewLayout->addWidget(viewsList.at(i), i / 2, i % 2);
+        ui->viewLayout->addWidget(setsList.at(ui->tabWidget->currentIndex())->views().at(i), i / 2, i % 2);
 }
 
 void MainWindow::initData()

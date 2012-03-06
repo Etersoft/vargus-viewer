@@ -17,3 +17,8 @@ QStringList Set::camerasNames()
         list << cameraList.at(i)->name();
     return list;
 }
+
+void Set::addView(View *view)
+{
+    viewList << new View(view);
+}
