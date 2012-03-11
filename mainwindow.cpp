@@ -67,9 +67,6 @@ void MainWindow::initData()
     if(!socket->waitForConnected(5000))
         QMessageBox::critical(NULL, tr("Error"), tr("Cannot connect to server"));
 
-    // TODO: нужно "сбрасывать" приветствие
-    QMessageBox::information(NULL, tr("info"), readAnswer());
-
     // Инициализация камер
     socket->write("query camera;quantity\n");
     int cameras = readAnswer().trimmed().toInt();
@@ -137,8 +134,22 @@ void MainWindow::initData()
 QString MainWindow::readAnswer()
 {
     QString answer;
-    for(answer.clear(); answer.isEmpty() || answer.contains(">"); socket->waitForReadyRead(3000))
+    int tries = 0;
+    while(tries < 5)
+    {
+        if(!socket->waitForReadyRead(2000))
+        {
+            tries++;
+            continue;
+        }
         answer = trUtf8(socket->readLine().data());
+        if(!answer.isEmpty() && answer.at(0) != ':' && answer.at(0) != '>')
+            break;
+    }
+
+    if (tries == 5)
+        QMessageBox::critical(this, tr("Error"), tr("Server is not response"));
+
     return answer;
 }
 
