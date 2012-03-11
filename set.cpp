@@ -20,5 +20,21 @@ QStringList Set::camerasNames()
 
 void Set::addView(View *view)
 {
-    viewList << new View(view);
+    View *new_view = new View(view);
+    connect(new_view, SIGNAL(waitForUpdate()), this, SLOT(updateActiveView()));
+    viewList << new_view;
+}
+
+void Set::setActiveView(int index)
+{
+    for(int i = viewList.count() - 1; i >= 0; i--)
+        viewList.at(index)->setActive(i == index);
+}
+
+void Set::updateActiveView()
+{
+    for(int i = 0; i < viewList.count(); i++)
+    {
+        viewList.at(i)->updateActivity();
+    }
 }

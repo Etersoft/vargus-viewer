@@ -9,7 +9,6 @@ View::View()
 View::View(QString new_value)
 {
     view_description = new_value;
-    active = false;
 }
 
 View::View(View* view)
@@ -23,9 +22,15 @@ View::View(View* view)
     view_icon = new QIcon(*view->passiveIcon());
     view_active_icon = new QIcon(*view->activeIcon());
 
+    active = false;
+    waitActive = false;
+
     this->setIcon(*view_icon);
     this->setFixedSize(ICON_WIDTH, ICON_HEIGHT);
     this->setIconSize(this->size());
+    this->setToolTip(view_description);
+
+    connect(this, SIGNAL(clicked()), this, SLOT(onClick()));
 }
 
 void View::setDoubleFrames(QStringList list)
@@ -136,4 +141,26 @@ QPixmap View::createIconImage(QColor color, QColor bkColor)
     painter.end();
 
     return image;
+}
+
+void View::setActive(bool a)
+{
+    active = a;
+    if(active)
+        this->setIcon(*view_active_icon);
+    else
+        this->setIcon(*view_icon);
+}
+
+void View::onClick()
+{
+    waitActive = true;
+    emit(waitForUpdate());
+}
+
+bool View::updateActivity()
+{
+    this->setActive(waitActive);
+    waitActive = false;
+    return active;
 }

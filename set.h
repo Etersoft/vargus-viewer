@@ -24,10 +24,12 @@ public:
     QList<Camera *> cameras(){return cameraList;}
     QList<View *> views(){return viewList;}
 
+    void setActiveView(int index);
+
 signals:
 
-public slots:
-
+private slots:
+    void updateActiveView();
 };
 
 #endif // SET_H
