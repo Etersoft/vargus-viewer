@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QUrl>
+#include <QDrag>
 
 #include <vlc/vlc.h>
 
@@ -33,6 +34,13 @@ public:
     void startPlay(sizeVideo size);
     void stopPlay();
 
+protected:
+    void mousePressEvent ( QMouseEvent * e );
+
+    void dropEvent(QDropEvent *de);
+    void dragMoveEvent(QDragMoveEvent *de);
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dragLeaveEvent ( QDragLeaveEvent * event );
 public slots:
     void updateInterface();
 };

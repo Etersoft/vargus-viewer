@@ -20,6 +20,8 @@ private:
 
     VideoWidget* vw1;
     VideoWidget* vw2;
+    VideoWidget* vw3;
+    VideoWidget* vw4;
 };
 
 #endif // MAINWINDOW_H

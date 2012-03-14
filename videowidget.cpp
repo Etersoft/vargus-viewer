@@ -4,6 +4,10 @@
 #include <QFrame>
 #include <QTimer>
 
+#include <QDragEnterEvent>
+#include <QDragLeaveEvent>
+#include <QDropEvent>
+
 VideoWidget::VideoWidget(): QWidget()
 {
     const char * const vlc_args[] = {
@@ -27,7 +31,7 @@ VideoWidget::VideoWidget(): QWidget()
     vlcPlayer = libvlc_media_player_new (vlcInstance);
 
     connect(poller, SIGNAL(timeout()), this, SLOT(updateInterface()));
-
+    setAcceptDrops(true);
     poller->start(100);
 }
 
@@ -81,7 +85,8 @@ void VideoWidget::startPlay(sizeVideo size)
 
 void VideoWidget::stopPlay()
 {
-    libvlc_media_player_stop(vlcPlayer);
+    if(_isPlaying)
+        libvlc_media_player_stop(vlcPlayer);
 }
 
 void VideoWidget::updateInterface()
@@ -92,5 +97,47 @@ void VideoWidget::updateInterface()
     libvlc_media_t *curMedia = libvlc_media_player_get_media (vlcPlayer);
     if (curMedia == NULL)
         return;
+}
+
+void VideoWidget::mousePressEvent ( QMouseEvent * e )
+{
+    QDrag* drag = new QDrag(this);
+    // The data to be transferred by the drag and drop operation is contained in a QMimeData object
+    QList<QUrl> *urls= new QList<QUrl>;
+    urls->append(urlBigVideoStream);
+    urls->append(urlSmallVideoStream);
+
+    QMimeData *data = new QMimeData;
+    data->setUrls(*urls);
+    // Assign ownership of the QMimeData object to the QDrag object.
+    drag->setMimeData(data);
+    // Start the drag and drop operation
+    drag->start();
+}
+
+void VideoWidget::dropEvent(QDropEvent *de)
+{
+   stopPlay();
+   QList<QUrl> urls;
+   urls = de->mimeData()->urls();
+   urlBigVideoStream = urls.takeAt(0);
+   urlSmallVideoStream = urls.takeAt(0);
+   startPlay(SMALLVIDEO);
+}
+
+void VideoWidget::dragMoveEvent(QDragMoveEvent *de)
+{
+    de->accept();
+}
+
+void VideoWidget::dragEnterEvent(QDragEnterEvent *event)
+{
+    event->acceptProposedAction();
+}
+
+void VideoWidget::dragLeaveEvent ( QDragLeaveEvent * event )
+{
+    //stopPlay();
+    int i =0;
 }
 

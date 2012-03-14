@@ -16,6 +16,13 @@ MainWindow::MainWindow(QWidget *parent) :
     vw2->setUrlVideoStream (QUrl("2.avi"),VideoWidget::SMALLVIDEO);
     ui->gridLayout_2->addWidget(vw2);
     vw2->startPlay(VideoWidget::SMALLVIDEO);
+
+    vw3 = new VideoWidget();
+    ui->gridLayout_3->addWidget(vw3);
+
+    vw4 = new VideoWidget();
+    ui->gridLayout_4->addWidget(vw4);
+
 }
 
 MainWindow::~MainWindow()
