@@ -113,6 +113,7 @@ void VideoWidget::mousePressEvent ( QMouseEvent * e )
     urls->append(urlSmallVideoStream);
 
     QMimeData *data = new QMimeData;
+    data->setUserData(0,(QObjectUserData*)this);
     data->setUrls(*urls);
     // Assign ownership of the QMimeData object to the QDrag object.
     drag->setMimeData(data);
@@ -127,6 +128,11 @@ void VideoWidget::dropEvent(QDropEvent *de)
    urls = de->mimeData()->urls();
    urlBigVideoStream = urls.takeAt(0);
    urlSmallVideoStream = urls.takeAt(0);
+
+   VideoWidget* dragVideoWindet;
+   dragVideoWindet = (VideoWidget*)de->mimeData()->userData(0);
+   dragVideoWindet->stopPlay();
+
    startPlay(SMALLVIDEO);
 }
 
