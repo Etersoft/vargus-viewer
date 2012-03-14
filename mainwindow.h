@@ -36,6 +36,9 @@ private:
     void initData();
     QString readAnswer();
 
+private slots:
+    void onSetChanged();
+
 };
 
 #endif // MAINWINDOW_H

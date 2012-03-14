@@ -15,17 +15,19 @@ MainWindow::MainWindow(QWidget *parent) :
     // Заполнение вкладок-сетов
     for(int i = 0; i < setsList.count(); i ++)
     {
-        ui->tabWidget->addTab(setsList.at(i), setsList.at(i)->description());
+        Set *set = setsList.at(i);
         for(int j = 0; j < viewsList.count(); j ++)
         {
-            setsList.at(i)->addView(viewsList.at(j));
+            set->addView(viewsList.at(j));
         }
+        set->setActiveView(0);
+        ui->tabWidget->addTab(set, set->description());
     }
 
+    connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(onSetChanged()));
+
     ui->tabWidget->setCurrentIndex(0);
-    // Заполнение панели раскладок
-    for(int i = 0; i < viewsList.count(); i ++)
-        ui->viewLayout->addWidget(setsList.at(ui->tabWidget->currentIndex())->views().at(i), i / 2, i % 2);
+    onSetChanged();
 }
 
 void MainWindow::initData()
@@ -64,9 +66,6 @@ void MainWindow::initData()
     socket->connectToHost(server, port);
     if(!socket->waitForConnected(5000))
         QMessageBox::critical(NULL, tr("Error"), tr("Cannot connect to server"));
-
-    // TODO: нужно "сбрасывать" приветствие
-    QMessageBox::information(NULL, tr("info"), readAnswer());
 
     // Инициализация камер
     socket->write("query camera;quantity\n");
@@ -135,12 +134,43 @@ void MainWindow::initData()
 QString MainWindow::readAnswer()
 {
     QString answer;
-    for(answer.clear(); answer.isEmpty() || answer.contains(">"); socket->waitForReadyRead(3000))
+    int tries = 0;
+    while(tries < 5)
+    {
+        if(!socket->waitForReadyRead(2000))
+        {
+            tries++;
+            continue;
+        }
         answer = trUtf8(socket->readLine().data());
+        if(!answer.isEmpty() && answer.at(0) != ':' && answer.at(0) != '>')
+            break;
+    }
+
+    if (tries == 5)
+        QMessageBox::critical(this, tr("Error"), tr("Server is not response"));
+
     return answer;
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::onSetChanged()
+{
+    // Заполнение панели раскладок
+    while(!ui->viewLayout->isEmpty())
+    {
+        QWidget *widget = ui->viewLayout->takeAt(0)->widget();
+        widget->hide();
+    }
+
+    for(int i = 0; i < viewsList.count(); i ++)
+    {
+        View *view = setsList.at(ui->tabWidget->currentIndex())->views().at(i);
+        view->show();
+        ui->viewLayout->addWidget(view, i / 2, i % 2);
+    }
 }

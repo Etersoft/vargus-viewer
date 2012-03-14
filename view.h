@@ -26,6 +26,7 @@ class View : public QPushButton
     QIcon *view_active_icon;
 
     bool active;
+    bool waitActive;
 
 public:
     View();
@@ -50,10 +51,18 @@ public:
     QIcon* activeIcon(){return view_active_icon;}
     QIcon* passiveIcon(){return view_icon;}
 
+    void setActive(bool a);
+    bool waitingActive(){return waitActive;}
+    bool updateActivity();
+
 private:
     QPixmap createIconImage(QColor color, QColor bkColor);
 
 private slots:
+    void onClick();
+
+signals:
+    void waitForUpdate();
 };
 
 #endif // VIEW_H
