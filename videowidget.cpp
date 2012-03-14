@@ -8,6 +8,8 @@
 #include <QDragLeaveEvent>
 #include <QDropEvent>
 
+
+libvlc_instance_t *VideoWidget::vlcInstance = 0;
 VideoWidget::VideoWidget(): QWidget()
 {
     const char * const vlc_args[] = {
@@ -27,7 +29,10 @@ VideoWidget::VideoWidget(): QWidget()
 
     poller=new QTimer(this);
 
-    vlcInstance=libvlc_new(sizeof(vlc_args) / sizeof(vlc_args[0]), vlc_args);
+    if(!vlcInstance)
+    {
+        vlcInstance=libvlc_new(sizeof(vlc_args) / sizeof(vlc_args[0]), vlc_args);
+    }
     vlcPlayer = libvlc_media_player_new (vlcInstance);
 
     connect(poller, SIGNAL(timeout()), this, SLOT(updateInterface()));
