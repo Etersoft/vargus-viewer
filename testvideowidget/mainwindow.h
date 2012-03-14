@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
+#include "../videowidget.h"
 namespace Ui {
     class MainWindow;
 }
@@ -17,6 +17,9 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+    VideoWidget* vw1;
+    VideoWidget* vw2;
 };
 
 #endif // MAINWINDOW_H

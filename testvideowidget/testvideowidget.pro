@@ -8,7 +8,8 @@ QT       += core gui
 
 TARGET = testvideowidget
 TEMPLATE = app
-
+LIBS += /usr/lib64/libvlc.so
+LIBS += -L/usr/lib64/libvlc/
 
 SOURCES += main.cpp\
         mainwindow.cpp \
