@@ -17,11 +17,13 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     camera.cpp \
     set.cpp \
-    view.cpp
+    view.cpp \
+    videowidget.cpp
 
 HEADERS  += mainwindow.h \
     camera.h \
     set.h \
-    view.h
+    view.h \
+    videowidget.h
 
 FORMS    += mainwindow.ui
