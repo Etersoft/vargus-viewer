@@ -13,9 +13,11 @@ LIBS += -L/usr/lib64/libvlc/
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    ../videowidget.cpp
+    ../videowidget.cpp \
+    dragtextedit.cpp
 
 HEADERS  += mainwindow.h \
-    ../videowidget.h
+    ../videowidget.h \
+    dragtextedit.h
 
 FORMS    += mainwindow.ui

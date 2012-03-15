@@ -23,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :
     vw4 = new VideoWidget();
     ui->gridLayout_4->addWidget(vw4);
 
+    ui->lineEdit->setText("1.avi");
+    ui->lineEdit_2->setText("2.avi");
 }
 
 MainWindow::~MainWindow()

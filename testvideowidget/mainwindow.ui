@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>679</width>
-    <height>544</height>
+    <height>587</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -58,6 +58,26 @@
     </property>
     <layout class="QGridLayout" name="gridLayout_4"/>
    </widget>
+   <widget class="DragTextEdit" name="lineEdit">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>470</y>
+      <width>171</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="DragTextEdit" name="lineEdit_2">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>490</y>
+      <width>171</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -80,6 +100,13 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>DragTextEdit</class>
+   <extends>QLineEdit</extends>
+   <header>dragtextedit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
