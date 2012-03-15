@@ -22,6 +22,9 @@ private:
     VideoWidget* vw2;
     VideoWidget* vw3;
     VideoWidget* vw4;
+
+public slots:
+    void openArhive();
 };
 
 #endif // MAINWINDOW_H

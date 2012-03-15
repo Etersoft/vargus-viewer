@@ -4,10 +4,12 @@
 #include <QWidget>
 #include <QUrl>
 #include <QDrag>
+#include <QMenu>
 
 #include <vlc/vlc.h>
 
 class QFrame;
+
 
 class VideoWidget: public QWidget
 {
@@ -23,6 +25,10 @@ class VideoWidget: public QWidget
 
     QUrl urlBigVideoStream;
     QUrl urlSmallVideoStream;
+
+    QMenu* contextMenu;
+    QAction *arhiveCallAction;
+    void setupContextMenu();
 
 public:
     VideoWidget();
@@ -43,6 +49,10 @@ protected:
     void dragLeaveEvent ( QDragLeaveEvent * event );
 public slots:
     void updateInterface();
+    void ContextMenuAction(const QPoint& z);
+    void arhiveMenuPress();
+signals:
+    void arhiveCall();
 };
 
 #endif // VIDEOVIDGET_H

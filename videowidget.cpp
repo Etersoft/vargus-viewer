@@ -38,6 +38,8 @@ VideoWidget::VideoWidget(): QWidget()
     connect(poller, SIGNAL(timeout()), this, SLOT(updateInterface()));
     setAcceptDrops(true);
     poller->start(100);
+
+    setupContextMenu();
 }
 
 VideoWidget::~VideoWidget()
@@ -106,6 +108,14 @@ void VideoWidget::updateInterface()
 
 void VideoWidget::mousePressEvent ( QMouseEvent * e )
 {
+    if(e->button() == Qt::RightButton)
+    {
+        ContextMenuAction(e->pos());
+    }
+
+    if(e->button() != Qt::LeftButton)
+        return;
+
     QDrag* drag = new QDrag(this);
     // The data to be transferred by the drag and drop operation is contained in a QMimeData object
     QList<QUrl> *urls= new QList<QUrl>;
@@ -158,3 +168,26 @@ void VideoWidget::dragLeaveEvent ( QDragLeaveEvent * event )
     int i =0;
 }
 
+void VideoWidget::setupContextMenu()
+{
+    frame->setContextMenuPolicy(Qt::CustomContextMenu);
+    contextMenu=new QMenu(this);
+    arhiveCallAction=new QAction(this);
+    arhiveCallAction->setText(trUtf8("Архив"));
+
+    connect(frame, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(ContextMenuAction(const QPoint& z)));
+}
+
+void VideoWidget::ContextMenuAction(const QPoint& z)
+{
+    contextMenu->clear();
+    disconnect(arhiveCallAction, 0, 0, 0);
+    contextMenu->addAction(arhiveCallAction);
+    connect(arhiveCallAction, SIGNAL(triggered()), this,SLOT(arhiveMenuPress()));
+    contextMenu->exec(mapToGlobal(z));
+}
+
+void VideoWidget::arhiveMenuPress()
+{
+    emit arhiveCall();
+}

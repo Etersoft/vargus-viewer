@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QProcess>
+#include <QDesktopServices>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -11,6 +13,8 @@ MainWindow::MainWindow(QWidget *parent) :
     vw1->setUrlVideoStream(QUrl("1.avi"),VideoWidget::SMALLVIDEO);
     vw1->startPlay(VideoWidget::SMALLVIDEO);
     ui->gridLayout->addWidget(vw1,0,0);
+
+    connect(vw1,SIGNAL(arhiveCall()),this,SLOT(openArhive()));
 
     vw2 = new VideoWidget();
     vw2->setUrlVideoStream (QUrl("2.avi"),VideoWidget::SMALLVIDEO);
@@ -31,3 +35,10 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::openArhive()
+{
+    QDesktopServices::openUrl(QUrl("http://google.com"));
+
+}
+
