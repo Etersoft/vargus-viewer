@@ -15,7 +15,7 @@ class VideoWidget: public QWidget
     QFrame *frame;
 
     QTimer *poller;
-    bool _isPlaying;
+    bool isPlaying;
 
     static libvlc_instance_t *vlcInstance;
     libvlc_media_player_t *vlcPlayer;

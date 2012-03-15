@@ -20,7 +20,7 @@ VideoWidget::VideoWidget(): QWidget()
              "" }; /* "--no-video-title-show"*/
 
 
-    _isPlaying=false;
+    isPlaying=false;
     frame=new QFrame(this);
 
     QVBoxLayout *layout = new QVBoxLayout;
@@ -85,18 +85,18 @@ void VideoWidget::startPlay(sizeVideo size)
 
     int ret = libvlc_media_player_play (vlcPlayer);
     if(ret == 0)
-        _isPlaying=true;
+        isPlaying=true;
 }
 
 void VideoWidget::stopPlay()
 {
-    if(_isPlaying)
+    if(isPlaying)
         libvlc_media_player_stop(vlcPlayer);
 }
 
 void VideoWidget::updateInterface()
 {
-    if(!_isPlaying)
+    if(!isPlaying)
         return;
 
     libvlc_media_t *curMedia = libvlc_media_player_get_media (vlcPlayer);
