@@ -125,13 +125,19 @@ void VideoWidget::dropEvent(QDropEvent *de)
 {
    stopPlay();
    QList<QUrl> urls;
+
+   if(!de->mimeData()->hasUrls())
+        return;
    urls = de->mimeData()->urls();
+   if(urls.count() != 2)
+        return;
    urlBigVideoStream = urls.takeAt(0);
    urlSmallVideoStream = urls.takeAt(0);
 
    VideoWidget* dragVideoWindet;
    dragVideoWindet = (VideoWidget*)de->mimeData()->userData(0);
-   dragVideoWindet->stopPlay();
+   if(dragVideoWindet)
+        dragVideoWindet->stopPlay();
 
    startPlay(SMALLVIDEO);
 }
