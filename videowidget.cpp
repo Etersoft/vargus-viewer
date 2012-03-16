@@ -10,6 +10,57 @@
 
 
 libvlc_instance_t *VideoWidget::vlcInstance = 0;
+RunningTextSettings *VideoWidget::runningTextSetting = 0;
+RunningTextSettings::RunningTextSettings()
+{
+    color = 0xFFFFFF;
+    opacity = 255;
+    position = -1;
+    refresh = 1000;
+    size = -1;
+    timeout = 0;
+    x = 0;
+    y = 0;
+    limitLine = 13;
+}
+
+LimitLine::LimitLine(int _numLimitLine) : numLimitLine(_numLimitLine)
+{
+    strings = new QStringList();
+}
+
+LimitLine::~LimitLine()
+{
+    delete strings;
+}
+
+void LimitLine::AddString(QString string)
+{
+    strings->append(string);
+    if(strings->count() > numLimitLine)
+    {
+        //strings->erase();
+        //strings->first().clear();
+        strings->pop_front();
+    }
+}
+
+QString LimitLine::getLimitLine()
+{
+    QString finalResult = QString("");
+    foreach(const QString &sringElement, *strings)
+    {
+        finalResult += sringElement + "\n";
+    }
+    return finalResult;
+}
+
+QString LimitLine::AddStringGetLine(QString string)
+{
+    AddString(string);
+    return getLimitLine();
+}
+
 VideoWidget::VideoWidget(): QWidget()
 {
     const char * const vlc_args[] = {
@@ -33,6 +84,13 @@ VideoWidget::VideoWidget(): QWidget()
     {
         vlcInstance=libvlc_new(sizeof(vlc_args) / sizeof(vlc_args[0]), vlc_args);
     }
+    if(!runningTextSetting)
+    {
+        runningTextSetting = new RunningTextSettings();
+    }
+
+    runningText = new LimitLine(runningTextSetting->limitLine) ;
+
     vlcPlayer = libvlc_media_player_new (vlcInstance);
 
     connect(poller, SIGNAL(timeout()), this, SLOT(updateInterface()));
@@ -147,7 +205,9 @@ void VideoWidget::dropEvent(QDropEvent *de)
    VideoWidget* dragVideoWindet;
    dragVideoWindet = (VideoWidget*)de->mimeData()->userData(0);
    if(dragVideoWindet)
+   {
         dragVideoWindet->stopPlay();
+   }
 
    startPlay(SMALLVIDEO);
 }
@@ -190,4 +250,24 @@ void VideoWidget::ContextMenuAction(const QPoint& z)
 void VideoWidget::arhiveMenuPress()
 {
     emit arhiveCall();
+}
+
+void VideoWidget::writeTextString(QString string)
+{
+    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Color,runningTextSetting->color);
+    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Opacity,runningTextSetting->opacity);
+    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Position,runningTextSetting->position);
+    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Refresh,runningTextSetting->refresh);
+    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Size,runningTextSetting->size);
+    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Timeout,runningTextSetting->timeout);
+    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_X,runningTextSetting->x);
+    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Y,runningTextSetting->y);
+
+    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Enable,1);
+    libvlc_video_set_marquee_string(vlcPlayer,libvlc_marquee_Text,runningText->AddStringGetLine(string).toAscii());
+}
+
+void VideoWidget::disableTextString()
+{
+    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Enable,0);
 }

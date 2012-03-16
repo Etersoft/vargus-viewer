@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFile>
 #include "../videowidget.h"
 namespace Ui {
     class MainWindow;
@@ -23,8 +24,11 @@ private:
     VideoWidget* vw3;
     VideoWidget* vw4;
 
+    QFile* file4TestWriteTextEvent;
+    QTimer* timer4Event;
 public slots:
     void openArhive();
+    void time2AddString();
 };
 
 #endif // MAINWINDOW_H

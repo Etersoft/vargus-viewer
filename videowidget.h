@@ -10,6 +10,33 @@
 
 class QFrame;
 
+struct RunningTextSettings
+{
+    RunningTextSettings();
+    int color;
+    int opacity;
+    int position;
+    int refresh;
+    int size;
+    int timeout;
+    int x;
+    int y;
+    int limitLine;
+};
+
+class LimitLine
+{
+private:
+    QStringList* strings;
+    int numLimitLine;
+public:
+    LimitLine(int _numLimitLine);
+    ~LimitLine();
+    void setNumLimitLine(int num);
+    QString getLimitLine();
+    void AddString(QString string);
+    QString AddStringGetLine(QString string);
+};
 
 class VideoWidget: public QWidget
 {
@@ -30,6 +57,8 @@ class VideoWidget: public QWidget
     QAction *arhiveCallAction;
     void setupContextMenu();
 
+    static RunningTextSettings* runningTextSetting;
+    LimitLine* runningText;
 public:
     VideoWidget();
     ~VideoWidget();
@@ -39,6 +68,8 @@ public:
 
     void startPlay(sizeVideo size);
     void stopPlay();
+    void writeTextString(QString string);
+    void disableTextString();
 
 protected:
     void mousePressEvent ( QMouseEvent * e );

@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QProcess>
 #include <QDesktopServices>
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -29,6 +30,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->lineEdit->setText("1.avi");
     ui->lineEdit_2->setText("2.avi");
+
+    file4TestWriteTextEvent = new QFile("1.txt");
+    if (file4TestWriteTextEvent->open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        timer4Event = new QTimer();
+        connect(timer4Event, SIGNAL(timeout()), this, SLOT(time2AddString()));
+        timer4Event->start(3000);
+    }
+
 }
 
 MainWindow::~MainWindow()
@@ -40,5 +50,11 @@ void MainWindow::openArhive()
 {
     QDesktopServices::openUrl(QUrl("http://google.com"));
 
+}
+
+void MainWindow::time2AddString()
+{
+    QString readingString = file4TestWriteTextEvent->readLine();
+    vw1->writeTextString(readingString.remove(QChar('\n'),Qt::CaseInsensitive));
 }
 
