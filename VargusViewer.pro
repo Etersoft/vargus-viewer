@@ -27,3 +27,5 @@ HEADERS  += mainwindow.h \
     videowidget.h
 
 FORMS    += mainwindow.ui
+
+unix|win32: LIBS += -lvlc
