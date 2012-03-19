@@ -10,6 +10,8 @@
 #include <set.h>
 #include <view.h>
 #include <QAbstractSocket>
+#include<QMessageBox>
+#include<QCloseEvent>
 
 #define MAX_PLAYERS 16
 
@@ -26,6 +28,9 @@ class MainWindow : public QMainWindow
     QList<Set *> setsList;
     QList<View *> viewsList;
 
+    QAction *exitAction;
+    QAction *aboutAction;
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -35,9 +40,14 @@ private:
 
     void initData();
     QString readAnswer();
+    void createActions();
+    bool okToContinue();
 
 private slots:
     void onSetChanged();
+    void about();
+protected:
+    void closeEvent(QCloseEvent *);
 
 };
 

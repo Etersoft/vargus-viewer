@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QMessageBox>
 #include <QFile>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -9,6 +8,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    createActions();
+    this->setWindowTitle(tr("VargusViewer"));
     // Обработка входных данных
     initData();
 
@@ -173,4 +174,36 @@ void MainWindow::onSetChanged()
         view->show();
         ui->viewLayout->addWidget(view, i / 2, i % 2);
     }
+}
+
+void MainWindow::createActions()
+{
+    exitAction = new QAction(tr("&Exit"),this);
+    connect(ui->actionExit,SIGNAL(triggered()),this,SLOT(close()));
+
+    aboutAction = new QAction(tr("&About"),this);
+    connect(ui->actionAbout,SIGNAL(triggered()),this,SLOT(about()));
+}
+
+void MainWindow::about()
+{
+    QMessageBox::about(this, tr("О программе"),
+             tr("<h2>VargusViewer</h2><p>Etersoft"));
+
+}
+
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if(okToContinue())
+        QMainWindow::closeEvent(event);
+    else event->ignore();
+}
+
+bool MainWindow::okToContinue()
+{
+    int r = QMessageBox::warning(this,tr("Vargus Viewer"),tr("Вы уверены, что хотите выйти?"), QMessageBox::Yes|QMessageBox::No);
+    if(r == QMessageBox::Yes)
+        return true;
+    else return false;
 }

@@ -20,4 +20,6 @@ HEADERS  += mainwindow.h \
     ../videowidget.h \
     dragtextedit.h
 
+unix|win32: LIBS += -lvlc
+
 FORMS    += mainwindow.ui
