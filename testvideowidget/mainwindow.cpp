@@ -3,6 +3,7 @@
 #include <QProcess>
 #include <QDesktopServices>
 #include <QTimer>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -16,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->gridLayout->addWidget(vw1,0,0);
 
     connect(vw1,SIGNAL(arhiveCall()),this,SLOT(openArhive()));
+    connect(vw1,SIGNAL(bigSizeCall()),this,SLOT(showBigSize()));
 
     vw2 = new VideoWidget();
     vw2->setUrlVideoStream (QUrl("2.avi"),VideoWidget::SMALLVIDEO);
@@ -50,6 +52,13 @@ void MainWindow::openArhive()
 {
     QDesktopServices::openUrl(QUrl("http://google.com"));
 
+}
+
+void MainWindow::showBigSize()
+{
+    QMessageBox msgBox;
+    msgBox.setText("Need 2 show big size video");
+    msgBox.exec();
 }
 
 void MainWindow::time2AddString()

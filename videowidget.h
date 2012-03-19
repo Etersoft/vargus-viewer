@@ -44,6 +44,7 @@ class VideoWidget: public QWidget
     QFrame *frame;
 
     QTimer *poller;
+    QTimer *waitingDoubleClickTimer;
     bool isPlaying;
 
     static libvlc_instance_t *vlcInstance;
@@ -59,6 +60,9 @@ class VideoWidget: public QWidget
 
     static RunningTextSettings* runningTextSetting;
     LimitLine* runningText;
+
+    enum statusesClick{CLICK, DOUBLE_CLICK};
+    statusesClick StatusClick;
 public:
     VideoWidget();
     ~VideoWidget();
@@ -73,17 +77,21 @@ public:
 
 protected:
     void mousePressEvent ( QMouseEvent * e );
+    void mouseDoubleClickEvent ( QMouseEvent * event );
 
     void dropEvent(QDropEvent *de);
     void dragMoveEvent(QDragMoveEvent *de);
     void dragEnterEvent(QDragEnterEvent *event);
     void dragLeaveEvent ( QDragLeaveEvent * event );
+    void startDrag();
 public slots:
     void updateInterface();
     void ContextMenuAction(const QPoint& z);
     void arhiveMenuPress();
+    void waitingDoubleClickTimeout();
 signals:
     void arhiveCall();
+    void bigSizeCall();
 };
 
 #endif // VIDEOVIDGET_H

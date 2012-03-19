@@ -8,6 +8,7 @@
 #include <QDragLeaveEvent>
 #include <QDropEvent>
 
+#include <QApplication>
 
 libvlc_instance_t *VideoWidget::vlcInstance = 0;
 RunningTextSettings *VideoWidget::runningTextSetting = 0;
@@ -97,6 +98,8 @@ VideoWidget::VideoWidget(): QWidget()
     setAcceptDrops(true);
     poller->start(100);
 
+    waitingDoubleClickTimer = new QTimer();
+
     setupContextMenu();
 }
 
@@ -174,6 +177,14 @@ void VideoWidget::mousePressEvent ( QMouseEvent * e )
     if(e->button() != Qt::LeftButton)
         return;
 
+    StatusClick =  CLICK;
+
+    connect(waitingDoubleClickTimer, SIGNAL(timeout()), this, SLOT(waitingDoubleClickTimeout()));
+    waitingDoubleClickTimer->start(QApplication::doubleClickInterval());
+}
+
+void VideoWidget::startDrag()
+{
     QDrag* drag = new QDrag(this);
     // The data to be transferred by the drag and drop operation is contained in a QMimeData object
     QList<QUrl> *urls= new QList<QUrl>;
@@ -187,6 +198,21 @@ void VideoWidget::mousePressEvent ( QMouseEvent * e )
     drag->setMimeData(data);
     // Start the drag and drop operation
     drag->start();
+}
+
+void VideoWidget::mouseDoubleClickEvent ( QMouseEvent * event )
+{
+    StatusClick =  DOUBLE_CLICK;
+    emit bigSizeCall();
+}
+
+void VideoWidget::waitingDoubleClickTimeout()
+{
+    waitingDoubleClickTimer->stop();
+    if(StatusClick ==  CLICK)
+    {
+        startDrag();
+    }
 }
 
 void VideoWidget::dropEvent(QDropEvent *de)

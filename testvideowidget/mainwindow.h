@@ -26,9 +26,11 @@ private:
 
     QFile* file4TestWriteTextEvent;
     QTimer* timer4Event;
+
 public slots:
     void openArhive();
     void time2AddString();
+    void showBigSize();
 };
 
 #endif // MAINWINDOW_H
