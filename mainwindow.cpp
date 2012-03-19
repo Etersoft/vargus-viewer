@@ -7,6 +7,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->prevButton->setIcon(QIcon("images/prev.png"));
+    ui->resetButton->setIcon(QIcon("images/reset.png"));
+    ui->nextButton->setIcon(QIcon("images/next.png"));
 
     createActions();
     this->setWindowTitle(tr("VargusViewer"));
