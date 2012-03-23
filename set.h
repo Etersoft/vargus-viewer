@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "camera.h"
 #include "view.h"
+#include"videowidget.h"
 
 class Set : public QWidget
 {
@@ -12,11 +13,11 @@ class Set : public QWidget
     QString set_description;
     QList<Camera *> cameraList;
     QList<View *> viewList;
-    QList<QPushButton *> videoList;
+    QList<VideoWidget *> videoList;
 
 
 public:
-    explicit Set();
+    explicit Set() {}
     Set(QString desc){set_description = desc;}
 
     QString description(){return set_description;}
@@ -27,6 +28,7 @@ public:
     QList<View *> views(){return viewList;}
 
     void setActiveView(int index);
+    void makeVideoWidgets();
 
 signals:
 private:
@@ -37,6 +39,8 @@ private:
     void makeFiveSquareTwoOneTripple();//квадрат 5*5 два двойных один центральный
     void makeTrippleSquare();//квадрат 3*3
     void makeFourSquare();//квадрат 4*4
+
+    void stopPlay();
 
 
 

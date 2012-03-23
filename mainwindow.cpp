@@ -80,13 +80,14 @@ void MainWindow::initData()
         camerasList << new Camera(readAnswer().trimmed());
         socket->write(QString("query camera;" + QString::number(i+1) + ";description\n").toAscii());
         camerasList.at(i)->setDescription(readAnswer().trimmed());
-        socket->write(QString("query camera;" + QString::number(i+1) + ";source\n").toAscii());
+        socket->write(QString("query camera;" + QString::number(i+1) + ";view:source\n").toAscii());
         camerasList.at(i)->setSource(readAnswer().trimmed());
-        socket->write(QString("query camera;" + QString::number(i+1) + ";preview\n").toAscii());
+        socket->write(QString("query camera;" + QString::number(i+1) + ";view:preview\n").toAscii());
         camerasList.at(i)->setPreview(readAnswer().trimmed());
         socket->write(QString("query camera;" + QString::number(i+1) + ";agent\n").toAscii());
         camerasList.at(i)->setAgent(readAnswer().trimmed());
     }
+
 
     // Инициализация сетов
     socket->write("query set;quantity\n");
@@ -133,6 +134,9 @@ void MainWindow::initData()
     socket->write("exit\n");
     socket->disconnect();
     delete socket;
+
+    for(int i = 0; i < setsList.length(); i++)
+        setsList.at(i)->makeVideoWidgets();
 }
 
 QString MainWindow::readAnswer()
