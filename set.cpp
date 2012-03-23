@@ -252,6 +252,7 @@ void Set::setLayouts(int type)
     if(layout()!= NULL)
         delete layout();
     stopPlay();
+    tp = type;
     switch(type)
     {
         case(0):
@@ -298,7 +299,8 @@ void Set::makeVideoWidgets()
         v->setUrlVideoStream(cameraList.at(i)->source(), VideoWidget::BIGVIDEO);
         videoList << v;
     }
-    setLayouts(0);
+    tp = 0;
+
 }
 
 void Set::stopPlay()

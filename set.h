@@ -15,10 +15,13 @@ class Set : public QWidget
     QList<View *> viewList;
     QList<VideoWidget *> videoList;
 
+    int tp;//тип раскладки, используемой в данный момент
+    bool active;
+
 
 public:
     explicit Set() {}
-    Set(QString desc){set_description = desc;}
+    Set(QString desc){set_description = desc; active = false;}
 
     QString description(){return set_description;}
     void addView(View* view);
@@ -29,6 +32,10 @@ public:
 
     void setActiveView(int index);
     void makeVideoWidgets();
+    void restoreState() {setLayouts(tp);}
+    void stopPlay();
+    bool isActive() {return active;}
+    void setActive(bool act) {active = act;}
 
 signals:
 private:
@@ -39,13 +46,9 @@ private:
     void makeFiveSquareTwoOneTripple();//квадрат 5*5 два двойных один центральный
     void makeTrippleSquare();//квадрат 3*3
     void makeFourSquare();//квадрат 4*4
-
-    void stopPlay();
-
-
-
 private slots:
     void updateActiveView();
+
 };
 
 #endif // SET_H

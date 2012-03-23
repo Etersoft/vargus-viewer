@@ -44,7 +44,7 @@ private:
     bool okToContinue();
 
 private slots:
-    void onSetChanged();
+    void onSetChanged(int num);
     void about();
 protected:
     void closeEvent(QCloseEvent *);

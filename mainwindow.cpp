@@ -28,10 +28,10 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->tabWidget->addTab(set, set->description());
     }
 
-    connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(onSetChanged()));
+    connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(onSetChanged(int)));
 
     ui->tabWidget->setCurrentIndex(0);
-    onSetChanged();
+    onSetChanged(0);
 }
 
 void MainWindow::initData()
@@ -166,13 +166,20 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::onSetChanged()
+void MainWindow::onSetChanged(int num)
 {
+    for( int i = 0; i < setsList.length(); i++)
+        if(setsList.at(i)->isActive())
+        {
+            setsList.at(i)->stopPlay();
+            setsList.at(i)->setActive(false);
+        }
+
     // Заполнение панели раскладок
     while(!ui->viewLayout->isEmpty())
     {
-        QWidget *widget = ui->viewLayout->takeAt(0)->widget();
-        widget->hide();
+        QWidget *s = ui->viewLayout->takeAt(0)->widget();
+        s->hide();
     }
 
     for(int i = 0; i < viewsList.count(); i ++)
@@ -181,6 +188,8 @@ void MainWindow::onSetChanged()
         view->show();
         ui->viewLayout->addWidget(view, i / 2, i % 2);
     }
+    setsList.at(num)->setActive(true);
+    setsList.at(num)->restoreState();
 }
 
 void MainWindow::createActions()
