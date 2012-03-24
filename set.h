@@ -5,7 +5,6 @@
 #include "camera.h"
 #include "view.h"
 #include"videowidget.h"
-
 class Set : public QWidget
 {
     Q_OBJECT
@@ -17,11 +16,12 @@ class Set : public QWidget
 
     int tp;//тип раскладки, используемой в данный момент
     bool active;
+    int activeCameras;
 
 
 public:
-    explicit Set() {tp = 0;}
-    Set(QString desc){tp = 0; set_description = desc; active = false;}
+    explicit Set() {activeCameras = tp = 0;}
+    Set(QString desc){activeCameras = tp = 0; set_description = desc; active = false;}
 
     QString description(){return set_description;}
     void addView(View* view);
@@ -36,8 +36,11 @@ public:
     void stopPlay();
     bool isActive() {return active;}
     void setActive(bool act) {active = act;}
+    QList<Camera *> getActiveCameras();
+
 
 signals:
+    void updateActiveCameras(QList<Camera*>);
 private:
     void setLayouts(int type);
     void makeTwoSquare();//квадрат 4*4

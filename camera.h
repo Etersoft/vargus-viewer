@@ -15,7 +15,7 @@ class Camera : public QObject
 
 public:
     explicit Camera();
-    Camera(QString cam){cam_name = cam;};
+    Camera(QString cam){cam_name = cam;}
 
     QString name() {return cam_name;}
     QString description() {return cam_description;}

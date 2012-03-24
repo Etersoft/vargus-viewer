@@ -58,20 +58,18 @@ void Set::makeTwoSquare()
 {
     QGridLayout *grid = new QGridLayout(this);
     setLayout(grid);
-    int y = 0;
-    bool f = true;
-    for( int i =0; i < 2 && f; i++)
+    QList<VideoWidget *>::iterator it = videoList.begin();
+    QList<VideoWidget *>::iterator end = videoList.end();
+    for( int i =0; i < 2; i++)
     {
         for( int j = 0; j < 2; j++)
         {
-            if(videoList.length() == y)
-            {
-                f = false;
-                break;
-            }
-            grid->addWidget(videoList.at(y),i,j);
-            videoList.at(y)->startPlay(VideoWidget::SMALLVIDEO);
-            videoList.at(y++)->show();
+            if(it == end) return;
+            grid->addWidget(*it,i,j);
+            (*it)->startPlay(VideoWidget::SMALLVIDEO);
+            (*it)->show();
+            it++;
+            activeCameras++;
         }
     }
 }
@@ -85,16 +83,19 @@ void Set::makeFourSquareTripple()
     grid->addWidget(videoList.at(0),0,0,2,2);
     videoList.at(0)->startPlay(VideoWidget::SMALLVIDEO);
     videoList.at(0)->show();
+    activeCameras++;
 
     if(videoList.length() < 2) return;
     grid->addWidget(videoList.at(1),0,2);
     videoList.at(1)->startPlay(VideoWidget::SMALLVIDEO);
     videoList.at(1)->show();
+    activeCameras++;
 
     if(videoList.length() < 3) return;
     grid->addWidget(videoList.at(2),1,2);
     videoList.at(2)->startPlay(VideoWidget::SMALLVIDEO);
     videoList.at(2)->show();
+    activeCameras++;
 
     for(int i = 0; i < 3; i++)
     {
@@ -103,6 +104,7 @@ void Set::makeFourSquareTripple()
         grid->addWidget(videoList.at(3+i),2,i);
         videoList.at(3+i)->startPlay(VideoWidget::SMALLVIDEO);
         videoList.at(3+i)->show();
+        activeCameras++;
     }
 
 
@@ -120,31 +122,37 @@ void Set::makeFourSquareOneCentral()
         grid->addWidget(videoList.at(i), 0, i);
         videoList.at(i)->startPlay(VideoWidget::SMALLVIDEO);
         videoList.at(i)->show();
+        activeCameras++;
     }
     if(videoList.length() < 5) return;
     grid->addWidget(videoList.at(4),1,0);
     videoList.at(4)->startPlay(VideoWidget::SMALLVIDEO);
     videoList.at(4)->show();
+    activeCameras++;
 
     if(videoList.length() < 6) return;
     grid->addWidget(videoList.at(5),1,1,2,2);
     videoList.at(5)->startPlay(VideoWidget::SMALLVIDEO);
     videoList.at(5)->show();
+    activeCameras++;
 
     if(videoList.length() < 7) return;
     grid->addWidget(videoList.at(6),1,3);
     videoList.at(6)->startPlay(VideoWidget::SMALLVIDEO);
     videoList.at(6)->show();
+    activeCameras++;
 
     if(videoList.length() < 8) return;
     grid->addWidget(videoList.at(7),2,0);
     videoList.at(7)->startPlay(VideoWidget::SMALLVIDEO);
     videoList.at(7)->show();
+    activeCameras++;
 
     if(videoList.length() < 9) return;
     grid->addWidget(videoList.at(8),2,3);
     videoList.at(8)->startPlay(VideoWidget::SMALLVIDEO);
     videoList.at(8)->show();
+    activeCameras++;
 
     for(int i = 0; i < 4; i++)
     {
@@ -152,6 +160,7 @@ void Set::makeFourSquareOneCentral()
         grid->addWidget(videoList.at(i + 9), 3, i);
         videoList.at(i + 9)->startPlay(VideoWidget::SMALLVIDEO);
         videoList.at(i+9)->show();
+        activeCameras++;
     }
 
 
@@ -165,16 +174,19 @@ void Set::makeFiveSquareTwoOneTripple()
     grid->addWidget(videoList.at(0),0,0,3,3);
     videoList.at(0)->startPlay(VideoWidget::SMALLVIDEO);
     videoList.at(0)->show();
+    activeCameras++;
 
     if(videoList.length() < 2) return;
     grid->addWidget(videoList.at(1),0,3,2,2);
     videoList.at(1)->startPlay(VideoWidget::SMALLVIDEO);
     videoList.at(1)->show();
+    activeCameras++;
 
     if(videoList.length() < 3) return;
     grid->addWidget(videoList.at(2),2,3,2,2);
     videoList.at(2)->startPlay(VideoWidget::SMALLVIDEO);
     videoList.at(2)->show();
+    activeCameras++;
 
     for( int i = 0; i < 3; i++)
     {
@@ -182,6 +194,7 @@ void Set::makeFiveSquareTwoOneTripple()
         grid->addWidget(videoList.at(i+3),3,i);
         videoList.at(i+3)->startPlay(VideoWidget::SMALLVIDEO);
         videoList.at(i+3)->show();
+        activeCameras++;
     }
     for( int i = 0; i < 5; i++)
     {
@@ -189,6 +202,7 @@ void Set::makeFiveSquareTwoOneTripple()
         grid->addWidget(videoList.at(i+6),4,i);
         videoList.at(i+6)->startPlay(VideoWidget::SMALLVIDEO);
         videoList.at(i+6)->show();
+        activeCameras++;
     }
 }
 
@@ -207,6 +221,7 @@ void Set::makeFourSquare()
             (*it)->startPlay(VideoWidget::SMALLVIDEO);
             (*it)->show();
             it++;
+            activeCameras++;
         }
     }
 
@@ -228,6 +243,7 @@ void Set::makeTrippleSquare()
             (*it)->startPlay(VideoWidget::SMALLVIDEO);
             (*it)->show();
             it++;
+            activeCameras++;
         }
 }
 
@@ -237,6 +253,7 @@ void Set::setLayouts(int type)
         delete layout();
     stopPlay();
     tp = type;
+    activeCameras = 0;
     switch(type)
     {
         case(0):
@@ -271,6 +288,7 @@ void Set::setLayouts(int type)
         }
 
      }
+    emit updateActiveCameras(getActiveCameras());
 
 }
 
@@ -300,3 +318,13 @@ void Set::stopPlay()
         it++;
     }
 }
+
+QList<Camera*> Set::getActiveCameras()
+{
+    QList<Camera *> res;
+    QList<Camera *>::iterator it = cameraList.begin();
+    for(int i = 0; i < activeCameras; i++)
+        res << (*it);
+    return res;
+}
+

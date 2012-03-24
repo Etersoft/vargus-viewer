@@ -27,6 +27,7 @@ class MainWindow : public QMainWindow
     QList<Camera *> camerasList;
     QList<Set *> setsList;
     QList<View *> viewsList;
+    QList<Camera *> currentCameras;
 
     QAction *exitAction;
     QAction *aboutAction;
@@ -45,6 +46,7 @@ private:
 
 private slots:
     void onSetChanged(int num);
+    void changeActiveCameras(QList<Camera*> activeCameras);
     void about();
 protected:
     void closeEvent(QCloseEvent *);

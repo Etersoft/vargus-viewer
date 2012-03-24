@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QFile>
+#include <QList>
+#include<QListIterator>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -32,6 +34,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->tabWidget->setCurrentIndex(0);
     onSetChanged(0);
+    for(int i = 0; i < setsList.length(); i++)
+        connect(setsList.at(i),SIGNAL(updateActiveCameras(QList<Camera*>)),this,SLOT(changeActiveCameras(QList<Camera*>)));
+    changeActiveCameras(setsList.at(0)->getActiveCameras());
 }
 
 void MainWindow::initData()
@@ -190,6 +195,8 @@ void MainWindow::onSetChanged(int num)
     }
     setsList.at(num)->setActive(true);
     setsList.at(num)->restoreState();
+    //changeActiveCameras(setsList.at(num)->getActiveCameras());
+
 }
 
 void MainWindow::createActions()
@@ -222,4 +229,43 @@ bool MainWindow::okToContinue()
     if(r == QMessageBox::Yes)
         return true;
     else return false;
+}
+
+void MainWindow::changeActiveCameras(QList<Camera *> activeCameras)
+{
+    currentCameras.clear();
+    for(int i = 0; i < setsList.length(); i++)
+    {
+        if(setsList.at(i)->isActive())
+            currentCameras = setsList.at(i)->cameras();
+    }
+    QList<Camera *>::iterator it = currentCameras.begin();
+    QList<Camera *>::iterator end = currentCameras.end();
+    ui->cameraList->clear();
+    int camNum =1;
+    while(it != end)
+    {
+
+        ui->cameraList->addItem(QString::number(camNum++) + ". " + (*it)->description());
+        it++;
+    }
+    QList<Camera *>::iterator itac = activeCameras.begin();
+    QList<Camera *>::iterator endac = activeCameras.end();
+    int cameraNum = 0;
+    while(itac != endac)
+    {
+        it = currentCameras.begin();
+        while(it != end)
+        {
+            if((*itac) == (*it))
+            {
+                QColor color(0,255,255);
+                ui->cameraList->item(cameraNum)->setBackgroundColor(color);
+                cameraNum++;
+                break;
+            }
+            it++;
+        }
+        itac++;
+    }
 }
