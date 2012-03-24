@@ -9,10 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->prevButton->setIcon(QIcon("images/prev.png"));
-    ui->resetButton->setIcon(QIcon("images/reset.png"));
-    ui->nextButton->setIcon(QIcon("images/next.png"));
-
+    makeButtons();
     createActions();
     this->setWindowTitle(tr("VargusViewer"));
     // Обработка входных данных
@@ -33,10 +30,13 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(onSetChanged(int)));
 
     ui->tabWidget->setCurrentIndex(0);
+    for(int i = 0; i < setsList.length(); i++)
+        setsList.at(i)->makeVideoWidgets();
     onSetChanged(0);
     for(int i = 0; i < setsList.length(); i++)
         connect(setsList.at(i),SIGNAL(updateActiveCameras(QList<Camera*>)),this,SLOT(changeActiveCameras(QList<Camera*>)));
     changeActiveCameras(setsList.at(0)->getActiveCameras());
+
 }
 
 void MainWindow::initData()
@@ -109,7 +109,7 @@ void MainWindow::initData()
             {
                 if(camlist.at(j) == camerasList.at(k)->name())
                 {
-                    setsList.at(i)->addCamera(camerasList.at(k));
+                        setsList.at(i)->addCamera(camerasList.at(k));
                     break;
                 }
             }
@@ -139,9 +139,6 @@ void MainWindow::initData()
     socket->write("exit\n");
     socket->disconnect();
     delete socket;
-
-    for(int i = 0; i < setsList.length(); i++)
-        setsList.at(i)->makeVideoWidgets();
 }
 
 QString MainWindow::readAnswer()
@@ -251,9 +248,9 @@ void MainWindow::changeActiveCameras(QList<Camera *> activeCameras)
     }
     QList<Camera *>::iterator itac = activeCameras.begin();
     QList<Camera *>::iterator endac = activeCameras.end();
-    int cameraNum = 0;
     while(itac != endac)
     {
+        int cameraNum = 0;
         it = currentCameras.begin();
         while(it != end)
         {
@@ -261,11 +258,66 @@ void MainWindow::changeActiveCameras(QList<Camera *> activeCameras)
             {
                 QColor color(0,255,255);
                 ui->cameraList->item(cameraNum)->setBackgroundColor(color);
-                cameraNum++;
                 break;
             }
             it++;
+            cameraNum++;
         }
         itac++;
+    }
+}
+
+void MainWindow::makeButtons()
+{
+    ui->prevButton->setIcon(QIcon("images/prev.png"));
+    ui->resetButton->setIcon(QIcon("images/reset.png"));
+    ui->nextButton->setIcon(QIcon("images/next.png"));
+    connect(ui->nextButton,SIGNAL(clicked()),this,SLOT(nextGroup()));
+    connect(ui->prevButton,SIGNAL(clicked()),this,SLOT(prevGroup()));
+    connect(ui->resetButton,SIGNAL(clicked()),this,SLOT(resetGroup()));
+}
+
+void MainWindow::nextGroup()
+{
+    QList<Set *>::iterator it = setsList.begin();
+    QList<Set *>::iterator end = setsList.end();
+    while(it != end)
+    {
+        if((*it)->isActive())
+        {
+            (*it)->next();
+            break;
+        }
+        it++;
+    }
+}
+
+void MainWindow::prevGroup()
+{
+    QList<Set *>::iterator it = setsList.begin();
+    QList<Set *>::iterator end = setsList.end();
+    while(it != end)
+    {
+        if((*it)->isActive())
+        {
+            (*it)->prev();
+            break;
+        }
+        it++;
+    }
+}
+
+void MainWindow::resetGroup()
+{
+    QList<Set *>::iterator it = setsList.begin();
+    QList<Set *>::iterator end = setsList.end();
+    while(it != end)
+    {
+        if((*it)->isActive())
+        {
+            (*it)->reset();
+            break;
+        }
+        it++;
     }
 }

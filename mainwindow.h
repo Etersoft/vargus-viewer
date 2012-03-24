@@ -43,11 +43,15 @@ private:
     QString readAnswer();
     void createActions();
     bool okToContinue();
+    void makeButtons();
 
 private slots:
     void onSetChanged(int num);
     void changeActiveCameras(QList<Camera*> activeCameras);
     void about();
+    void nextGroup();
+    void prevGroup();
+    void resetGroup();
 protected:
     void closeEvent(QCloseEvent *);
 
