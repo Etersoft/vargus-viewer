@@ -20,8 +20,8 @@ class Set : public QWidget
 
 
 public:
-    explicit Set() {}
-    Set(QString desc){set_description = desc; active = false;}
+    explicit Set() {tp = 0;}
+    Set(QString desc){tp = 0; set_description = desc; active = false;}
 
     QString description(){return set_description;}
     void addView(View* view);
