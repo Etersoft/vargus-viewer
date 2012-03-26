@@ -25,7 +25,8 @@ class Set : public QWidget
 
 public:
     explicit Set() {activeCameras = tp = 0;}
-    Set(QString desc){activeCameras = tp = 0; set_description = desc; active = false;}
+    Set(QString desc);
+    ~Set();
 
     QString description(){return set_description;}
     void addView(View* view);
@@ -36,7 +37,6 @@ public:
 
     void setActiveView(int index);
     void makeVideoWidgets();
-    void restoreState() {setLayouts(tp);}
     void stopPlay();
     bool isActive() {return active;}
     void setActive(bool act) {active = act;}
@@ -45,8 +45,8 @@ public:
     void next();
     void prev();
     void reset();
-
-
+public slots:
+    void restoreState() {setLayouts(tp);}
 signals:
     void updateActiveCameras(QList<Camera*>);
 private:
@@ -57,6 +57,8 @@ private:
     void makeFiveSquareTwoOneTripple();//квадрат 5*5 два двойных один центральный
     void makeTrippleSquare();//квадрат 3*3
     void makeFourSquare();//квадрат 4*4
+
+    void bigVideo(VideoWidget * v);
 private slots:
     void updateActiveView();
 

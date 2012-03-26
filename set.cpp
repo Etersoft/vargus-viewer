@@ -2,8 +2,45 @@
 #include <QStringList>
 #include<QGridLayout>
 #include<QListIterator>
-#include<QMessageBox>
 
+Set::Set(QString desc)
+{
+    activeCameras = tp = 0;
+    set_description = desc;
+    active = false;
+}
+Set::~Set()
+{
+    QList<VideoWidget *>::iterator it = videoList.begin();
+    QList<VideoWidget *>::iterator end = videoList.end();
+    while(it != end)
+    {
+        delete (*it);
+        it++;
+    }
+    QList<Camera *>::iterator itc = cameraList.begin();
+    QList<Camera *>::iterator endc = cameraList.end();
+    while(itc != endc)
+    {
+        delete(*itc);
+        itc++;
+    }
+    QList<View *>::iterator itv = viewList.begin();
+    QList<View *>::iterator endv = viewList.end();
+    while(itv != endv)
+    {
+        delete (*itv);
+        itv++;
+    }
+    for(int i = 0; i < st.size(); i++)
+    {
+        delete st[i];
+    }
+    for(int i = 0; i < stc.size(); i++)
+    {
+        delete stc[i];
+    }
+}
 
 void Set::addCamera(Camera* cam)
 {
@@ -297,6 +334,8 @@ void Set::makeVideoWidgets()
         v->setUrlVideoStream((*it)->source(), VideoWidget::BIGVIDEO);
         videoList << v;
         it++;
+        connect(v,SIGNAL(bigSizeCall(VideoWidget*)),this,SLOT(bigVideo(VideoWidget*)));
+        connect(v,SIGNAL(arhiveCall()),this,SLOT(restoreState()));
     }
     for(int i = 0; i < viewList.length(); i++)
     {
@@ -375,3 +414,13 @@ void Set::reset()
     setLayouts(tp);
 }
 
+void Set::bigVideo(VideoWidget *v)
+{
+    stopPlay();
+    delete layout();
+    QGridLayout *grid  = new QGridLayout(this);
+    setLayout(grid);
+    grid->addWidget(v,0,0);
+    v->startPlay(VideoWidget::BIGVIDEO);
+
+}
