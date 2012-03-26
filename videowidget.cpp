@@ -79,6 +79,7 @@ VideoWidget::VideoWidget(): QWidget()
     isPlaying=false;
     frame=new QFrame(this);
 
+    QVBoxLayout* layout = new QVBoxLayout;
     layout->setContentsMargins(0,0,0,0);
     layout->addWidget(frame);
     setLayout(layout);
