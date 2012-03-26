@@ -64,12 +64,16 @@ QString LimitLine::AddStringGetLine(QString string)
 
 VideoWidget::VideoWidget(): QWidget()
 {
+
     const char * const vlc_args[] = {
               "-I", "dummy", /* Don't use any interface */
               "--ignore-config", /* Don't use VLC's config */
-              "--extraintf=logger", //log anything
-              "--verbose=2", //be much more verbose then normal for debugging purpose
-             "" }; /* "--no-video-title-show"*/
+              "--no-audio", /* Audio off */
+#ifdef QT_DEBUG
+              "--extraintf=logger", /* log anything */
+              "--verbose=2", /* be much more verbose then normal for debugging purpose */
+#endif
+             "" }; /* "--no-video-title-show" */
 
 
     isPlaying=false;
