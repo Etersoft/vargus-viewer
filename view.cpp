@@ -9,6 +9,15 @@ View::View()
 View::View(QString new_value)
 {
     view_description = new_value;
+    view_active_icon = view_icon = NULL;
+}
+View::~View()
+{
+    if(view_icon != NULL)
+        delete view_icon;
+    if(view_active_icon != NULL)
+        delete view_active_icon;
+
 }
 
 View::View(View* view)
@@ -25,10 +34,10 @@ View::View(View* view)
     active = false;
     waitActive = false;
 
-    this->setIcon(*view_icon);
-    this->setFixedSize(ICON_WIDTH, ICON_HEIGHT);
-    this->setIconSize(this->size());
-    this->setToolTip(view_description);
+    setIcon(*view_icon);
+    setFixedSize(ICON_WIDTH, ICON_HEIGHT);
+    setIconSize(this->size());
+    setToolTip(view_description);
 
     connect(this, SIGNAL(clicked()), this, SLOT(onClick()));
 }
@@ -68,9 +77,9 @@ void View::createIcons()
     view_icon = new QIcon(createIconImage(Qt::blue, Qt::gray));
     view_active_icon = new QIcon(createIconImage(Qt::blue, Qt::white));
 
-    this->setIcon(*view_icon);
-    this->setFixedSize(ICON_WIDTH, ICON_HEIGHT);
-    this->setIconSize(this->size());
+    setIcon(*view_icon);
+    setFixedSize(ICON_WIDTH, ICON_HEIGHT);
+    setIconSize(this->size());
 }
 
 QPixmap View::createIconImage(QColor color, QColor bkColor)

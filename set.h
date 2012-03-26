@@ -22,9 +22,10 @@ class Set : public QWidget
     QVector< QList<VideoWidget *>* > st;
     QVector< QList<Camera *>* > stc;
 
+    VideoWidget *bigPlaying;
 
 public:
-    explicit Set() {activeCameras = tp = 0;}
+    explicit Set();
     Set(QString desc);
     ~Set();
 
@@ -47,6 +48,7 @@ public:
     void reset();
 public slots:
     void restoreState() {setLayouts(tp);}
+    void showBig(int num);
 signals:
     void updateActiveCameras(QList<Camera*>);
 private:
@@ -58,9 +60,9 @@ private:
     void makeTrippleSquare();//квадрат 3*3
     void makeFourSquare();//квадрат 4*4
 
-    void bigVideo(VideoWidget * v);
 private slots:
     void updateActiveView();
+    void bigVideo(VideoWidget * v);
 
 };
 

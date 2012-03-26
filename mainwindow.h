@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QList>
+#include<QListWidget>
 
 #include <phonon/VideoPlayer>
 
@@ -52,6 +53,7 @@ private slots:
     void nextGroup();
     void prevGroup();
     void resetGroup();
+    void makeBigVideo(QListWidgetItem*);
 protected:
     void closeEvent(QCloseEvent *);
 

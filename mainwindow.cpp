@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     for(int i = 0; i < setsList.length(); i++)
         connect(setsList.at(i),SIGNAL(updateActiveCameras(QList<Camera*>)),this,SLOT(changeActiveCameras(QList<Camera*>)));
     changeActiveCameras(setsList.at(0)->getActiveCameras());
+    connect(ui->cameraList,SIGNAL(itemClicked(QListWidgetItem*)),this,SLOT(makeBigVideo(QListWidgetItem*)));
 
 }
 
@@ -166,6 +167,22 @@ QString MainWindow::readAnswer()
 MainWindow::~MainWindow()
 {
     delete ui;
+    QList<Camera *>::iterator itc = camerasList.begin();
+    QList<Camera *>::iterator endc = camerasList.end();
+    while(itc != endc)
+    {
+        delete (*itc);
+        itc++;
+    }
+    QList<View *>::iterator itv = viewsList.begin();
+    QList<View *>::iterator endv = viewsList.end();
+    while(itv != endv)
+    {
+        delete (*itv);
+        itv++;
+    }
+    delete exitAction;
+    delete aboutAction;
 }
 
 void MainWindow::onSetChanged(int num)
@@ -319,5 +336,30 @@ void MainWindow::resetGroup()
             break;
         }
         it++;
+    }
+}
+
+void MainWindow::makeBigVideo(QListWidgetItem * item)
+{
+    Set *activeSet;
+    QList<Set *>::iterator it = setsList.begin();
+    QList<Set *>::iterator end = setsList.end();
+    while(it != end)
+    {
+        if((*it)->isActive())
+        {
+            activeSet = (*it);
+            break;
+        }
+        it++;
+    }
+    int amount = ui->cameraList->count();
+    for(int i =0; i < amount; i++)
+    {
+        if(item == ui->cameraList->item(i))
+        {
+            activeSet->showBig(i);
+            break;
+        }
     }
 }

@@ -3,11 +3,19 @@
 #include<QGridLayout>
 #include<QListIterator>
 
+Set::Set()
+{
+    activeCameras = tp = 0;
+    active = false;
+    bigPlaying = NULL;
+}
+
 Set::Set(QString desc)
 {
     activeCameras = tp = 0;
     set_description = desc;
     active = false;
+    bigPlaying = NULL;
 }
 Set::~Set()
 {
@@ -357,6 +365,7 @@ void Set::stopPlay()
             (*it)->hide();
         it++;
     }
+    bigPlaying = NULL;
 }
 
 QList<Camera*> Set::getActiveCameras()
@@ -416,11 +425,25 @@ void Set::reset()
 
 void Set::bigVideo(VideoWidget *v)
 {
+    if(v == bigPlaying)
+    {
+        setLayouts(tp);
+        return;
+    }
     stopPlay();
     delete layout();
     QGridLayout *grid  = new QGridLayout(this);
     setLayout(grid);
     grid->addWidget(v,0,0);
     v->startPlay(VideoWidget::BIGVIDEO);
+    v->show();
+    bigPlaying = v;
+    QList<Camera *> res;
+    res << cameraList.at(videoList.indexOf(v));
+    emit updateActiveCameras(res);
+}
 
+void Set::showBig(int num)
+{
+    bigVideo(videoList.at(num));
 }
