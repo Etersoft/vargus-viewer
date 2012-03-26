@@ -66,6 +66,7 @@ class VideoWidget: public QWidget
 public:
     VideoWidget();
     ~VideoWidget();
+    static void staticDestructor();
 
     enum sizeVideo {BIGVIDEO, SMALLVIDEO};
     void setUrlVideoStream(QUrl urlStream, sizeVideo size);

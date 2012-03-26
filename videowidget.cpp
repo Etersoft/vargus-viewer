@@ -109,13 +109,13 @@ VideoWidget::VideoWidget(): QWidget()
 
 VideoWidget::~VideoWidget()
 {
-/*
-    libvlc_media_player_stop (vlcPlayer);
-
-    libvlc_media_release(vlcMedia);
     libvlc_media_player_release (vlcPlayer);
-    libvlc_release (vlcInstance);
-    */
+    libvlc_media_release(vlcMedia);
+}
+
+void  VideoWidget::staticDestructor()
+{
+    libvlc_release(vlcInstance);
 }
 
 void VideoWidget::setUrlVideoStream(QUrl urlStream, sizeVideo size)

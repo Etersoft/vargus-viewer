@@ -45,6 +45,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    if(vw1)
+        delete vw1;
+    if(vw2)
+        delete vw2;
+    if(vw3)
+        delete vw3;
+    if(vw4)
+        delete vw4;
+    VideoWidget::staticDestructor();
     delete ui;
 }
 
@@ -67,3 +76,9 @@ void MainWindow::time2AddString()
     vw1->writeTextString(readingString.remove(QChar('\n'),Qt::CaseInsensitive));
 }
 
+
+void MainWindow::on_pushButton_clicked()
+{
+    delete vw2;
+    vw2 = 0;
+}

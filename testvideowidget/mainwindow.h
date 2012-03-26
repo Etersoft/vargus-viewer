@@ -31,6 +31,8 @@ public slots:
     void openArhive();
     void time2AddString();
     void showBigSize();
+private slots:
+    void on_pushButton_clicked();
 };
 
 #endif // MAINWINDOW_H
