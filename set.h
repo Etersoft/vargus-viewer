@@ -19,7 +19,7 @@ class Set : public QWidget
     bool active;
     int activeCameras;
 
-    QVector< QList<VideoWidget *>* > st;
+    //QVector< QList<VideoWidget *>* > st;
     QVector< QList<Camera *>* > stc;
 
     VideoWidget *bigPlaying;
@@ -37,8 +37,8 @@ public:
     QList<View *> views(){return viewList;}
 
     void setActiveView(int index);
-    void makeVideoWidgets();
-    void stopPlay();
+    void init();
+    void stopPlay(VideoWidget *excluding = NULL);
     bool isActive() {return active;}
     void setActive(bool act) {active = act;}
     QList<Camera *> getActiveCameras();
@@ -60,9 +60,12 @@ private:
     void makeTrippleSquare();//квадрат 3*3
     void makeFourSquare();//квадрат 4*4
 
+    void countActiveAndPlay(int num);
+    void bigVideo(Camera *c);
+
 private slots:
     void updateActiveView();
-    void bigVideo(VideoWidget * v);
+    void bigVideo(VideoWidget *v);
 
 };
 

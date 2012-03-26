@@ -31,12 +31,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->tabWidget->setCurrentIndex(0);
     for(int i = 0; i < setsList.length(); i++)
-        setsList.at(i)->makeVideoWidgets();
+        setsList.at(i)->init();
     onSetChanged(0);
     for(int i = 0; i < setsList.length(); i++)
         connect(setsList.at(i),SIGNAL(updateActiveCameras(QList<Camera*>)),this,SLOT(changeActiveCameras(QList<Camera*>)));
     changeActiveCameras(setsList.at(0)->getActiveCameras());
-    connect(ui->cameraList,SIGNAL(itemClicked(QListWidgetItem*)),this,SLOT(makeBigVideo(QListWidgetItem*)));
+    connect(ui->cameraList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(makeBigVideo(QListWidgetItem*)));
 
 }
 
