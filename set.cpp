@@ -295,8 +295,7 @@ void Set::makeVideoWidgets()
     for(int i = 0; i < cameraList.length(); i++)
     {
         VideoWidget *v = new VideoWidget();
-        v->setUrlVideoStream(cameraList.at(i)->preview(), VideoWidget::SMALLVIDEO);
-        v->setUrlVideoStream(cameraList.at(i)->source(), VideoWidget::BIGVIDEO);
+        v->setCamera(cameraList.at(i));
         videoList << v;
     }
     tp = 0;

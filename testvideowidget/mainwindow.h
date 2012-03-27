@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QFile>
 #include "../videowidget.h"
+#include "../camera.h"
+
 namespace Ui {
     class MainWindow;
 }

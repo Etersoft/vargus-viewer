@@ -9,19 +9,32 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    Camera* cam1 = new Camera();
+    cam1->setName("Name");
+    cam1->setDescription("Desription");
+    cam1->setPreview("1.avi");
+    cam1->setSource("1.avi");
+
     ui->setupUi(this);
 
     vw1 = new VideoWidget();
-    vw1->setUrlVideoStream(QUrl("1.avi"),VideoWidget::SMALLVIDEO);
+    vw1->setCamera(cam1);
     vw1->startPlay(VideoWidget::SMALLVIDEO);
     ui->gridLayout->addWidget(vw1,0,0);
 
     connect(vw1,SIGNAL(arhiveCall()),this,SLOT(openArhive()));
     connect(vw1,SIGNAL(bigSizeCall()),this,SLOT(showBigSize()));
 
+    Camera* cam2 = new Camera();
+    cam2->setName("Name");
+    cam2->setDescription("Desription");
+    cam2->setPreview("2.avi");
+    cam2->setSource("2.avi");
+
+
     vw2 = new VideoWidget();
-    vw2->setUrlVideoStream (QUrl("2.avi"),VideoWidget::SMALLVIDEO);
     ui->gridLayout_2->addWidget(vw2);
+    vw2->setCamera(cam2);
     vw2->startPlay(VideoWidget::SMALLVIDEO);
 
     vw3 = new VideoWidget();
