@@ -5,7 +5,7 @@
 #include "camera.h"
 #include "view.h"
 #include"videowidget.h"
-
+#include<QVector>
 class Set : public QWidget
 {
     Q_OBJECT
@@ -17,11 +17,17 @@ class Set : public QWidget
 
     int tp;//тип раскладки, используемой в данный момент
     bool active;
+    int activeCameras;
 
+    //QVector< QList<VideoWidget *>* > st;
+    QVector< QList<Camera *>* > stc;
+
+    VideoWidget *bigPlaying;
 
 public:
-    explicit Set() {}
-    Set(QString desc){set_description = desc; active = false;}
+    explicit Set();
+    Set(QString desc);
+    ~Set();
 
     QString description(){return set_description;}
     void addView(View* view);
@@ -31,23 +37,35 @@ public:
     QList<View *> views(){return viewList;}
 
     void setActiveView(int index);
-    void makeVideoWidgets();
-    void restoreState() {setLayouts(tp);}
-    void stopPlay();
+    void init();
+    void stopPlay(VideoWidget *excluding = NULL);
     bool isActive() {return active;}
     void setActive(bool act) {active = act;}
+    QList<Camera *> getActiveCameras();
 
+    void next();
+    void prev();
+    void reset();
+public slots:
+    void restoreState() {setLayouts(tp);}
+    void showBig(int num);
 signals:
+    void updateActiveCameras(QList<Camera*>);
 private:
     void setLayouts(int type);
-    void makeTwoSquare();//квадрат 4*4
+    void makeTwoSquare();//квадрат 2*2
     void makeFourSquareTripple();//квадрат 4*4 тройной
     void makeFourSquareOneCentral();//квадрат 4*4 двойной центральный
     void makeFiveSquareTwoOneTripple();//квадрат 5*5 два двойных один центральный
     void makeTrippleSquare();//квадрат 3*3
     void makeFourSquare();//квадрат 4*4
+
+    void countActiveAndPlay(int num);
+    void bigVideo(Camera *c);
+
 private slots:
     void updateActiveView();
+    void bigVideo(VideoWidget *v);
 
 };
 

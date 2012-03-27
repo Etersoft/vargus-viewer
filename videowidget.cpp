@@ -197,7 +197,7 @@ void VideoWidget::startDrag()
 void VideoWidget::mouseDoubleClickEvent ( QMouseEvent * event )
 {
     StatusClick =  DOUBLE_CLICK;
-    emit bigSizeCall();
+    emit bigSizeCall(this);
 }
 
 void VideoWidget::waitingDoubleClickTimeout()

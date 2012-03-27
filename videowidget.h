@@ -92,7 +92,7 @@ public slots:
     void waitingDoubleClickTimeout();
 signals:
     void arhiveCall();
-    void bigSizeCall();
+    void bigSizeCall(VideoWidget *);
 };
 
 #endif // VIDEOVIDGET_H

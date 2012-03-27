@@ -32,6 +32,7 @@ public:
     View();
     View(QString new_value);
     View(View* view);
+    ~View();
 
     void setDescription(QString new_value){view_description = new_value;}
     void setWidth(int new_value){view_width = new_value;}

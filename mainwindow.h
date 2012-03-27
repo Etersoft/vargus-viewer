@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QList>
+#include<QListWidget>
 
 #include <phonon/VideoPlayer>
 
@@ -27,6 +28,7 @@ class MainWindow : public QMainWindow
     QList<Camera *> camerasList;
     QList<Set *> setsList;
     QList<View *> viewsList;
+    QList<Camera *> currentCameras;
 
     QAction *exitAction;
     QAction *aboutAction;
@@ -42,10 +44,16 @@ private:
     QString readAnswer();
     void createActions();
     bool okToContinue();
+    void makeButtons();
 
 private slots:
     void onSetChanged(int num);
+    void changeActiveCameras(QList<Camera*> activeCameras);
     void about();
+    void nextGroup();
+    void prevGroup();
+    void resetGroup();
+    void makeBigVideo(QListWidgetItem*);
 protected:
     void closeEvent(QCloseEvent *);
 
