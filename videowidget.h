@@ -93,6 +93,7 @@ public slots:
 signals:
     void arhiveCall();
     void bigSizeCall(VideoWidget *);
+    void camerasChanged(Camera *first,Camera *second);
 };
 
 #endif // VIDEOVIDGET_H

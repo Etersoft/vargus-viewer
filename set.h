@@ -65,6 +65,7 @@ private:
 private slots:
     void updateActiveView();
     void bigVideo(VideoWidget *v);
+    void changeCameras(Camera *first,Camera *second);
 
 };
 

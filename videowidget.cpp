@@ -225,8 +225,8 @@ void VideoWidget::dropEvent(QDropEvent *de)
    this->stopPlay();
    this->setCamera(dragCamera);
    this->startPlay(SMALLVIDEO);
-
    startPlay(SMALLVIDEO);
+   emit camerasChanged(dragCamera,camera);
 }
 
 void VideoWidget::dragMoveEvent(QDragMoveEvent *de)

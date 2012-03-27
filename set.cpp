@@ -312,7 +312,11 @@ void Set::stopPlay(VideoWidget *excluding)
     while(it!=end)
     {
         if(*it != excluding)
-            delete (*it);
+        {
+            (*it)->stopPlay();
+            (*it)->hide();
+            //delete (*it);
+        }
         it++;
     }
     bigPlaying = NULL;
@@ -427,6 +431,35 @@ void Set::countActiveAndPlay(int num)
     while(it != end)
     {
         connect(*it,SIGNAL(bigSizeCall(VideoWidget*)),this,SLOT(bigVideo(VideoWidget*)));
+        connect(*it,SIGNAL(camerasChanged(Camera *,Camera *)),this,SLOT(changeCameras(Camera*,Camera*)));
         it++;
     }
+}
+
+void Set::changeCameras(Camera *first, Camera *second)
+{
+    QList<Camera *>::iterator it = stc.at(tp)->begin();
+    QList<Camera *>::iterator end = stc.at(tp)->end();
+    int f = 0;
+    int s = 0;
+    int i = 0;
+    while(it != end)
+    {
+        if(*it == first)
+        {
+            f = i++;
+            it++;
+            continue;
+        }
+        if(*it == second)
+        {
+            s = i++;
+            it++;
+            continue;
+        }
+        it++;
+        i++;
+    }
+    stc.at(tp)->swap(f,s);
+    emit updateActiveCameras(getActiveCameras());
 }
