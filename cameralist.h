@@ -10,6 +10,7 @@ class CameraList : public QListWidget
     Q_OBJECT
     QList<Camera *> currentCameras;
     QList<Camera *> activeCameras;
+    QPoint startPos;
 
 public:
     explicit CameraList(QWidget *parent = 0);
@@ -20,6 +21,8 @@ signals:
 
 protected:
     void startDrag();
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
     
 public slots:
     
