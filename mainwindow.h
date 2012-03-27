@@ -13,6 +13,7 @@
 #include <QAbstractSocket>
 #include<QMessageBox>
 #include<QCloseEvent>
+#include "cameralist.h"
 
 #define MAX_PLAYERS 16
 
@@ -32,6 +33,8 @@ class MainWindow : public QMainWindow
 
     QAction *exitAction;
     QAction *aboutAction;
+
+    CameraList *camList;
 
 public:
     explicit MainWindow(QWidget *parent = 0);

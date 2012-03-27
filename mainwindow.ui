@@ -144,22 +144,6 @@
         </item>
        </layout>
       </item>
-      <item>
-       <widget class="QListWidget" name="cameraList">
-        <property name="minimumSize">
-         <size>
-          <width>200</width>
-          <height>87</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>200</width>
-          <height>16777215</height>
-         </size>
-        </property>
-       </widget>
-      </item>
      </layout>
     </item>
    </layout>

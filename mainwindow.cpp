@@ -9,7 +9,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    camList = new CameraList(this);
+    ui->controlLayout->addWidget(camList);
     makeButtons();
+    camList->setMaximumWidth(ui->nextButton->width()*4);
     createActions();
     this->setWindowTitle(tr("VargusViewer"));
     // Обработка входных данных
@@ -36,7 +39,9 @@ MainWindow::MainWindow(QWidget *parent) :
     for(int i = 0; i < setsList.length(); i++)
         connect(setsList.at(i),SIGNAL(updateActiveCameras(QList<Camera*>)),this,SLOT(changeActiveCameras(QList<Camera*>)));
     changeActiveCameras(setsList.at(0)->getActiveCameras());
-    connect(ui->cameraList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(makeBigVideo(QListWidgetItem*)));
+
+
+    connect(camList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(makeBigVideo(QListWidgetItem*)));
 
 }
 
@@ -209,8 +214,6 @@ void MainWindow::onSetChanged(int num)
     }
     setsList.at(num)->setActive(true);
     setsList.at(num)->restoreState();
-    //changeActiveCameras(setsList.at(num)->getActiveCameras());
-
 }
 
 void MainWindow::createActions()
@@ -247,41 +250,13 @@ bool MainWindow::okToContinue()
 
 void MainWindow::changeActiveCameras(QList<Camera *> activeCameras)
 {
-    currentCameras.clear();
     for(int i = 0; i < setsList.length(); i++)
     {
         if(setsList.at(i)->isActive())
-            currentCameras = setsList.at(i)->cameras();
+            camList->setCurrentCameras(setsList.at(i)->cameras());
     }
-    QList<Camera *>::iterator it = currentCameras.begin();
-    QList<Camera *>::iterator end = currentCameras.end();
-    ui->cameraList->clear();
-    int camNum =1;
-    while(it != end)
-    {
-
-        ui->cameraList->addItem(QString::number(camNum++) + ". " + (*it)->description());
-        it++;
-    }
-    QList<Camera *>::iterator itac = activeCameras.begin();
-    QList<Camera *>::iterator endac = activeCameras.end();
-    while(itac != endac)
-    {
-        int cameraNum = 0;
-        it = currentCameras.begin();
-        while(it != end)
-        {
-            if((*itac) == (*it))
-            {
-                QColor color(0,255,255);
-                ui->cameraList->item(cameraNum)->setBackgroundColor(color);
-                break;
-            }
-            it++;
-            cameraNum++;
-        }
-        itac++;
-    }
+    camList ->setActiveCameras(activeCameras);
+    camList->print();
 }
 
 void MainWindow::makeButtons()
@@ -353,10 +328,10 @@ void MainWindow::makeBigVideo(QListWidgetItem * item)
         }
         it++;
     }
-    int amount = ui->cameraList->count();
+    int amount = camList->count();
     for(int i =0; i < amount; i++)
     {
-        if(item == ui->cameraList->item(i))
+        if(item == camList->item(i))
         {
             activeSet->showBig(i);
             break;

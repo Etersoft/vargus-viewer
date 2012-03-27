@@ -19,8 +19,7 @@ class Set : public QWidget
     bool active;
     int activeCameras;
 
-    //QVector< QList<VideoWidget *>* > st;
-    QVector< QList<Camera *>* > stc;
+    QVector< QList<Camera *>* > stc;//расположение камер(виджетов) под каждый view
 
     VideoWidget *bigPlaying;
 

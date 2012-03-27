@@ -17,6 +17,7 @@ Set::Set(QString desc)
     set_description = desc;
     active = false;
     bigPlaying = NULL;
+
 }
 Set::~Set()
 {
@@ -101,7 +102,8 @@ void Set::updateActiveView()
 void Set::makeTwoSquare()
 {
     QGridLayout *grid = new QGridLayout(this);
-    grid->setSpacing(0);
+    grid->setMargin(0);
+    //grid->setSpacing(0);
     setLayout(grid);
     for( int i =0; i < 2; i++)
     {
@@ -118,6 +120,7 @@ void Set::makeTwoSquare()
 void Set::makeFourSquareTripple()
 {
     QGridLayout *grid = new QGridLayout(this);
+    grid->setMargin(0);
     setLayout(grid);
 
     VideoWidget *v = new VideoWidget();
@@ -145,6 +148,7 @@ void Set::makeFourSquareTripple()
 void Set::makeFourSquareOneCentral()
 {
     QGridLayout *grid = new QGridLayout(this);
+    grid->setMargin(0);
     setLayout(grid);
     for(int i = 0; i < 4; i++)
     {
@@ -185,6 +189,7 @@ void Set::makeFourSquareOneCentral()
 void Set::makeFiveSquareTwoOneTripple()
 {
     QGridLayout *grid  = new QGridLayout(this);
+    grid->setMargin(0);
     setLayout(grid);
     VideoWidget *v = new VideoWidget();
     videoList << v;
@@ -216,7 +221,7 @@ void Set::makeFiveSquareTwoOneTripple()
 void Set::makeTrippleSquare()
 {
     QGridLayout *grid  = new QGridLayout(this);
-    grid->setSpacing(0.5);
+    grid->setMargin(0);
     setLayout(grid);
     for(int i = 0; i < 3; i++)
         for( int j = 0; j < 3; j++)
@@ -231,6 +236,7 @@ void Set::makeTrippleSquare()
 void Set::makeFourSquare()
 {
     QGridLayout *grid = new QGridLayout(this);
+    grid->setMargin(0);
     setLayout(grid);
     for(int i = 0; i < 8; i++)
     {
