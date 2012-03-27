@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QFile>
 #include "../videowidget.h"
+#include "../camera.h"
+
 namespace Ui {
     class MainWindow;
 }
@@ -31,6 +33,8 @@ public slots:
     void openArhive();
     void time2AddString();
     void showBigSize();
+private slots:
+    void on_pushButton_clicked();
 };
 
 #endif // MAINWINDOW_H

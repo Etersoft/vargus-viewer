@@ -17,31 +17,27 @@
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>30</x>
+      <x>220</x>
       <y>20</y>
-      <width>291</width>
+      <width>111</width>
       <height>211</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout"/>
-   </widget>
-   <widget class="QWidget" name="gridLayoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>340</x>
-      <y>20</y>
-      <width>291</width>
-      <height>211</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_2"/>
+    <layout class="QGridLayout" name="gridLayout">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetNoConstraint</enum>
+     </property>
+     <property name="spacing">
+      <number>0</number>
+     </property>
+    </layout>
    </widget>
    <widget class="QWidget" name="gridLayoutWidget_3">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>250</y>
-      <width>291</width>
+      <x>100</x>
+      <y>230</y>
+      <width>231</width>
       <height>211</height>
      </rect>
     </property>
@@ -50,32 +46,76 @@
    <widget class="QWidget" name="gridLayoutWidget_4">
     <property name="geometry">
      <rect>
-      <x>340</x>
-      <y>250</y>
-      <width>291</width>
+      <x>330</x>
+      <y>230</y>
+      <width>231</width>
       <height>211</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout_4"/>
+    <layout class="QGridLayout" name="gridLayout_4">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetNoConstraint</enum>
+     </property>
+     <property name="spacing">
+      <number>0</number>
+     </property>
+    </layout>
    </widget>
    <widget class="DragTextEdit" name="lineEdit">
     <property name="geometry">
      <rect>
       <x>340</x>
-      <y>470</y>
+      <y>480</y>
       <width>171</width>
       <height>21</height>
      </rect>
+    </property>
+    <property name="frame">
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="DragTextEdit" name="lineEdit_2">
     <property name="geometry">
      <rect>
       <x>340</x>
-      <y>490</y>
+      <y>510</y>
       <width>171</width>
       <height>21</height>
      </rect>
+    </property>
+    <property name="frame">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QWidget" name="gridLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>20</y>
+      <width>111</width>
+      <height>211</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetNoConstraint</enum>
+     </property>
+     <property name="spacing">
+      <number>0</number>
+     </property>
+    </layout>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>480</y>
+      <width>91</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>delete widget</string>
     </property>
    </widget>
   </widget>

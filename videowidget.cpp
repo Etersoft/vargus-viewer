@@ -64,18 +64,23 @@ QString LimitLine::AddStringGetLine(QString string)
 
 VideoWidget::VideoWidget(): QWidget()
 {
+
     const char * const vlc_args[] = {
               "-I", "dummy", /* Don't use any interface */
               "--ignore-config", /* Don't use VLC's config */
-              "--extraintf=logger", //log anything
-              "--verbose=2", //be much more verbose then normal for debugging purpose
-             "" }; /* "--no-video-title-show"*/
+              "--no-audio", /* Audio off */
+#ifdef QT_DEBUG
+              "--extraintf=logger", /* log anything */
+              "--verbose=2", /* be much more verbose then normal for debugging purpose */
+#endif
+             "" }; /* "--no-video-title-show" */
 
 
     isPlaying=false;
     frame=new QFrame(this);
 
-    QVBoxLayout *layout = new QVBoxLayout;
+    QVBoxLayout* layout = new QVBoxLayout;
+    layout->setContentsMargins(0,0,0,0);
     layout->addWidget(frame);
     setLayout(layout);
 
@@ -105,38 +110,29 @@ VideoWidget::VideoWidget(): QWidget()
 
 VideoWidget::~VideoWidget()
 {
-/*
-    libvlc_media_player_stop (vlcPlayer);
-
-    libvlc_media_release(vlcMedia);
     libvlc_media_player_release (vlcPlayer);
-    libvlc_release (vlcInstance);
-    */
+    libvlc_media_release(vlcMedia);
 }
 
-void VideoWidget::setUrlVideoStream(QUrl urlStream, sizeVideo size)
+void  VideoWidget::staticDestructor()
 {
-    switch(size)
-    {
-        case BIGVIDEO:
-            urlBigVideoStream = urlStream;
-            break;
-        case SMALLVIDEO:
-            urlSmallVideoStream = urlStream;
-            break;
-    }
+    libvlc_release(vlcInstance);
 }
 
+void VideoWidget::setCamera(Camera* _camera)
+{
+    camera = _camera;
+}
 
 void VideoWidget::startPlay(sizeVideo size)
 {
     switch(size)
     {
         case BIGVIDEO:
-            vlcMedia = libvlc_media_new_path(vlcInstance, urlBigVideoStream.toString().toAscii());
+            vlcMedia = libvlc_media_new_path(vlcInstance, camera->source().toAscii());
             break;
         case SMALLVIDEO:
-            vlcMedia = libvlc_media_new_path(vlcInstance, urlSmallVideoStream.toString().toAscii());
+            vlcMedia = libvlc_media_new_path(vlcInstance, camera->preview().toAscii());
             break;
     }
 
@@ -187,13 +183,11 @@ void VideoWidget::startDrag()
 {
     QDrag* drag = new QDrag(this);
     // The data to be transferred by the drag and drop operation is contained in a QMimeData object
-    QList<QUrl> *urls= new QList<QUrl>;
-    urls->append(urlBigVideoStream);
-    urls->append(urlSmallVideoStream);
 
     QMimeData *data = new QMimeData;
-    data->setUserData(0,(QObjectUserData*)this);
-    data->setUrls(*urls);
+    data->setUserData(0,(QObjectUserData*)camera);
+    data->setUserData(1,(QObjectUserData*)this);
+
     // Assign ownership of the QMimeData object to the QDrag object.
     drag->setMimeData(data);
     // Start the drag and drop operation
@@ -217,23 +211,20 @@ void VideoWidget::waitingDoubleClickTimeout()
 
 void VideoWidget::dropEvent(QDropEvent *de)
 {
-   stopPlay();
-   QList<QUrl> urls;
-
-   if(!de->mimeData()->hasUrls())
-        return;
-   urls = de->mimeData()->urls();
-   if(urls.count() != 2)
-        return;
-   urlBigVideoStream = urls.takeAt(0);
-   urlSmallVideoStream = urls.takeAt(0);
-
    VideoWidget* dragVideoWindet;
-   dragVideoWindet = (VideoWidget*)de->mimeData()->userData(0);
+   dragVideoWindet = (VideoWidget*)de->mimeData()->userData(1);
    if(dragVideoWindet)
    {
         dragVideoWindet->stopPlay();
+        dragVideoWindet->setCamera(camera);
+        dragVideoWindet->startPlay(SMALLVIDEO);
    }
+
+   Camera *dragCamera;
+   dragCamera = (Camera*)de->mimeData()->userData(0);
+   this->stopPlay();
+   this->setCamera(dragCamera);
+   this->startPlay(SMALLVIDEO);
 
    startPlay(SMALLVIDEO);
 }

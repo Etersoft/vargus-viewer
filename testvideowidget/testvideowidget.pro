@@ -14,11 +14,13 @@ LIBS += -L/usr/lib64/libvlc/
 SOURCES += main.cpp\
         mainwindow.cpp \
     ../videowidget.cpp \
-    dragtextedit.cpp
+    dragtextedit.cpp \
+    ../camera.cpp
 
 HEADERS  += mainwindow.h \
     ../videowidget.h \
-    dragtextedit.h
+    dragtextedit.h \
+    ../camera.h
 
 unix|win32: LIBS += -lvlc
 

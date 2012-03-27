@@ -395,7 +395,7 @@ void Set::bigVideo(Camera *c)
     QGridLayout *grid  = new QGridLayout(this);
     setLayout(grid);
     VideoWidget *v = new VideoWidget();
-    v->setUrlVideoStream(c->source(),VideoWidget::BIGVIDEO);
+	v->setCamera(c);
     connect(v,SIGNAL(bigSizeCall(VideoWidget*)),this,SLOT(bigVideo(VideoWidget*)));
     grid->addWidget(v,0,0);
     v->startPlay(VideoWidget::BIGVIDEO);
@@ -419,8 +419,7 @@ void Set::countActiveAndPlay(int num)
         activeCameras = cameraList.length();
     for(int i =  0; i < activeCameras; i++)
     {
-        videoList.at(i)->setUrlVideoStream(stc.at(tp)->at(i)->preview(), VideoWidget::SMALLVIDEO);
-        videoList.at(i)->setUrlVideoStream(stc.at(tp)->at(i)->source(), VideoWidget::BIGVIDEO);
+		videoList.at(i)->setCamera(stc.at(tp)->at(i));
         videoList.at(i)->startPlay(VideoWidget::SMALLVIDEO);
     }
     QList<VideoWidget *>::iterator it = videoList.begin();

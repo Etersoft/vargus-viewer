@@ -7,6 +7,7 @@
 #include <QMenu>
 
 #include <vlc/vlc.h>
+#include "camera.h"
 
 class QFrame;
 
@@ -51,8 +52,7 @@ class VideoWidget: public QWidget
     libvlc_media_player_t *vlcPlayer;
     libvlc_media_t *vlcMedia;
 
-    QUrl urlBigVideoStream;
-    QUrl urlSmallVideoStream;
+    Camera *camera;
 
     QMenu* contextMenu;
     QAction *arhiveCallAction;
@@ -66,10 +66,11 @@ class VideoWidget: public QWidget
 public:
     VideoWidget();
     ~VideoWidget();
+    static void staticDestructor();
+
+    void setCamera(Camera *_camera);
 
     enum sizeVideo {BIGVIDEO, SMALLVIDEO};
-    void setUrlVideoStream(QUrl urlStream, sizeVideo size);
-
     void startPlay(sizeVideo size);
     void stopPlay();
     void writeTextString(QString string);
