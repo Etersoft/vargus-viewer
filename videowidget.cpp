@@ -94,6 +94,8 @@ VideoWidget::VideoWidget(): QWidget()
     {
         runningTextSetting = new RunningTextSettings();
     }
+    vlcMedia = NULL;
+    camera = NULL;
 
     runningText = new LimitLine(runningTextSetting->limitLine) ;
 
@@ -111,7 +113,8 @@ VideoWidget::VideoWidget(): QWidget()
 VideoWidget::~VideoWidget()
 {
     libvlc_media_player_release (vlcPlayer);
-    libvlc_media_release(vlcMedia);
+    if(vlcMedia)
+        libvlc_media_release(vlcMedia);
 }
 
 void  VideoWidget::staticDestructor()
@@ -126,6 +129,8 @@ void VideoWidget::setCamera(Camera* _camera)
 
 void VideoWidget::startPlay(sizeVideo size)
 {
+    if(camera == NULL)
+           return;
     switch(size)
     {
         case BIGVIDEO:
@@ -213,20 +218,20 @@ void VideoWidget::dropEvent(QDropEvent *de)
 {
    VideoWidget* dragVideoWindet;
    dragVideoWindet = (VideoWidget*)de->mimeData()->userData(1);
+   Camera *dragCamera;
+   dragCamera = (Camera*)de->mimeData()->userData(0);
    if(dragVideoWindet)
    {
         dragVideoWindet->stopPlay();
         dragVideoWindet->setCamera(camera);
         dragVideoWindet->startPlay(SMALLVIDEO);
    }
-
-   Camera *dragCamera;
-   dragCamera = (Camera*)de->mimeData()->userData(0);
+   Camera *firstCam = camera;
    this->stopPlay();
-   this->setCamera(dragCamera);
+   camera = dragCamera;
    this->startPlay(SMALLVIDEO);
    startPlay(SMALLVIDEO);
-   emit camerasChanged(dragCamera,camera);
+   emit camerasChanged(firstCam,dragCamera);
 }
 
 void VideoWidget::dragMoveEvent(QDragMoveEvent *de)

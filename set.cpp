@@ -313,9 +313,7 @@ void Set::stopPlay(VideoWidget *excluding)
     {
         if(*it != excluding)
         {
-            (*it)->stopPlay();
-            (*it)->hide();
-            //delete (*it);
+            delete (*it);
         }
         it++;
     }
