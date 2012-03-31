@@ -75,6 +75,7 @@ public:
     void stopPlay();
     void writeTextString(QString string);
     void disableTextString();
+    Camera * getCamera() { return camera; }
 
 protected:
     void mousePressEvent ( QMouseEvent * e );
@@ -93,7 +94,7 @@ public slots:
 signals:
     void arhiveCall();
     void bigSizeCall(VideoWidget *);
-    void camerasChanged(Camera *first,Camera *second);
+    void camerasChanged(VideoWidget *,Camera *second, bool fromAnotherWidget);
 };
 
 #endif // VIDEOVIDGET_H

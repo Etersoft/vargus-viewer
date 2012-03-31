@@ -387,16 +387,17 @@ void Set::bigVideo(VideoWidget *v)
         setLayouts(tp);
         return;
     }
+    QList<Camera *> res;
+    res << cameraList.at(videoList.indexOf(v));
     stopPlay(v);
     delete layout();
     QGridLayout *grid  = new QGridLayout(this);
     setLayout(grid);
+    grid->setMargin(0);
     grid->addWidget(v,0,0);
     v->startPlay(VideoWidget::BIGVIDEO);
     v->show();
     bigPlaying = v;
-    QList<Camera *> res;
-    res << cameraList.at(videoList.indexOf(v));
     emit updateActiveCameras(res);
 }
 
@@ -444,31 +445,32 @@ void Set::countActiveAndPlay(int num)
     while(it != end)
     {
         connect(*it,SIGNAL(bigSizeCall(VideoWidget*)),this,SLOT(bigVideo(VideoWidget*)));
-        connect(*it,SIGNAL(camerasChanged(Camera *,Camera *)),this,SLOT(changeCameras(Camera*,Camera*)));
+        connect(*it,SIGNAL(camerasChanged(VideoWidget *,Camera *,bool)),this,SLOT(changeCameras(VideoWidget*,Camera*,bool)));
         it++;
     }
 }
 
-void Set::changeCameras(Camera *first, Camera *second)
+void Set::changeCameras(VideoWidget *first, Camera *second, bool fromAnotherWidget)
 {
+    if(!fromAnotherWidget)
+    {
+        int f = videoList.indexOf(first);
+        stc.at(tp)->removeAt(f);
+        stc.at(tp)->insert(f,second);
+        emit updateActiveCameras(getActiveCameras());
+        return;
+    }
     QList<Camera *>::iterator it = stc.at(tp)->begin();
     QList<Camera *>::iterator end = stc.at(tp)->end();
-    int f = 0;
+    int f = videoList.indexOf(first);
     int s = 0;
     int i = 0;
     while(it != end)
     {
-        if(*it == first)
-        {
-            f = i++;
-            it++;
-            continue;
-        }
         if(*it == second)
         {
-            s = i++;
-            it++;
-            continue;
+            s = i;
+            break;
         }
         it++;
         i++;

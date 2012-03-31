@@ -40,7 +40,7 @@ public:
     void init();
     void stopPlay(VideoWidget *excluding = NULL);
     bool isActive() {return active;}
-    void setActive(bool act) {active = act;}
+    void setActive(bool act) {active = act; if(!active) lastCamNum[tp] = -1;}
     QList<Camera *> getActiveCameras();
 
     void next();
@@ -67,7 +67,7 @@ private:
 private slots:
     void updateActiveView();
     void bigVideo(VideoWidget *v);
-    void changeCameras(Camera *first,Camera *second);
+    void changeCameras(VideoWidget *first,Camera *second, bool fromAnotherWidget);
 
 };
 

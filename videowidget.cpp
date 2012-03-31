@@ -217,6 +217,7 @@ void VideoWidget::waitingDoubleClickTimeout()
 void VideoWidget::dropEvent(QDropEvent *de)
 {
    VideoWidget* dragVideoWindet;
+   bool fromAnotherWidget = false;
    dragVideoWindet = (VideoWidget*)de->mimeData()->userData(1);
    Camera *dragCamera;
    dragCamera = (Camera*)de->mimeData()->userData(0);
@@ -225,12 +226,12 @@ void VideoWidget::dropEvent(QDropEvent *de)
         dragVideoWindet->stopPlay();
         dragVideoWindet->setCamera(camera);
         dragVideoWindet->startPlay(SMALLVIDEO);
+        fromAnotherWidget = true;
    }
-   Camera *firstCam = camera;
    stopPlay();
    camera = dragCamera;
    startPlay(SMALLVIDEO);
-   emit camerasChanged(firstCam,dragCamera);
+   emit camerasChanged(this, dragCamera, fromAnotherWidget);
 }
 
 void VideoWidget::dragMoveEvent(QDragMoveEvent *de)
