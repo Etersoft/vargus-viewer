@@ -53,7 +53,8 @@ void CameraList::startDrag()
     // The data to be transferred by the drag and drop operation is contained in a QMimeData object
     QMimeData *data = new QMimeData;
     int r = currentRow();
-    data->setUserData(0,(QObjectUserData*)currentCameras.at(r));
+    Camera * c = currentCameras.at(r);
+    data->setUserData(0,(QObjectUserData*)c);
     //Assign ownership of the QMimeData object to the QDrag object.
     drag->setMimeData(data);
     // Start the drag and drop operation
