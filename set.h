@@ -18,6 +18,7 @@ class Set : public QWidget
     int tp;//тип раскладки, используемой в данный момент
     bool active;
     int activeCameras;
+    int* lastCamNum;
 
     QVector< QList<Camera *>* > stc;//расположение камер(виджетов) под каждый view
 
@@ -61,6 +62,7 @@ private:
 
     void countActiveAndPlay(int num);
     void bigVideo(Camera *c);
+    int amountOfCells(int tp);
 
 private slots:
     void updateActiveView();

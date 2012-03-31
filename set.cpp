@@ -2,13 +2,13 @@
 #include <QStringList>
 #include<QGridLayout>
 #include<QListIterator>
-#include<QMessageBox>
 
 Set::Set()
 {
     activeCameras = tp = 0;
     active = false;
     bigPlaying = NULL;
+    lastCamNum = NULL;
 }
 
 Set::Set(QString desc)
@@ -17,6 +17,7 @@ Set::Set(QString desc)
     set_description = desc;
     active = false;
     bigPlaying = NULL;
+    lastCamNum = NULL;
 
 }
 Set::~Set()
@@ -46,6 +47,8 @@ Set::~Set()
     {
         delete stc[i];
     }
+    if(lastCamNum != NULL)
+       delete lastCamNum;
 }
 
 void Set::addCamera(Camera* cam)
@@ -103,7 +106,6 @@ void Set::makeTwoSquare()
 {
     QGridLayout *grid = new QGridLayout(this);
     grid->setMargin(0);
-    //grid->setSpacing(0);
     setLayout(grid);
     for( int i =0; i < 2; i++)
     {
@@ -298,11 +300,14 @@ void Set::setLayouts(int type)
 
 void Set::init()
 {
+    lastCamNum = new int[viewList.length()];
     for(int i = 0; i < viewList.length(); i++)
     {
         QList<Camera *>* tmpc = new QList<Camera *>(cameraList);
         stc << tmpc;
+        lastCamNum[i] = -1;
     }
+
 }
 
 void Set::stopPlay(VideoWidget *excluding)
@@ -334,27 +339,31 @@ QList<Camera*> Set::getActiveCameras()
 
 void Set::next()
 {
-    if(activeCameras >= stc.at(tp)->length())
-        return;
-    for(int i = 0; i < activeCameras; i++)
+    if(amountOfCells(tp) >= stc.at(tp)->length() || lastCamNum[tp] == cameraList.length() - 1)
+            return;
+    stc.at(tp)->clear();
+    for(int i = lastCamNum[tp]+1; i < cameraList.length(); i++)
     {
-        stc.at(tp)->move(0,stc.at(tp)->length()-1);
+        stc.at(tp)->push_back(cameraList.at(i));
+    }
+    for(int i = 0; i <= lastCamNum[tp]; i++)
+    {
+        stc.at(tp)->push_back(cameraList.at(i));
     }
     setLayouts(tp);
     emit updateActiveCameras(getActiveCameras());
+
 }
 
 void Set::prev()
 {
-    if(activeCameras >= stc.at(tp)->length())
+    int number = amountOfCells(tp);
+    if(number >= stc.at(tp)->length() || lastCamNum[tp] == activeCameras - 1)
         return;
-    for(int i = 0; i < activeCameras; i++)
-    {
-        stc.at(tp)->move(stc.at(tp)->length()-1,0);
-    }
-    setLayouts(tp);
-    emit updateActiveCameras(getActiveCameras());
-
+    lastCamNum[tp] = lastCamNum[tp]-number*2;
+    if(lastCamNum[tp] < -1)
+        lastCamNum[tp] = -1;
+    next();
 }
 
 void Set::reset()
@@ -367,6 +376,7 @@ void Set::reset()
        stc.at(tp)->push_back(*itc);
        itc++;
     }
+    lastCamNum[tp] = -1;
     setLayouts(tp);
 }
 
@@ -419,6 +429,11 @@ void Set::countActiveAndPlay(int num)
         activeCameras = num;
     else
         activeCameras = cameraList.length();
+    int tmp = lastCamNum[tp];
+    lastCamNum[tp] = (lastCamNum[tp] + activeCameras);
+    if(lastCamNum[tp] >= cameraList.length())
+        lastCamNum[tp] =cameraList.length()-1;
+    activeCameras = lastCamNum[tp] - tmp;
     for(int i =  0; i < activeCameras; i++)
     {
 		videoList.at(i)->setCamera(stc.at(tp)->at(i));
@@ -460,4 +475,37 @@ void Set::changeCameras(Camera *first, Camera *second)
     }
     stc.at(tp)->swap(f,s);
     emit updateActiveCameras(getActiveCameras());
+}
+
+int Set::amountOfCells(int tp)
+{
+    switch(tp)
+    {
+        case(0):
+        {
+            return 4;
+        }
+        case(1):
+        {
+            return 6;
+        }
+        case(2):
+        {
+            return 13;
+        }
+        case(3):
+        {
+            return 11;
+        }
+       case(4):
+        {
+            return 9;
+        }
+        case(5):
+        {
+            return 48;
+        }
+
+    }
+    return 0;
 }
