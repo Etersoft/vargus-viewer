@@ -3,15 +3,20 @@
 #include <QFile>
 #include <QList>
 #include<QListIterator>
+Logger &log = Logger::instance();
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    log.openLogFile("log.txt");
+    log.writeToFile("PROGRAM STARTED");
     ui->setupUi(this);
     camList = new CameraList(this);
     ui->controlLayout->addWidget(camList);
     makeButtons();
+    log.writeToFile("Made buttons");
+
     camList->setMaximumWidth(ui->nextButton->width()*4);
     createActions();
     this->setWindowTitle(tr("VargusViewer"));
@@ -19,34 +24,22 @@ MainWindow::MainWindow(QWidget *parent) :
     initData();
 
     // Заполнение вкладок-сетов
-    for(int i = 0; i < setsList.count(); i ++)
-    {
-        Set *set = setsList.at(i);
-        for(int j = 0; j < viewsList.count(); j ++)
-        {
-            set->addView(viewsList.at(j));
-        }
-        set->setActiveView(0);
-        ui->tabWidget->addTab(set, set->description());
-    }
+    makeSets();
 
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(onSetChanged(int)));
 
     ui->tabWidget->setCurrentIndex(0);
-    for(int i = 0; i < setsList.length(); i++)
-        setsList.at(i)->init();
     onSetChanged(0);
     for(int i = 0; i < setsList.length(); i++)
         connect(setsList.at(i),SIGNAL(updateActiveCameras(QList<Camera*>)),this,SLOT(changeActiveCameras(QList<Camera*>)));
     changeActiveCameras(setsList.at(0)->getActiveCameras());
-
-
     connect(camList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(makeBigVideo(QListWidgetItem*)));
 
 }
 
 void MainWindow::initData()
 {
+    log.writeToFile("Reading .cfg file");
     // Чтение конфигурационного файла
     QFile configFile("vargus.cfg");
     if(!configFile.open(QIODevice::ReadOnly))
@@ -75,14 +68,17 @@ void MainWindow::initData()
         confString = configFile.readLine();
     }
     configFile.close();
+    log.writeToFile(".cfg file is read");
 
     // Сеанс связи с сервером
+    log.writeToFile("Server conection started");
     socket = new QAbstractSocket(QAbstractSocket::TcpSocket, this);
     socket->connectToHost(server, port);
     if(!socket->waitForConnected(5000))
         QMessageBox::critical(NULL, tr("Error"), tr("Cannot connect to server"));
 
     // Инициализация камер
+    log.writeToFile("Cameras initialization started");
     socket->write("query camera;quantity\n");
     int cameras = readAnswer().trimmed().toInt();
     for(int i = 0; i < cameras; i++)
@@ -98,9 +94,11 @@ void MainWindow::initData()
         socket->write(QString("query camera;" + QString::number(i+1) + ";agent\n").toAscii());
         camerasList.at(i)->setAgent(readAnswer().trimmed());
     }
+    log.writeToFile("Cameras initialization ended");
 
 
     // Инициализация сетов
+    log.writeToFile("Sets initialization started");
     socket->write("query set;quantity\n");
     int sets = readAnswer().trimmed().toInt();
     ui->tabWidget->clear();
@@ -120,8 +118,9 @@ void MainWindow::initData()
                 }
             }
     }
-
+    log.writeToFile("Sets initialization ended");
     // Инициализация раскладок
+    log.writeToFile("Views initialization started");
     socket->write("query view;quantity\n");
     int views = readAnswer().trimmed().toInt();
     for(int i = 0; i < views; i++)
@@ -138,13 +137,14 @@ void MainWindow::initData()
         viewsList.at(i)->setTripleFrames(readAnswer().trimmed().split(','));
         socket->write(QString("query view;" + QString::number(i+1) + ";geometry:quadruple\n").toAscii());
         viewsList.at(i)->setQuadrupleFrames(readAnswer().trimmed().split(','));
-
         viewsList.at(i)->createIcons();
     }
+    log.writeToFile("Views initialization ended");
 
     socket->write("exit\n");
     socket->disconnect();
     delete socket;
+    log.writeToFile("Connection closed. Initialization ended");
 }
 
 QString MainWindow::readAnswer()
@@ -188,6 +188,8 @@ MainWindow::~MainWindow()
     }
     delete exitAction;
     delete aboutAction;
+    log.writeToFile("PROGRAM ENDED");
+    log.closeFile();
 }
 
 void MainWindow::onSetChanged(int num)
@@ -337,4 +339,20 @@ void MainWindow::makeBigVideo(QListWidgetItem * item)
             break;
         }
     }
+}
+
+void MainWindow::makeSets()
+{
+    for(int i = 0; i < setsList.count(); i ++)
+    {
+        Set *set = setsList.at(i);
+        for(int j = 0; j < viewsList.count(); j ++)
+        {
+            set->addView(viewsList.at(j));
+        }
+        set->setActiveView(0);
+        ui->tabWidget->addTab(set, set->description());
+    }
+    for(int i = 0; i < setsList.length(); i++)
+        setsList.at(i)->init();
 }

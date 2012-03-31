@@ -19,14 +19,16 @@ SOURCES += main.cpp\
     set.cpp \
     view.cpp \
     videowidget.cpp \
-    cameralist.cpp
+    cameralist.cpp \
+    logger.cpp
 
 HEADERS  += mainwindow.h \
     set.h \
     view.h \
     videowidget.h \
     camera.h \
-    cameralist.h
+    cameralist.h \
+    logger.h
 
 FORMS    += mainwindow.ui
 

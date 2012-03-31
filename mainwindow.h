@@ -14,6 +14,7 @@
 #include<QMessageBox>
 #include<QCloseEvent>
 #include "cameralist.h"
+#include "logger.h"
 
 #define MAX_PLAYERS 16
 
@@ -48,6 +49,7 @@ private:
     void createActions();
     bool okToContinue();
     void makeButtons();
+    void makeSets();
 
 private slots:
     void onSetChanged(int num);
