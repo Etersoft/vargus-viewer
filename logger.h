@@ -6,12 +6,14 @@ class Logger
 {
 public:
     static Logger& instance();
+    bool makeLogFile();
     bool openLogFile(const QString &filename);
     bool writeToFile(const QString &text);
     void closeFile();
+    QString getFileName();
 private:
     static Logger* myInstance;
-    Logger(){}
+    Logger(){ file = NULL;}
     Logger& operator=(Logger const&);
     Logger(Logger const&);
     QFile *file;

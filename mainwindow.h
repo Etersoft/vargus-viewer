@@ -34,6 +34,7 @@ class MainWindow : public QMainWindow
 
     QAction *exitAction;
     QAction *aboutAction;
+    QAction *delLogFilesAction;
 
     CameraList *camList;
 
@@ -50,6 +51,9 @@ private:
     bool okToContinue();
     void makeButtons();
     void makeSets();
+    void initCameras();
+    void initSets();
+    void initViews();
 
 private slots:
     void onSetChanged(int num);
@@ -59,6 +63,7 @@ private slots:
     void prevGroup();
     void resetGroup();
     void makeBigVideo(QListWidgetItem*);
+    void deleteLogFiles();
 protected:
     void closeEvent(QCloseEvent *);
 

@@ -1,8 +1,9 @@
 #include "set.h"
+#include"logger.h"
 #include <QStringList>
 #include<QGridLayout>
 #include<QListIterator>
-
+extern Logger &log;
 Set::Set()
 {
     activeCameras = tp = 0;
@@ -457,6 +458,7 @@ void Set::changeCameras(VideoWidget *first, Camera *second, bool fromAnotherWidg
         int f = videoList.indexOf(first);
         stc.at(tp)->removeAt(f);
         stc.at(tp)->insert(f,second);
+        log.writeToFile("Change camera in widget " + QString::number(f) + " to " + second->description());
         emit updateActiveCameras(getActiveCameras());
         return;
     }
@@ -475,6 +477,7 @@ void Set::changeCameras(VideoWidget *first, Camera *second, bool fromAnotherWidg
         it++;
         i++;
     }
+    log.writeToFile("Swap widgets " + QString::number(f) + " " + QString::number(s));
     stc.at(tp)->swap(f,s);
     emit updateActiveCameras(getActiveCameras());
 }

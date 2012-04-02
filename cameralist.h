@@ -17,6 +17,7 @@ public:
     void setActiveCameras(QList<Camera *> cams) { activeCameras = cams; }
     void setCurrentCameras(QList<Camera *> cams) { currentCameras = cams; }
     void print();
+    Camera * getCamera(int num) { return currentCameras.at(num); }
 signals:
 
 protected:
