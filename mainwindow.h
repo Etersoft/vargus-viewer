@@ -36,6 +36,9 @@ class MainWindow : public QMainWindow
     QAction *aboutAction;
     QAction *delLogFilesAction;
 
+    QMenu *fileMenu;
+    QMenu *helpMenu;
+
     CameraList *camList;
 
 public:
@@ -47,6 +50,7 @@ private:
 
     void initData();
     QString readAnswer();
+    void createMenus();
     void createActions();
     bool okToContinue();
     void makeButtons();

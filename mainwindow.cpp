@@ -19,12 +19,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     log.writeToFile("PROGRAM STARTED");
     ui->setupUi(this);
+    createMenus();
+    makeButtons();
+    createActions();
     camList = new CameraList(this);
     ui->controlLayout->addWidget(camList);
-    makeButtons();
     camList->setMaximumWidth(ui->nextButton->width()*4);
-    createActions();
-    this->setWindowTitle(tr("VargusViewer"));
+    setWindowTitle(tr("VargusViewer"));
     // Обработка входных данных
     initData();
 
@@ -135,6 +136,10 @@ MainWindow::~MainWindow()
         itv++;
     }
     delete delLogFilesAction;
+    delete exitAction;
+    delete aboutAction;
+    delete fileMenu;
+    delete helpMenu;
     log.writeToFile("PROGRAM ENDED");
     log.closeFile();
 }
@@ -168,19 +173,23 @@ void MainWindow::onSetChanged(int num)
 
 void MainWindow::createActions()
 {
-    //exitAction = new QAction(tr("&Exit"),this);
-    connect(ui->actionExit,SIGNAL(triggered()),this,SLOT(close()));
-
-    //aboutAction = new QAction(tr("&About"),this);
-    connect(ui->actionAbout,SIGNAL(triggered()),this,SLOT(about()));
-
     delLogFilesAction = new QAction(tr("&Удалить log файлы"),this);
-    ui->menu->addAction(delLogFilesAction);
+    fileMenu->addAction(delLogFilesAction);
     connect(delLogFilesAction,SIGNAL(triggered()),this,SLOT(deleteLogFiles()));
+
+    fileMenu->addSeparator();
+    exitAction = new QAction(tr("&Exit"),this);
+    fileMenu->addAction(exitAction);
+    connect(exitAction,SIGNAL(triggered()),this,SLOT(close()));
+
+    aboutAction = new QAction(tr("&О программе"),this);
+    helpMenu->addAction(aboutAction);
+    connect(aboutAction,SIGNAL(triggered()),this,SLOT(about()));
 }
 
 void MainWindow::about()
 {
+    log.writeToFile("Action about clicked");
     QMessageBox::about(this, tr("О программе"),
              tr("<h2>VargusViewer</h2><p>Etersoft"));
 
@@ -417,6 +426,7 @@ void MainWindow::initViews()
 
 void MainWindow::deleteLogFiles()
 {
+    log.writeToFile("Action delete other log files clicked");
     QDir d(".");
     d.cd("logs");
     QStringList l;
@@ -432,4 +442,12 @@ void MainWindow::deleteLogFiles()
             QFile::remove(tmp);
         it++;
     }
+}
+
+void MainWindow::createMenus()
+{
+    fileMenu = new QMenu(tr("&Файл"),this);
+    menuBar()->addMenu(fileMenu);
+    helpMenu = new QMenu(tr("Помощь"),this);
+    menuBar() -> addMenu(helpMenu);
 }
