@@ -202,7 +202,7 @@ void MainWindow::about()
 {
     log.writeToFile("Action about clicked");
     QMessageBox::about(this, tr("О программе"),
-             tr("<h2>VargusViewer</h2><p>Etersoft"));
+             tr("<h2>VargusViewer</h2><p>Etersoft 2012</p>"));
 
 }
 
@@ -487,7 +487,6 @@ void MainWindow::createLayouts()
     controlLayout = new QVBoxLayout();
 
     viewLayout = new QGridLayout();
-    //viewLayout->setMargin(0);
     controlLayout->addLayout(viewLayout);
 
     buttonLayout = new QHBoxLayout();
