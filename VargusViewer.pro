@@ -30,6 +30,6 @@ HEADERS  += mainwindow.h \
     cameralist.h \
     logger.h
 
-FORMS    += mainwindow.ui
+FORMS    +=
 
 unix|win32: LIBS += -lvlc

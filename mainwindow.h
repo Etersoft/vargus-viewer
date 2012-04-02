@@ -6,6 +6,7 @@
 #include<QListWidget>
 
 #include <phonon/VideoPlayer>
+#include<QLayout>
 
 #include <camera.h>
 #include <set.h>
@@ -17,11 +18,6 @@
 #include "logger.h"
 
 #define MAX_PLAYERS 16
-
-namespace Ui {
-    class MainWindow;
-}
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -39,15 +35,25 @@ class MainWindow : public QMainWindow
     QMenu *fileMenu;
     QMenu *helpMenu;
 
+    QTabWidget *setTab;
+
     CameraList *camList;
+
+    QHBoxLayout *centralLayout;
+    QVBoxLayout *videoLayout;
+    QVBoxLayout *controlLayout;
+    QGridLayout *viewLayout;
+    QHBoxLayout *buttonLayout;
+
+    QPushButton *prevButton;
+    QPushButton *resetButton;
+    QPushButton *nextButton;
 
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
-
     void initData();
     QString readAnswer();
     void createMenus();
@@ -58,6 +64,7 @@ private:
     void initCameras();
     void initSets();
     void initViews();
+    void createLayouts();
 
 private slots:
     void onSetChanged(int num);

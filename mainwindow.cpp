@@ -7,40 +7,36 @@
 #include<QDir>
 Logger &log = Logger::instance();
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *)
 {
     if(!log.makeLogFile())
     {
         int n = QMessageBox::warning(this,"Warning",tr("Невозможно открыть файл для записи логов.\n Продолжить работу?"),tr("Да"),tr("Нет"),QString(),0,1);
         if(n) exit(1);
     }
-
     log.writeToFile("PROGRAM STARTED");
-    ui->setupUi(this);
+    setTab = new QTabWidget(this);
     createMenus();
     makeButtons();
     createActions();
     camList = new CameraList(this);
-    ui->controlLayout->addWidget(camList);
-    camList->setMaximumWidth(ui->nextButton->width()*4);
+    camList->setMaximumWidth(nextButton->width()*4);
     setWindowTitle(tr("VargusViewer"));
     // Обработка входных данных
     initData();
 
     // Заполнение вкладок-сетов
     makeSets();
+    createLayouts();
 
-    connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(onSetChanged(int)));
+    connect(setTab, SIGNAL(currentChanged(int)), this, SLOT(onSetChanged(int)));
 
-    ui->tabWidget->setCurrentIndex(0);
+    setTab->setCurrentIndex(0);
     onSetChanged(0);
     for(int i = 0; i < setsList.length(); i++)
         connect(setsList.at(i),SIGNAL(updateActiveCameras(QList<Camera*>)),this,SLOT(changeActiveCameras(QList<Camera*>)));
     changeActiveCameras(setsList.at(0)->getActiveCameras());
     connect(camList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(makeBigVideo(QListWidgetItem*)));
-
 }
 
 void MainWindow::initData()
@@ -120,7 +116,6 @@ QString MainWindow::readAnswer()
 
 MainWindow::~MainWindow()
 {
-    delete ui;
     QList<Camera *>::iterator itc = camerasList.begin();
     QList<Camera *>::iterator endc = camerasList.end();
     while(itc != endc)
@@ -140,6 +135,13 @@ MainWindow::~MainWindow()
     delete aboutAction;
     delete fileMenu;
     delete helpMenu;
+    delete setTab;
+    delete centralLayout;
+
+    delete prevButton;
+    delete resetButton;
+    delete nextButton;
+
     log.writeToFile("PROGRAM ENDED");
     log.closeFile();
 }
@@ -155,17 +157,17 @@ void MainWindow::onSetChanged(int num)
         }
 
     // Заполнение панели раскладок
-    while(!ui->viewLayout->isEmpty())
+    while(!viewLayout->isEmpty())
     {
-        QWidget *s = ui->viewLayout->takeAt(0)->widget();
+        QWidget *s = viewLayout->takeAt(0)->widget();
         s->hide();
     }
 
     for(int i = 0; i < viewsList.count(); i ++)
     {
-        View *view = setsList.at(ui->tabWidget->currentIndex())->views().at(i);
+        View *view = setsList.at(setTab->currentIndex())->views().at(i);
         view->show();
-        ui->viewLayout->addWidget(view, i / 2, i % 2);
+        viewLayout->addWidget(view, i / 2, i % 2);
     }
     setsList.at(num)->setActive(true);
     setsList.at(num)->restoreState();
@@ -225,12 +227,21 @@ void MainWindow::changeActiveCameras(QList<Camera *> activeCameras)
 void MainWindow::makeButtons()
 {
     log.writeToFile("Making buttons");
-    ui->prevButton->setIcon(QIcon("images/prev.png"));
-    ui->resetButton->setIcon(QIcon("images/reset.png"));
-    ui->nextButton->setIcon(QIcon("images/next.png"));
-    connect(ui->nextButton,SIGNAL(clicked()),this,SLOT(nextGroup()));
-    connect(ui->prevButton,SIGNAL(clicked()),this,SLOT(prevGroup()));
-    connect(ui->resetButton,SIGNAL(clicked()),this,SLOT(resetGroup()));
+    prevButton = new QPushButton(this);
+    prevButton->setMinimumSize(50,50);
+    prevButton->setMaximumSize(50,50);
+    resetButton = new QPushButton(this);
+    resetButton->setMinimumSize(50,50);
+    resetButton->setMaximumSize(50,50);
+    nextButton = new QPushButton(this);
+    nextButton->setMinimumSize(50,50);
+    nextButton->setMaximumSize(50,50);
+    prevButton->setIcon(QIcon("images/prev.png"));
+    resetButton->setIcon(QIcon("images/reset.png"));
+    nextButton->setIcon(QIcon("images/next.png"));
+    connect(nextButton,SIGNAL(clicked()),this,SLOT(nextGroup()));
+    connect(prevButton,SIGNAL(clicked()),this,SLOT(prevGroup()));
+    connect(resetButton,SIGNAL(clicked()),this,SLOT(resetGroup()));
     log.writeToFile("Buttons made");
 }
 
@@ -318,7 +329,7 @@ void MainWindow::makeSets()
             set->addView(viewsList.at(j));
         }
         set->setActiveView(0);
-        ui->tabWidget->addTab(set, set->description());
+        setTab->addTab(set, set->description());
     }
     for(int i = 0; i < setsList.length(); i++)
         setsList.at(i)->init();
@@ -364,7 +375,6 @@ void MainWindow::initSets()
     info = readAnswer().trimmed();
     log.writeToFile("Set amount " + info);
     int sets = info.toInt();
-    ui->tabWidget->clear();
     for(int i = 0; i < sets; i++)
     {
         socket->write(QString("query set;" + QString::number(i+1) + ";description\n").toAscii());
@@ -446,8 +456,38 @@ void MainWindow::deleteLogFiles()
 
 void MainWindow::createMenus()
 {
+
     fileMenu = new QMenu(tr("&Файл"),this);
     menuBar()->addMenu(fileMenu);
     helpMenu = new QMenu(tr("Помощь"),this);
     menuBar() -> addMenu(helpMenu);
+}
+
+void MainWindow::createLayouts()
+{
+    QWidget *w = new QWidget(this);
+
+    centralLayout = new QHBoxLayout();
+
+    videoLayout = new QVBoxLayout();
+    videoLayout->addWidget(setTab);
+    centralLayout -> addLayout(videoLayout);
+
+    controlLayout = new QVBoxLayout();
+
+    viewLayout = new QGridLayout();
+    //viewLayout->setMargin(0);
+    controlLayout->addLayout(viewLayout);
+
+    buttonLayout = new QHBoxLayout();
+    buttonLayout ->setMargin(0);
+    buttonLayout ->addWidget(prevButton);
+    buttonLayout -> addWidget(resetButton);
+    buttonLayout -> addWidget(nextButton);
+    controlLayout -> addLayout(buttonLayout);
+    controlLayout -> addWidget(camList);
+    centralLayout -> addLayout(controlLayout);
+    w->setLayout(centralLayout);
+    setCentralWidget(w);
+    setMinimumSize(800,600);
 }
