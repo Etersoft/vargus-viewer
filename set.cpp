@@ -88,6 +88,7 @@ void Set::setActiveView(int index)
 
 void Set::updateActiveView()
 {
+    lastCamNum[tp] *= (-1);
     int type = 0;
     QList<View *>::iterator it = viewList.begin();
     QList<View *>::iterator end = viewList.end();
