@@ -137,7 +137,6 @@ MainWindow::~MainWindow()
     delete helpMenu;
     delete setTab;
     delete centralLayout;
-
     delete prevButton;
     delete resetButton;
     delete nextButton;
@@ -295,7 +294,7 @@ void MainWindow::resetGroup()
 
 void MainWindow::makeBigVideo(QListWidgetItem * item)
 {
-    Set *activeSet;
+    Set *activeSet = NULL;
     QList<Set *>::iterator it = setsList.begin();
     QList<Set *>::iterator end = setsList.end();
     while(it != end)
