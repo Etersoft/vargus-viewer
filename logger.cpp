@@ -11,6 +11,7 @@ Logger &Logger::instance()
 
 bool Logger::makeLogFile()
 {
+    if(!enabled) return true;
     QDir dir(".");
     dir.mkdir("logs");
     dir.cd("logs");
@@ -20,6 +21,7 @@ bool Logger::makeLogFile()
 
 bool Logger::openLogFile(const QString &filename)
 {
+    if(!enabled) return true;
     file = new QFile(filename);
     if(file->open(QIODevice::WriteOnly | QIODevice::Append))
         return true;
@@ -28,6 +30,7 @@ bool Logger::openLogFile(const QString &filename)
 
 bool Logger::writeToFile(const QString &text)
 {
+    if(!enabled) return true;
     if(!file) return false;
     QDateTime d = QDateTime::currentDateTime();
     QString s;
@@ -48,6 +51,14 @@ void Logger::closeFile()
 QString Logger::getFileName()
 {
     if(!file)
-        return QString();
+        return QDateTime::currentDateTime().toString(Qt::ISODate);
     return file->fileName();
+}
+
+void Logger::setActive(bool isEnabled)
+{
+    if(isEnabled && (file == NULL))
+            makeLogFile();
+    enabled = isEnabled;
+
 }

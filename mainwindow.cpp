@@ -133,8 +133,10 @@ MainWindow::~MainWindow()
     delete delLogFilesAction;
     delete exitAction;
     delete aboutAction;
+    delete enableLog;
     delete fileMenu;
     delete helpMenu;
+    delete settingsMenu;
     delete setTab;
     delete centralLayout;
     delete prevButton;
@@ -179,13 +181,21 @@ void MainWindow::createActions()
     connect(delLogFilesAction,SIGNAL(triggered()),this,SLOT(deleteLogFiles()));
 
     fileMenu->addSeparator();
-    exitAction = new QAction(tr("&Exit"),this);
+    exitAction = new QAction(tr("&Выход"),this);
     fileMenu->addAction(exitAction);
     connect(exitAction,SIGNAL(triggered()),this,SLOT(close()));
 
     aboutAction = new QAction(tr("&О программе"),this);
     helpMenu->addAction(aboutAction);
     connect(aboutAction,SIGNAL(triggered()),this,SLOT(about()));
+
+    enableLog = new QAction(tr("&Вести лог"),this);
+    enableLog -> setCheckable(true);
+    enableLog -> setChecked(true);
+    settingsMenu -> addAction(enableLog);
+    connect(enableLog,SIGNAL(toggled(bool)),this,SLOT(enableLogging(bool)));
+
+
 }
 
 void MainWindow::about()
@@ -458,7 +468,9 @@ void MainWindow::createMenus()
 
     fileMenu = new QMenu(tr("&Файл"),this);
     menuBar()->addMenu(fileMenu);
-    helpMenu = new QMenu(tr("Помощь"),this);
+    settingsMenu = new QMenu(tr("&Настройки"),this);
+    menuBar() -> addMenu(settingsMenu);
+    helpMenu = new QMenu(tr("&Помощь"),this);
     menuBar() -> addMenu(helpMenu);
 }
 
@@ -489,4 +501,9 @@ void MainWindow::createLayouts()
     w->setLayout(centralLayout);
     setCentralWidget(w);
     setMinimumSize(800,600);
+}
+
+void MainWindow::enableLogging(bool enable)
+{
+    log.setActive(enable);
 }

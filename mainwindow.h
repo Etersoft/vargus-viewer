@@ -31,9 +31,11 @@ class MainWindow : public QMainWindow
     QAction *exitAction;
     QAction *aboutAction;
     QAction *delLogFilesAction;
+    QAction *enableLog;
 
     QMenu *fileMenu;
     QMenu *helpMenu;
+    QMenu *settingsMenu;
 
     QTabWidget *setTab;
 
@@ -75,6 +77,7 @@ private slots:
     void resetGroup();
     void makeBigVideo(QListWidgetItem*);
     void deleteLogFiles();
+    void enableLogging(bool enable);
 protected:
     void closeEvent(QCloseEvent *);
 

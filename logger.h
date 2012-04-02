@@ -11,12 +11,14 @@ public:
     bool writeToFile(const QString &text);
     void closeFile();
     QString getFileName();
+    void setActive(bool isEnabled);
 private:
     static Logger* myInstance;
-    Logger(){ file = NULL;}
+    Logger(){ file = NULL; enabled = true;}
     Logger& operator=(Logger const&);
     Logger(Logger const&);
     QFile *file;
+    bool enabled;
 
 };
 
