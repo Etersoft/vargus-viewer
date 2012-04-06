@@ -187,6 +187,8 @@ void VideoWidget::mousePressEvent ( QMouseEvent * e )
 
 void VideoWidget::startDrag()
 {
+    if(camera == NULL)
+        return;
     QDrag* drag = new QDrag(this);
     // The data to be transferred by the drag and drop operation is contained in a QMimeData object
 

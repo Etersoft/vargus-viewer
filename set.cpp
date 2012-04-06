@@ -334,7 +334,7 @@ QList<Camera*> Set::getActiveCameras()
 {
     QList<Camera *> res;
     QList<Camera *>::iterator it = stc.at(tp)->begin();
-    for(int i = 0; i < activeCameras; i++,it++)
+    for(int i = 0; i < videoList.length(); i++,it++)
         res << (*it);
     return res;
 }
@@ -431,11 +431,11 @@ void Set::countActiveAndPlay(int num)
     if(cameraList.length() >= num)
         activeCameras = num;
     else
-        activeCameras = cameraList.length();
+        activeCameras = stc.at(tp)->length();
     int tmp = lastCamNum[tp];
     lastCamNum[tp] = (lastCamNum[tp] + activeCameras);
-    if(lastCamNum[tp] >= cameraList.length())
-        lastCamNum[tp] =cameraList.length()-1;
+    if(lastCamNum[tp] >= stc.at(tp)->length())
+        lastCamNum[tp] =stc.at(tp)->length()-1;
     activeCameras = lastCamNum[tp] - tmp;
     for(int i =  0; i < activeCameras; i++)
     {
@@ -479,6 +479,19 @@ void Set::changeCameras(VideoWidget *first, Camera *second, bool fromAnotherWidg
         i++;
     }
     log.writeToFile("Swap widgets " + QString::number(f) + " " + QString::number(s));
+    if(f >= stc.at(tp)->length())
+    {
+        int k = f - stc.at(tp)->length() + 1;
+        for(int i = 0; i < k; i++)
+            stc.at(tp)->push_back(NULL);
+        lastCamNum[tp]+=k;
+    }
+    else if(it == end)
+    {
+        stc.at(tp)->push_back(NULL);
+        lastCamNum[tp]++;
+        s = stc.at(tp)->length()-1;
+    }
     stc.at(tp)->swap(f,s);
     emit updateActiveCameras(getActiveCameras());
 }
