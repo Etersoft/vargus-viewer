@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     view.cpp \
     videowidget.cpp \
     cameralist.cpp \
-    logger.cpp
+    logger.cpp \
+    settingsdialog.cpp
 
 HEADERS  += mainwindow.h \
     set.h \
@@ -28,7 +29,8 @@ HEADERS  += mainwindow.h \
     videowidget.h \
     camera.h \
     cameralist.h \
-    logger.h
+    logger.h \
+    settingsdialog.h
 
 FORMS    +=
 

@@ -57,8 +57,7 @@ QString Logger::getFileName()
 
 void Logger::setActive(bool isEnabled)
 {
+    enabled = isEnabled;
     if(isEnabled && (file == NULL))
             makeLogFile();
-    enabled = isEnabled;
-
 }

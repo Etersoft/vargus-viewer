@@ -112,6 +112,7 @@ VideoWidget::VideoWidget(): QWidget()
 
 VideoWidget::~VideoWidget()
 {
+    stopPlay();
     libvlc_media_player_release (vlcPlayer);
     if(vlcMedia)
         libvlc_media_release(vlcMedia);

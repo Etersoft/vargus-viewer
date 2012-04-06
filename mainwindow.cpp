@@ -5,10 +5,15 @@
 #include<QListIterator>
 #include<QMessageBox>
 #include<QDir>
+#include"settingsdialog.h"
 Logger &log = Logger::instance();
+bool test = true;
 
 MainWindow::MainWindow(QWidget *)
 {
+    settings = new QSettings("Etersoft","VargusViewer");
+    bool settingsRead = readSettings();
+    log.setActive(loggingEnabled);
     if(!log.makeLogFile())
     {
         int n = QMessageBox::warning(this,"Warning",tr("Невозможно открыть файл для записи логов.\n Продолжить работу?"),tr("Да"),tr("Нет"),QString(),0,1);
@@ -16,68 +21,35 @@ MainWindow::MainWindow(QWidget *)
     }
     log.writeToFile("PROGRAM STARTED");
     setTab = new QTabWidget(this);
+    connect(setTab, SIGNAL(currentChanged(int)), this, SLOT(onSetChanged(int)));
     createMenus();
     makeButtons();
     createActions();
     camList = new CameraList(this);
     camList->setMaximumWidth(nextButton->width()*4);
-    setWindowTitle(tr("VargusViewer"));
-    // Обработка входных данных
-    initData();
-
-    // Заполнение вкладок-сетов
-    makeSets();
-    createLayouts();
-
-    connect(setTab, SIGNAL(currentChanged(int)), this, SLOT(onSetChanged(int)));
-
-    setTab->setCurrentIndex(0);
-    onSetChanged(0);
-    for(int i = 0; i < setsList.length(); i++)
-        connect(setsList.at(i),SIGNAL(updateActiveCameras(QList<Camera*>)),this,SLOT(changeActiveCameras(QList<Camera*>)));
-    changeActiveCameras(setsList.at(0)->getActiveCameras());
     connect(camList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(makeBigVideo(QListWidgetItem*)));
+    setWindowTitle(tr("VargusViewer"));
+    createLayouts();
+    if(settingsRead)
+    {
+        startConnection();
+    }
+    else
+        changeConnectionSettings();
 }
 
-void MainWindow::initData()
+bool MainWindow::initData()
 {
-    log.writeToFile("Reading .cfg file");
-    // Чтение конфигурационного файла
-    QFile configFile("vargus.cfg");
-    if(!configFile.open(QIODevice::ReadOnly))
-    {
-        QMessageBox::information(NULL, tr("Error"), tr("Can't open file"));
-        return;
-    }
-
-    QString server;
-    int port;
-
-    QString confString = configFile.readLine();
-    while(!confString.isEmpty())
-    {
-        if(!confString.contains('#') && confString.contains('='))
-        {
-            int index = confString.indexOf('=');
-            QString var = confString.left(index);
-            QString value = confString.mid(index + 1).trimmed();
-
-            if(var == "SERVER")
-                server = value.toUtf8();
-            else if(var == "PORT")
-                port = value.toInt();
-        }
-        confString = configFile.readLine();
-    }
-    configFile.close();
-    log.writeToFile(".cfg file is read");
-
     // Сеанс связи с сервером
     log.writeToFile("Server conection started");
     socket = new QAbstractSocket(QAbstractSocket::TcpSocket, this);
     socket->connectToHost(server, port);
     if(!socket->waitForConnected(5000))
-        QMessageBox::critical(NULL, tr("Error"), tr("Cannot connect to server"));
+    {
+        QMessageBox::critical(NULL, tr("Ошибка"), tr("Невозможно подключиться к серверу.\nПожалуйста, измените настройки соединения"));
+        delete socket;
+        return false;
+    }
 
     // Инициализация камер
     initCameras();
@@ -90,6 +62,7 @@ void MainWindow::initData()
     socket->disconnect();
     delete socket;
     log.writeToFile("Connection closed. Initialization ended");
+    return true;
 }
 
 QString MainWindow::readAnswer()
@@ -116,6 +89,7 @@ QString MainWindow::readAnswer()
 
 MainWindow::~MainWindow()
 {
+    disconnect(setTab,SIGNAL(currentChanged(int)),this,SLOT(onSetChanged(int)));
     QList<Camera *>::iterator itc = camerasList.begin();
     QList<Camera *>::iterator endc = camerasList.end();
     while(itc != endc)
@@ -129,6 +103,13 @@ MainWindow::~MainWindow()
     {
         delete (*itv);
         itv++;
+    }
+    QList<Set *>::iterator its = setsList.begin();
+    QList<Set *>::iterator ends = setsList.end();
+    while(its != ends)
+    {
+        delete (*its);
+        its++;
     }
     delete delLogFilesAction;
     delete exitAction;
@@ -191,10 +172,13 @@ void MainWindow::createActions()
 
     enableLog = new QAction(tr("&Вести лог"),this);
     enableLog -> setCheckable(true);
-    enableLog -> setChecked(true);
+    enableLog -> setChecked(loggingEnabled);
     settingsMenu -> addAction(enableLog);
     connect(enableLog,SIGNAL(toggled(bool)),this,SLOT(enableLogging(bool)));
 
+    connectionSettings = new QAction(tr("&Настройки соединения"),this);
+    settingsMenu -> addAction(connectionSettings);
+    connect(connectionSettings,SIGNAL(triggered()),this,SLOT(changeConnectionSettings()));
 
 }
 
@@ -337,11 +321,11 @@ void MainWindow::makeSets()
         {
             set->addView(viewsList.at(j));
         }
+        set->init();
         set->setActiveView(0);
         setTab->addTab(set, set->description());
+        connect(set,SIGNAL(updateActiveCameras(QList<Camera*>)),this,SLOT(changeActiveCameras(QList<Camera*>)));
     }
-    for(int i = 0; i < setsList.length(); i++)
-        setsList.at(i)->init();
 }
 
 void MainWindow::initCameras()
@@ -467,7 +451,7 @@ void MainWindow::createMenus()
 {
 
     fileMenu = new QMenu(tr("&Файл"),this);
-    menuBar()->addMenu(fileMenu);
+    menuBar() -> addMenu(fileMenu);
     settingsMenu = new QMenu(tr("&Настройки"),this);
     menuBar() -> addMenu(settingsMenu);
     helpMenu = new QMenu(tr("&Помощь"),this);
@@ -481,17 +465,17 @@ void MainWindow::createLayouts()
     centralLayout = new QHBoxLayout();
 
     videoLayout = new QVBoxLayout();
-    videoLayout->addWidget(setTab);
+    videoLayout -> addWidget(setTab);
     centralLayout -> addLayout(videoLayout);
 
     controlLayout = new QVBoxLayout();
 
     viewLayout = new QGridLayout();
-    controlLayout->addLayout(viewLayout);
+    controlLayout -> addLayout(viewLayout);
 
     buttonLayout = new QHBoxLayout();
-    buttonLayout ->setMargin(0);
-    buttonLayout ->addWidget(prevButton);
+    buttonLayout -> setMargin(0);
+    buttonLayout -> addWidget(prevButton);
     buttonLayout -> addWidget(resetButton);
     buttonLayout -> addWidget(nextButton);
     controlLayout -> addLayout(buttonLayout);
@@ -504,5 +488,98 @@ void MainWindow::createLayouts()
 
 void MainWindow::enableLogging(bool enable)
 {
-    log.setActive(enable);
+    if(enable)
+    {
+        log.setActive(enable);
+        settings->setValue("logging",1);
+        log.writeToFile("Logging is enabled");
+    }
+    else {
+        settings->setValue("logging",0);
+        log.writeToFile("Logging is disbled");
+        log.setActive(enable);
+    }
+    loggingEnabled = enable;
+}
+
+bool MainWindow::readSettings()
+{
+    server = settings->value("server","").toString();
+    port = settings->value("port",-1).toInt();
+    int t = settings->value("logging", -1).toInt();
+    if(t == 1 || t ==-1)
+        loggingEnabled = true;
+    else loggingEnabled = false;
+    if(server == "" || port < 0 || port > 65535)
+        return false;
+    return true;
+}
+
+void MainWindow::changeConnectionSettings()
+{
+    SettingsDialog d(this,server,port);
+    connect(&d,SIGNAL(newSettings(QString,int)),this,SLOT(newSettings(QString,int)));
+    d.exec();
+}
+
+void MainWindow::newSettings(QString newServer, int newPort)
+{
+    if((server == newServer) && (port == newPort))
+        return;
+    server = newServer;
+    port = newPort;
+    saveSettings();
+    startConnection();
+}
+
+void MainWindow::saveSettings()
+{
+    if(!settings) return;
+    settings->setValue("server",server);
+    settings->setValue("port",port);
+    if(loggingEnabled)
+        settings->setValue("logging",1);
+    else
+        settings->setValue("logging",0);
+}
+
+void MainWindow::startConnection()
+{
+    disconnect(setTab,SIGNAL(currentChanged(int)),this,SLOT(onSetChanged(int)));
+
+    QList<Camera *>::iterator itc = camerasList.begin();
+    QList<Camera *>::iterator endc = camerasList.end();
+    while(itc != endc)
+    {
+        delete (*itc);
+        itc++;
+    }
+    camList->clear();
+    camerasList.clear();
+    QList<View *>::iterator itv = viewsList.begin();
+    QList<View *>::iterator endv = viewsList.end();
+    while(itv != endv)
+    {
+        delete (*itv);
+        itv++;
+    }
+    viewsList.clear();
+    setTab->clear();
+    QList<Set *>::iterator its = setsList.begin();
+    QList<Set *>::iterator ends = setsList.end();
+    while (its != ends)
+    {
+        delete (*its);
+        its++;
+    }
+    setsList.clear();
+    // Обработка входных данных
+    if(initData() == false)
+        return;
+    // Заполнение вкладок-сетов
+    makeSets();
+    setTab->setCurrentIndex(0);
+    onSetChanged(0);
+    connect(setTab,SIGNAL(currentChanged(int)),this,SLOT(onSetChanged(int)));
+    changeActiveCameras(setsList.at(0)->getActiveCameras());
 }

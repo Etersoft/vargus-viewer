@@ -14,6 +14,7 @@
 #include <QAbstractSocket>
 #include<QMessageBox>
 #include<QCloseEvent>
+#include<QSettings>
 #include "cameralist.h"
 #include "logger.h"
 
@@ -32,6 +33,7 @@ class MainWindow : public QMainWindow
     QAction *aboutAction;
     QAction *delLogFilesAction;
     QAction *enableLog;
+    QAction *connectionSettings;
 
     QMenu *fileMenu;
     QMenu *helpMenu;
@@ -51,12 +53,17 @@ class MainWindow : public QMainWindow
     QPushButton *resetButton;
     QPushButton *nextButton;
 
+    QSettings *settings;
+    QString server;
+    int port;
+    bool loggingEnabled;
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
 private:
-    void initData();
+    bool initData();
     QString readAnswer();
     void createMenus();
     void createActions();
@@ -67,6 +74,10 @@ private:
     void initSets();
     void initViews();
     void createLayouts();
+    bool readSettings();
+    void setDefaultsSettings();
+    void saveSettings();
+    void startConnection();
 
 private slots:
     void onSetChanged(int num);
@@ -78,6 +89,8 @@ private slots:
     void makeBigVideo(QListWidgetItem*);
     void deleteLogFiles();
     void enableLogging(bool enable);
+    void changeConnectionSettings();
+    void newSettings(QString newServer, int newPort);
 protected:
     void closeEvent(QCloseEvent *);
 

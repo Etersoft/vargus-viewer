@@ -49,7 +49,7 @@ Set::~Set()
         delete stc[i];
     }
     if(lastCamNum != NULL)
-       delete lastCamNum;
+        delete[] lastCamNum;
 }
 
 void Set::addCamera(Camera* cam)
