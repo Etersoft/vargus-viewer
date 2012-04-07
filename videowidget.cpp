@@ -226,6 +226,8 @@ void VideoWidget::dropEvent(QDropEvent *de)
    dragCamera = (Camera*)de->mimeData()->userData(0);
    if(dragVideoWindet)
    {
+       if(this == dragVideoWindet)
+           return;
         dragVideoWindet->stopPlay();
         dragVideoWindet->setCamera(camera);
         dragVideoWindet->startPlay(SMALLVIDEO);

@@ -1,10 +1,9 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include <QFile>
 #include <QList>
 #include<QListIterator>
 #include<QMessageBox>
 #include<QDir>
+#include<QMenuBar>
 #include"settingsdialog.h"
 Logger &log = Logger::instance();
 bool test = true;
