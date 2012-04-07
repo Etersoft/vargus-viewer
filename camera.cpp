@@ -1,9 +1,5 @@
 #include "camera.h"
 
-Camera::Camera()
-{
-}
-
 Camera* Camera::copy()
 {
     Camera *res = new Camera();

@@ -19,6 +19,7 @@ class Set : public QWidget
     bool active;
     int activeCameras;
     int* lastCamNum;
+    bool buttonClicked;
 
     QVector< QList<Camera *>* > stc;//расположение камер(виджетов) под каждый view
 
@@ -40,7 +41,7 @@ public:
     void init();
     void stopPlay(VideoWidget *excluding = NULL);
     bool isActive() {return active;}
-    void setActive(bool act) {active = act; if(!active) lastCamNum[tp] = -1;}
+    void setActive(bool act) {active = act;}
     QList<Camera *> getActiveCameras();
 
     void next();
@@ -60,7 +61,7 @@ private:
     void makeTrippleSquare();//квадрат 3*3
     void makeFourSquare();//квадрат 4*4
 
-    void countActiveAndPlay(int num);
+    void countActiveAndPlay();
     void bigVideo(Camera *c);
     int amountOfCells(int tp);
 

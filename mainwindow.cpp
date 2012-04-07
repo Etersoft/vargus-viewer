@@ -9,10 +9,20 @@
 Logger &log = Logger::instance();
 bool test = true;
 
-MainWindow::MainWindow(QWidget *)
+MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
 {
     settings = new QSettings("Etersoft","VargusViewer");
-    bool settingsRead = readSettings();
+    bool settingsRead;
+    if(serverAdr =="" || portNum == 0)
+        settingsRead = readSettings();
+    else
+    {
+        server = serverAdr;
+        port = portNum;
+        loggingEnabled = logging;
+        log.setActive(logging);
+        settingsRead = true;
+    }
     log.setActive(loggingEnabled);
     if(!log.makeLogFile())
     {

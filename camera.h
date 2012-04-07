@@ -14,7 +14,7 @@ class Camera : public QObject
     QString cam_agent;
 
 public:
-    explicit Camera();
+    explicit Camera(){}
     Camera(QString cam){cam_name = cam;}
     Camera * copy();
 

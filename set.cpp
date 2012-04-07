@@ -7,7 +7,7 @@ extern Logger &log;
 Set::Set()
 {
     activeCameras = tp = 0;
-    active = false;
+    buttonClicked = active = false;
     bigPlaying = NULL;
     lastCamNum = NULL;
 }
@@ -16,7 +16,7 @@ Set::Set(QString desc)
 {
     activeCameras = tp = 0;
     set_description = desc;
-    active = false;
+    buttonClicked = active = false;
     bigPlaying = NULL;
     lastCamNum = NULL;
 
@@ -88,7 +88,7 @@ void Set::setActiveView(int index)
 
 void Set::updateActiveView()
 {
-    lastCamNum[tp] *= (-1);
+    //lastCamNum[tp] *= (-1);
     int type = 0;
     QList<View *>::iterator it = viewList.begin();
     QList<View *>::iterator end = viewList.end();
@@ -118,7 +118,6 @@ void Set::makeTwoSquare()
             videoList << v;
         }
     }
-    countActiveAndPlay(4);
 }
 
 void Set::makeFourSquareTripple()
@@ -145,8 +144,6 @@ void Set::makeFourSquareTripple()
         videoList << v;
         grid->addWidget(v,2,i);
     }
-
-    countActiveAndPlay(6);
 }
 
 void Set::makeFourSquareOneCentral()
@@ -187,7 +184,6 @@ void Set::makeFourSquareOneCentral()
         videoList << v;
         grid->addWidget(v, 3, i);
     }
-    countActiveAndPlay(13);
 }
 
 void Set::makeFiveSquareTwoOneTripple()
@@ -219,7 +215,6 @@ void Set::makeFiveSquareTwoOneTripple()
         videoList << v;
         grid->addWidget(v,4,i);
     }
-    countActiveAndPlay(11);
 }
 
 void Set::makeTrippleSquare()
@@ -234,7 +229,6 @@ void Set::makeTrippleSquare()
             videoList << v;
             grid->addWidget(v,i,j);
         }
-    countActiveAndPlay(9);
 }
 
 void Set::makeFourSquare()
@@ -252,7 +246,6 @@ void Set::makeFourSquare()
 
         }
     }
-    countActiveAndPlay(48);
 }
 
 void Set::setLayouts(int type)
@@ -294,8 +287,8 @@ void Set::setLayouts(int type)
             makeFourSquare();
             break;
         }
-
      }
+    countActiveAndPlay();
     emit updateActiveCameras(getActiveCameras());
 
 }
@@ -307,7 +300,7 @@ void Set::init()
     {
         QList<Camera *>* tmpc = new QList<Camera *>(cameraList);
         stc << tmpc;
-        lastCamNum[i] = -1;
+        lastCamNum[i] = (amountOfCells(i) < cameraList.length()) ? (amountOfCells(i) - 1) : (cameraList.length() - 1);
     }
 
 }
@@ -334,7 +327,7 @@ QList<Camera*> Set::getActiveCameras()
 {
     QList<Camera *> res;
     QList<Camera *>::iterator it = stc.at(tp)->begin();
-    for(int i = 0; i < videoList.length(); i++,it++)
+    for(int i = 0; i < activeCameras; i++,it++)
         res << (*it);
     return res;
 }
@@ -343,6 +336,7 @@ void Set::next()
 {
     if(amountOfCells(tp) >= stc.at(tp)->length() || lastCamNum[tp] == cameraList.length() - 1)
             return;
+    buttonClicked = true;
     stc.at(tp)->clear();
     for(int i = lastCamNum[tp]+1; i < cameraList.length(); i++)
     {
@@ -353,8 +347,11 @@ void Set::next()
         stc.at(tp)->push_back(cameraList.at(i));
     }
     setLayouts(tp);
+    lastCamNum[tp]+=activeCameras;
+    if(lastCamNum[tp] >= stc.at(tp)->length())
+        lastCamNum[tp] = stc.at(tp)->length() - 1;
     emit updateActiveCameras(getActiveCameras());
-
+    buttonClicked = false;
 }
 
 void Set::prev()
@@ -378,8 +375,8 @@ void Set::reset()
        stc.at(tp)->push_back(*itc);
        itc++;
     }
-    lastCamNum[tp] = -1;
     setLayouts(tp);
+    lastCamNum[tp] = activeCameras - 1;
 }
 
 void Set::bigVideo(VideoWidget *v)
@@ -390,7 +387,8 @@ void Set::bigVideo(VideoWidget *v)
         return;
     }
     QList<Camera *> res;
-    res << cameraList.at(videoList.indexOf(v));
+    res << v->getCamera();
+    v->stopPlay();
     stopPlay(v);
     delete layout();
     QGridLayout *grid  = new QGridLayout(this);
@@ -426,17 +424,11 @@ void Set::showBig(int num)
     bigVideo(cameraList.at(num));
 }
 
-void Set::countActiveAndPlay(int num)
+void Set::countActiveAndPlay()
 {
-    if(cameraList.length() >= num)
-        activeCameras = num;
-    else
-        activeCameras = stc.at(tp)->length();
-    int tmp = lastCamNum[tp];
-    lastCamNum[tp] = (lastCamNum[tp] + activeCameras);
-    if(lastCamNum[tp] >= stc.at(tp)->length())
-        lastCamNum[tp] =stc.at(tp)->length()-1;
-    activeCameras = lastCamNum[tp] - tmp;
+    activeCameras = (stc.at(tp)->length() < videoList.length()) ? stc.at(tp)->length() : videoList.length();
+    if(buttonClicked && (activeCameras + lastCamNum[tp]) > stc.at(tp)->length())
+        activeCameras = stc.at(tp)->length() - lastCamNum[tp] - 1;
     for(int i =  0; i < activeCameras; i++)
     {
 		videoList.at(i)->setCamera(stc.at(tp)->at(i));

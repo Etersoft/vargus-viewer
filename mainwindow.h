@@ -59,7 +59,7 @@ class MainWindow : public QMainWindow
     bool loggingEnabled;
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = 0, QString server = 0, int portNum = 0, bool logging = false);
     ~MainWindow();
 
 private:
