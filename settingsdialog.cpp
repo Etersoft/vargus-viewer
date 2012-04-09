@@ -34,14 +34,14 @@ SettingsDialog::SettingsDialog(QWidget *parent, QString server, int port) :
 void SettingsDialog::createLayouts()
 {
     QGridLayout *grid = new QGridLayout(this);
-    grid ->addWidget(serverLabel,0,0);
+    grid -> addWidget(serverLabel,0,0);
     grid -> addWidget(serverLineEdit,0,1);
     grid -> addWidget(portLabel,1,0);
     grid -> addWidget(portLineEdit,1,1);
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout -> addWidget(okButton);
     buttonLayout -> addWidget(cancelButton);
-    grid->addLayout(buttonLayout,2,1);
+    grid -> addLayout(buttonLayout,2,1);
 }
 
 void SettingsDialog::createButtons()
@@ -57,13 +57,13 @@ void SettingsDialog::createButtons()
 
 void SettingsDialog::okButtonClicked()
 {
-    emit newSettings(serverLineEdit->text(),portLineEdit->text().toInt());
+    emit newSettings(serverLineEdit -> text(), portLineEdit -> text().toInt());
     close();
 }
 
 void SettingsDialog::enableOk()
 {
-    okButton->setEnabled(!(serverLineEdit->text().isEmpty()) && !(portLineEdit->text().isEmpty()));
+    okButton -> setEnabled(!(serverLineEdit -> text().isEmpty()) && !(portLineEdit -> text().isEmpty()));
 }
 
 SettingsDialog::~SettingsDialog()

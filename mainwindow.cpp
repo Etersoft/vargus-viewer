@@ -145,16 +145,15 @@ void MainWindow::onSetChanged(int num)
         {
             setsList.at(i)->stopPlay();
             setsList.at(i)->setActive(false);
+            break;
         }
-
     // Заполнение панели раскладок
     while(!viewLayout->isEmpty())
     {
         QWidget *s = viewLayout->takeAt(0)->widget();
         s->hide();
     }
-
-    for(int i = 0; i < viewsList.count(); i ++)
+    for(int i = 0; i < viewsList.count(); i++)
     {
         View *view = setsList.at(setTab->currentIndex())->views().at(i);
         view->show();
@@ -217,13 +216,16 @@ bool MainWindow::okToContinue()
 
 void MainWindow::changeActiveCameras(QList<Camera *> activeCameras)
 {
-    for(int i = 0; i < setsList.length(); i++)
+    QList<Set *>::iterator it =setsList.begin();
+    QList<Set *>::iterator end = setsList.end();
+    while(it != end)
     {
-        if(setsList.at(i)->isActive())
-            camList->setCurrentCameras(setsList.at(i)->cameras());
+        if((*it) -> isActive())
+            camList->setCurrentCameras((*it) -> cameras());
+        it++;
     }
-    camList ->setActiveCameras(activeCameras);
-    camList->print();
+    camList -> setActiveCameras(activeCameras);
+    camList -> print();
 }
 
 void MainWindow::makeButtons()
@@ -334,6 +336,8 @@ void MainWindow::makeSets()
         set->setActiveView(0);
         setTab->addTab(set, set->description());
         connect(set,SIGNAL(updateActiveCameras(QList<Camera*>)),this,SLOT(changeActiveCameras(QList<Camera*>)));
+        connect(set,SIGNAL(windowIsVisible(bool)),this,SLOT(setVisible(bool)));
+
     }
 }
 

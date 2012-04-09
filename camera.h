@@ -15,7 +15,7 @@ class Camera : public QObject
 
 public:
     explicit Camera(){}
-    Camera(QString cam){cam_name = cam;}
+    Camera(const QString &cam){cam_name = cam;}
     Camera * copy();
 
     QString name() {return cam_name;}
@@ -24,11 +24,11 @@ public:
     QString preview() {return cam_preview;}
     QString agent() {return cam_agent;}
 
-    void setName(QString new_value){cam_name = new_value;}
-    void setDescription(QString new_value){cam_description = new_value;}
-    void setSource(QString new_value){cam_source = new_value;}
-    void setPreview(QString new_value){cam_preview = new_value;}
-    void setAgent(QString new_value){cam_agent = new_value;}
+    void setName(const QString &new_value){cam_name = new_value;}
+    void setDescription(const QString &new_value){cam_description = new_value;}
+    void setSource(const QString &new_value){cam_source = new_value;}
+    void setPreview(const QString &new_value){cam_preview = new_value;}
+    void setAgent(const QString &new_value){cam_agent = new_value;}
 
 signals:
 

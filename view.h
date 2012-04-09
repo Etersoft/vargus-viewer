@@ -34,7 +34,7 @@ public:
     View(View* view);
     ~View();
 
-    void setDescription(QString new_value){view_description = new_value;}
+    void setDescription(const QString &new_value){view_description = new_value;}
     void setWidth(int new_value){view_width = new_value;}
     void setHeight(int new_value){view_height = new_value;}
     void setDoubleFrames(QStringList list);

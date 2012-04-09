@@ -12,7 +12,7 @@ Set::Set()
     lastCamNum = NULL;
 }
 
-Set::Set(QString desc)
+Set::Set(QString &desc)
 {
     activeCameras = tp = 0;
     set_description = desc;
@@ -61,8 +61,13 @@ void Set::addCamera(Camera* cam)
 QStringList Set::camerasNames()
 {
     QStringList list;
-    for(int i = 0; i < cameraList.count(); i++)
-        list << cameraList.at(i)->name();
+    QList<Camera *>::iterator it = cameraList.begin();
+    QList<Camera *>::iterator end = cameraList.end();
+    while(it != end)
+    {
+        list << (*it) -> name();
+        it++;
+    }
     return list;
 }
 
@@ -307,20 +312,20 @@ void Set::init()
 
 void Set::stopPlay(VideoWidget *excluding)
 {
+    emit windowIsVisible(false);
     QList<VideoWidget *>::iterator it = videoList.begin();
     QList<VideoWidget *>::iterator end = videoList.end();
     while(it!=end)
     {
         if(*it != excluding)
-        {
-            delete (*it);
-        }
+            delete *it;
         it++;
     }
     bigPlaying = NULL;
     videoList.clear();
     if(excluding)
         videoList << excluding;
+    emit windowIsVisible(true);
 }
 
 QList<Camera*> Set::getActiveCameras()
@@ -334,22 +339,23 @@ QList<Camera*> Set::getActiveCameras()
 
 void Set::next()
 {
-    if(amountOfCells(tp) >= stc.at(tp)->length() || lastCamNum[tp] == cameraList.length() - 1)
+    QList<Camera *> *currentList = stc.at(tp);
+    if(amountOfCells(tp) >= currentList -> length() || lastCamNum[tp] == cameraList.length() - 1)
             return;
     buttonClicked = true;
-    stc.at(tp)->clear();
+    currentList -> clear();
     for(int i = lastCamNum[tp]+1; i < cameraList.length(); i++)
     {
-        stc.at(tp)->push_back(cameraList.at(i));
+        currentList -> push_back(cameraList.at(i));
     }
     for(int i = 0; i <= lastCamNum[tp]; i++)
     {
-        stc.at(tp)->push_back(cameraList.at(i));
+        currentList -> push_back(cameraList.at(i));
     }
     setLayouts(tp);
-    lastCamNum[tp]+=activeCameras;
-    if(lastCamNum[tp] >= stc.at(tp)->length())
-        lastCamNum[tp] = stc.at(tp)->length() - 1;
+    lastCamNum[tp] += activeCameras;
+    if(lastCamNum[tp] >= currentList -> length())
+        lastCamNum[tp] = currentList -> length() - 1;
     emit updateActiveCameras(getActiveCameras());
     buttonClicked = false;
 }
@@ -367,12 +373,13 @@ void Set::prev()
 
 void Set::reset()
 {
-    stc.at(tp)->clear();
+    QList<Camera *> *currentList = stc.at(tp);
+    currentList -> clear();
     QList<Camera *>::iterator itc = cameraList.begin();
     QList<Camera *>::iterator endc = cameraList.end();
     while(itc != endc)
     {
-       stc.at(tp)->push_back(*itc);
+       currentList -> push_back(*itc);
        itc++;
     }
     setLayouts(tp);
@@ -426,15 +433,18 @@ void Set::showBig(int num)
 
 void Set::countActiveAndPlay()
 {
-    activeCameras = (stc.at(tp)->length() < videoList.length()) ? stc.at(tp)->length() : videoList.length();
-    if(buttonClicked && (activeCameras + lastCamNum[tp]) > stc.at(tp)->length())
-        activeCameras = stc.at(tp)->length() - lastCamNum[tp] - 1;
-    for(int i =  0; i < activeCameras; i++)
-    {
-		videoList.at(i)->setCamera(stc.at(tp)->at(i));
-        videoList.at(i)->startPlay(VideoWidget::SMALLVIDEO);
-    }
+    const QList<Camera *> *currentList = stc.at(tp);
+    int len = currentList->length();
+    activeCameras = (len < videoList.length()) ? len : videoList.length();
+    if(buttonClicked && (activeCameras + lastCamNum[tp]) > len)
+        activeCameras = len - lastCamNum[tp] - 1;
     QList<VideoWidget *>::iterator it = videoList.begin();
+    for(int i =  0; i < activeCameras; i++, it++)
+    {
+        (*it) -> setCamera(currentList -> at(i));
+        (*it) -> startPlay(VideoWidget::SMALLVIDEO);
+    }
+    it = videoList.begin();
     QList<VideoWidget *>::iterator end = videoList.end();
     while(it != end)
     {
@@ -446,17 +456,18 @@ void Set::countActiveAndPlay()
 
 void Set::changeCameras(VideoWidget *first, Camera *second, bool fromAnotherWidget)
 {
+    QList<Camera *> *currentList = stc.at(tp);
     if(!fromAnotherWidget)
     {
         int f = videoList.indexOf(first);
-        stc.at(tp)->removeAt(f);
-        stc.at(tp)->insert(f,second);
+        currentList -> removeAt(f);
+        currentList -> insert(f,second);
         log.writeToFile("Change camera in widget " + QString::number(f) + " to " + second->description());
         emit updateActiveCameras(getActiveCameras());
         return;
     }
-    QList<Camera *>::iterator it = stc.at(tp)->begin();
-    QList<Camera *>::iterator end = stc.at(tp)->end();
+    QList<Camera *>::iterator it = currentList -> begin();
+    QList<Camera *>::iterator end = currentList -> end();
     int f = videoList.indexOf(first);
     int s = 0;
     int i = 0;
@@ -471,20 +482,20 @@ void Set::changeCameras(VideoWidget *first, Camera *second, bool fromAnotherWidg
         i++;
     }
     log.writeToFile("Swap widgets " + QString::number(f) + " " + QString::number(s));
-    if(f >= stc.at(tp)->length())
+    if(f >= currentList -> length())
     {
-        int k = f - stc.at(tp)->length() + 1;
+        int k = f - currentList -> length() + 1;
         for(int i = 0; i < k; i++)
-            stc.at(tp)->push_back(NULL);
+            currentList -> push_back(NULL);
         lastCamNum[tp]+=k;
     }
     else if(it == end)
     {
-        stc.at(tp)->push_back(NULL);
+        currentList -> push_back(NULL);
         lastCamNum[tp]++;
-        s = stc.at(tp)->length()-1;
+        s = currentList -> length()-1;
     }
-    stc.at(tp)->swap(f,s);
+    currentList -> swap(f,s);
     emit updateActiveCameras(getActiveCameras());
 }
 
@@ -516,7 +527,6 @@ int Set::amountOfCells(int tp)
         {
             return 48;
         }
-
     }
     return 0;
 }

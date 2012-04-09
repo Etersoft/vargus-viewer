@@ -14,8 +14,8 @@ class CameraList : public QListWidget
 
 public:
     explicit CameraList(QWidget *parent = 0);
-    void setActiveCameras(QList<Camera *> cams) { activeCameras = cams; }
-    void setCurrentCameras(QList<Camera *> cams) { currentCameras = cams; }
+    void setActiveCameras(const QList<Camera *> &cams) { activeCameras = cams; }
+    void setCurrentCameras(const QList<Camera *> &cams) { currentCameras = cams; }
     void print();
     Camera * getCamera(int num) { return currentCameras.at(num); }
 signals:
