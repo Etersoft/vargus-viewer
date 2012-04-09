@@ -27,12 +27,12 @@ class Set : public QWidget
 
 public:
     explicit Set();
-    Set(QString &desc);
+    Set(const QString &desc);
     ~Set();
 
     QString description(){return set_description;}
     void addView(View* view);
-    void addCamera(Camera *cam);
+    void addCamera(Camera* cam);
     QStringList camerasNames();
     QList<Camera *> cameras(){return cameraList;}
     QList<View *> views(){return viewList;}
@@ -52,7 +52,6 @@ public slots:
     void showBig(int num);
 signals:
     void updateActiveCameras(QList<Camera*>);
-    void windowIsVisible(bool);
 private:
     void setLayouts(int type);
     void makeTwoSquare();//квадрат 2*2

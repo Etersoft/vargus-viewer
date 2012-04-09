@@ -2,6 +2,7 @@
 #include<QHBoxLayout>
 #include<QGridLayout>
 #include<QRegExpValidator>
+#include<QRegExp>
 
 SettingsDialog::SettingsDialog(QWidget *parent, QString server, int port) :
     QDialog(parent)

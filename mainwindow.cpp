@@ -341,7 +341,6 @@ void MainWindow::makeSets()
         set -> setActiveView(0);
         setTab -> addTab(set, set->description());
         connect(set,SIGNAL(updateActiveCameras(QList<Camera*>)),this,SLOT(changeActiveCameras(QList<Camera*>)));
-        connect(set,SIGNAL(windowIsVisible(bool)),this,SLOT(setVisible(bool)));
         it++;
     }
 }
