@@ -77,6 +77,9 @@ public:
     void disableTextString();
     Camera * getCamera() { return camera; }
 
+private:
+    static void clearVlc(libvlc_media_player_t *vlcPlayer,libvlc_media_t *vlcMedia);
+
 protected:
     void mousePressEvent ( QMouseEvent * e );
     void mouseDoubleClickEvent ( QMouseEvent * event );
