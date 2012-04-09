@@ -9,6 +9,7 @@
 #include <QDropEvent>
 
 #include <QApplication>
+#include <QtCore>
 
 libvlc_instance_t *VideoWidget::vlcInstance = 0;
 RunningTextSettings *VideoWidget::runningTextSetting = 0;
@@ -112,7 +113,14 @@ VideoWidget::VideoWidget(): QWidget()
 
 VideoWidget::~VideoWidget()
 {
-    stopPlay();
+    this->hide();
+    QtConcurrent::run(&VideoWidget::clearVlc, vlcPlayer, vlcMedia);
+}
+
+void VideoWidget::clearVlc(libvlc_media_player_t *vlcPlayer,libvlc_media_t *vlcMedia)
+{
+    //stopPlay();
+    libvlc_media_player_stop(vlcPlayer);
     libvlc_media_player_release (vlcPlayer);
     if(vlcMedia)
         libvlc_media_release(vlcMedia);
