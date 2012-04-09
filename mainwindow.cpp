@@ -221,7 +221,7 @@ void MainWindow::changeActiveCameras(QList<Camera *> activeCameras)
     while(it != end)
     {
         if((*it) -> isActive())
-            camList->setCurrentCameras((*it) -> cameras());
+            camList -> setCurrentCameras((*it) -> cameras());
         it++;
     }
     camList -> setActiveCameras(activeCameras);
@@ -232,17 +232,17 @@ void MainWindow::makeButtons()
 {
     log.writeToFile("Making buttons");
     prevButton = new QPushButton(this);
-    prevButton->setMinimumSize(50,50);
-    prevButton->setMaximumSize(50,50);
+    prevButton -> setMinimumSize(50,50);
+    prevButton -> setMaximumSize(50,50);
     resetButton = new QPushButton(this);
-    resetButton->setMinimumSize(50,50);
-    resetButton->setMaximumSize(50,50);
+    resetButton -> setMinimumSize(50,50);
+    resetButton -> setMaximumSize(50,50);
     nextButton = new QPushButton(this);
-    nextButton->setMinimumSize(50,50);
-    nextButton->setMaximumSize(50,50);
-    prevButton->setIcon(QIcon("images/prev.png"));
-    resetButton->setIcon(QIcon("images/reset.png"));
-    nextButton->setIcon(QIcon("images/next.png"));
+    nextButton -> setMinimumSize(50,50);
+    nextButton -> setMaximumSize(50,50);
+    prevButton -> setIcon(QIcon("images/prev.png"));
+    resetButton -> setIcon(QIcon("images/reset.png"));
+    nextButton -> setIcon(QIcon("images/next.png"));
     connect(nextButton,SIGNAL(clicked()),this,SLOT(nextGroup()));
     connect(prevButton,SIGNAL(clicked()),this,SLOT(prevGroup()));
     connect(resetButton,SIGNAL(clicked()),this,SLOT(resetGroup()));
@@ -256,9 +256,9 @@ void MainWindow::nextGroup()
     QList<Set *>::iterator end = setsList.end();
     while(it != end)
     {
-        if((*it)->isActive())
+        if((*it) -> isActive())
         {
-            (*it)->next();
+            (*it) -> next();
             break;
         }
         it++;
@@ -272,9 +272,9 @@ void MainWindow::prevGroup()
     QList<Set *>::iterator end = setsList.end();
     while(it != end)
     {
-        if((*it)->isActive())
+        if((*it) -> isActive())
         {
-            (*it)->prev();
+            (*it) -> prev();
             break;
         }
         it++;
@@ -288,9 +288,9 @@ void MainWindow::resetGroup()
     QList<Set *>::iterator end = setsList.end();
     while(it != end)
     {
-        if((*it)->isActive())
+        if((*it) -> isActive())
         {
-            (*it)->reset();
+            (*it) -> reset();
             break;
         }
         it++;
@@ -304,20 +304,20 @@ void MainWindow::makeBigVideo(QListWidgetItem * item)
     QList<Set *>::iterator end = setsList.end();
     while(it != end)
     {
-        if((*it)->isActive())
+        if((*it) -> isActive())
         {
             activeSet = (*it);
             break;
         }
         it++;
     }
-    int amount = camList->count();
-    for(int i =0; i < amount; i++)
+    int amount = camList -> count();
+    for(int i = 0; i < amount; i++)
     {
-        if(item == camList->item(i))
+        if(item == camList -> item(i))
         {
-            log.writeToFile("Big video from " + camList->getCamera(i)->name());
-            activeSet->showBig(i);
+            log.writeToFile("Big video from " + camList -> getCamera(i) -> name());
+            activeSet -> showBig(i);
             break;
         }
     }
@@ -325,50 +325,55 @@ void MainWindow::makeBigVideo(QListWidgetItem * item)
 
 void MainWindow::makeSets()
 {
-    for(int i = 0; i < setsList.count(); i ++)
+    QList<Set *>::iterator it = setsList.begin();
+    QList<Set *>::iterator end = setsList.end();
+    while( it != end )
     {
-        Set *set = setsList.at(i);
-        for(int j = 0; j < viewsList.count(); j ++)
+        Set *set = (*it);
+        QList<View *>::iterator itv = viewsList.begin();
+        QList<View *>::iterator endv = viewsList.end();
+        while( itv != endv )
         {
-            set->addView(viewsList.at(j));
+            set -> addView(*itv);
+            itv++;
         }
-        set->init();
-        set->setActiveView(0);
-        setTab->addTab(set, set->description());
+        set -> init();
+        set -> setActiveView(0);
+        setTab -> addTab(set, set->description());
         connect(set,SIGNAL(updateActiveCameras(QList<Camera*>)),this,SLOT(changeActiveCameras(QList<Camera*>)));
         connect(set,SIGNAL(windowIsVisible(bool)),this,SLOT(setVisible(bool)));
-
+        it++;
     }
 }
 
 void MainWindow::initCameras()
 {
     log.writeToFile("Cameras initialization started");
-    socket->write("query camera;quantity\n");
+    socket -> write("query camera;quantity\n");
     int cameras = readAnswer().trimmed().toInt();
     for(int i = 0; i < cameras; i++)
     {
         QString cam;
-        socket->write(QString("query camera;" + QString::number(i+1) + ";name\n").toAscii());
+        socket -> write(QString("query camera;" + QString::number(i+1) + ";name\n").toAscii());
         cam = readAnswer().trimmed();
         log.writeToFile("New camera " + cam);
         camerasList << new Camera(cam);
-        socket->write(QString("query camera;" + QString::number(i+1) + ";description\n").toAscii());
+        socket -> write(QString("query camera;" + QString::number(i+1) + ";description\n").toAscii());
         cam = readAnswer().trimmed();
         log.writeToFile("Description " + cam);
-        camerasList.at(i)->setDescription(cam);
-        socket->write(QString("query camera;" + QString::number(i+1) + ";view:source\n").toAscii());
+        camerasList.at(i) -> setDescription(cam);
+        socket -> write(QString("query camera;" + QString::number(i+1) + ";view:source\n").toAscii());
         cam = readAnswer().trimmed();
         log.writeToFile("Source " + cam);
-        camerasList.at(i)->setSource(cam);
-        socket->write(QString("query camera;" + QString::number(i+1) + ";view:preview\n").toAscii());
+        camerasList.at(i) -> setSource(cam);
+        socket -> write(QString("query camera;" + QString::number(i+1) + ";view:preview\n").toAscii());
         cam = readAnswer().trimmed();
         log.writeToFile("Preview " + cam);
-        camerasList.at(i)->setPreview(cam);
-        socket->write(QString("query camera;" + QString::number(i+1) + ";agent\n").toAscii());
+        camerasList.at(i) -> setPreview(cam);
+        socket -> write(QString("query camera;" + QString::number(i+1) + ";agent\n").toAscii());
         cam = readAnswer().trimmed();
         log.writeToFile("Agent " + cam);
-        camerasList.at(i)->setAgent(cam);
+        camerasList.at(i) -> setAgent(cam);
     }
     log.writeToFile("Cameras initialization ended");
 }
@@ -377,7 +382,7 @@ void MainWindow::initSets()
 {
     log.writeToFile("Sets initialization started");
     QString info;
-    socket->write("query set;quantity\n");
+    socket -> write("query set;quantity\n");
     info = readAnswer().trimmed();
     log.writeToFile("Set amount " + info);
     int sets = info.toInt();
@@ -387,17 +392,22 @@ void MainWindow::initSets()
         info = readAnswer().trimmed();
         log.writeToFile("New set " + info);
         setsList << new Set(info);
-        socket->write(QString("query set;" + QString::number(i+1) + ";cameras\n").toAscii());
+        socket -> write(QString("query set;" + QString::number(i+1) + ";cameras\n").toAscii());
         QStringList camlist = readAnswer().trimmed().split(',');
         for(int j = 0; j < camlist.count(); j++)
-            for(int k = 0; k < camerasList.count(); k++)
+        {
+            QList<Camera *>::iterator it = camerasList.begin();
+            QList<Camera *>::iterator end = camerasList.end();
+            while( it != end )
             {
-                if(camlist.at(j) == camerasList.at(k)->name())
+                if(camlist.at(j) == (*it)->name())
                 {
-                        setsList.at(i)->addCamera(camerasList.at(k));
+                    setsList.at(i)->addCamera(*it);
                     break;
                 }
+                it++;
             }
+        }
     }
     log.writeToFile("Sets initialization ended");
 }
@@ -405,37 +415,38 @@ void MainWindow::initSets()
 void MainWindow::initViews()
 {
     log.writeToFile("Views initialization started");
-    socket->write("query view;quantity\n");
+    socket -> write("query view;quantity\n");
     QString info = readAnswer().trimmed();
     log.writeToFile("Views amount " + info);
     int views = info.toInt();
     for(int i = 0; i < views; i++)
     {
-        socket->write(QString("query view;" + QString::number(i+1) + ";description\n").toAscii());
+        socket -> write(QString("query view;" + QString::number(i+1) + ";description\n").toAscii());
         info = readAnswer().trimmed();
         log.writeToFile("New view " + info);
-        viewsList << new View(info);
-        socket->write(QString("query view;" + QString::number(i+1) + ";geometry:width\n").toAscii());
+        View *v = new View(info);
+        socket -> write(QString("query view;" + QString::number(i+1) + ";geometry:width\n").toAscii());
         info = readAnswer().trimmed();
         log.writeToFile("Width: " + info);
-        viewsList.at(i)->setWidth(info.toInt());
-        socket->write(QString("query view;" + QString::number(i+1) + ";geometry:height\n").toAscii());
+        v -> setWidth(info.toInt());
+        socket -> write(QString("query view;" + QString::number(i+1) + ";geometry:height\n").toAscii());
         info = readAnswer().trimmed();
         log.writeToFile("Height: " + info);
-        viewsList.at(i)->setHeight(info.toInt());
+        v -> setHeight(info.toInt());
         socket->write(QString("query view;" + QString::number(i+1) + ";geometry:double\n").toAscii());
         info = readAnswer().trimmed();
         log.writeToFile("Double frames: " + info);
-        viewsList.at(i)->setDoubleFrames(info.split(','));
+        v -> setDoubleFrames(info.split(','));
         socket->write(QString("query view;" + QString::number(i+1) + ";geometry:triple\n").toAscii());
         info = readAnswer().trimmed();
         log.writeToFile("Triple frames: " + info);
-        viewsList.at(i)->setTripleFrames(info.split(','));
-        socket->write(QString("query view;" + QString::number(i+1) + ";geometry:quadruple\n").toAscii());
+        v -> setTripleFrames(info.split(','));
+        socket -> write(QString("query view;" + QString::number(i+1) + ";geometry:quadruple\n").toAscii());
         info = readAnswer().trimmed();
         log.writeToFile("Quadruple frames " + info);
-        viewsList.at(i)->setQuadrupleFrames(info.split(','));
-        viewsList.at(i)->createIcons();
+        v -> setQuadrupleFrames(info.split(','));
+        v -> createIcons();
+        viewsList << v;
     }
     log.writeToFile("Views initialization ended");
 }
@@ -494,7 +505,7 @@ void MainWindow::createLayouts()
     controlLayout -> addLayout(buttonLayout);
     controlLayout -> addWidget(camList);
     centralLayout -> addLayout(controlLayout);
-    w->setLayout(centralLayout);
+    w -> setLayout(centralLayout);
     setCentralWidget(w);
     setMinimumSize(800,600);
 }
@@ -504,11 +515,11 @@ void MainWindow::enableLogging(bool enable)
     if(enable)
     {
         log.setActive(enable);
-        settings->setValue("logging",1);
+        settings -> setValue("logging",1);
         log.writeToFile("Logging is enabled");
     }
     else {
-        settings->setValue("logging",0);
+        settings -> setValue("logging",0);
         log.writeToFile("Logging is disbled");
         log.setActive(enable);
     }
@@ -517,10 +528,10 @@ void MainWindow::enableLogging(bool enable)
 
 bool MainWindow::readSettings()
 {
-    server = settings->value("server","").toString();
-    port = settings->value("port",-1).toInt();
-    int t = settings->value("logging", -1).toInt();
-    if(t == 1 || t ==-1)
+    server = settings -> value("server", "").toString();
+    port = settings -> value("port", -1).toInt();
+    int t = settings -> value("logging", -1).toInt();
+    if(t == 1 || t == -1)
         loggingEnabled = true;
     else loggingEnabled = false;
     if(server == "" || port < 0 || port > 65535)
@@ -548,12 +559,12 @@ void MainWindow::newSettings(QString newServer, int newPort)
 void MainWindow::saveSettings()
 {
     if(!settings) return;
-    settings->setValue("server",server);
-    settings->setValue("port",port);
+    settings -> setValue("server",server);
+    settings -> setValue("port",port);
     if(loggingEnabled)
-        settings->setValue("logging",1);
+        settings -> setValue("logging",1);
     else
-        settings->setValue("logging",0);
+        settings -> setValue("logging",0);
 }
 
 void MainWindow::startConnection()
@@ -567,7 +578,7 @@ void MainWindow::startConnection()
         delete (*itc);
         itc++;
     }
-    camList->clear();
+    camList -> clear();
     camerasList.clear();
     QList<View *>::iterator itv = viewsList.begin();
     QList<View *>::iterator endv = viewsList.end();
@@ -577,7 +588,7 @@ void MainWindow::startConnection()
         itv++;
     }
     viewsList.clear();
-    setTab->clear();
+    setTab -> clear();
     QList<Set *>::iterator its = setsList.begin();
     QList<Set *>::iterator ends = setsList.end();
     while (its != ends)
@@ -591,8 +602,8 @@ void MainWindow::startConnection()
         return;
     // Заполнение вкладок-сетов
     makeSets();
-    setTab->setCurrentIndex(0);
+    setTab -> setCurrentIndex(0);
     onSetChanged(0);
     connect(setTab,SIGNAL(currentChanged(int)),this,SLOT(onSetChanged(int)));
-    changeActiveCameras(setsList.at(0)->getActiveCameras());
+    changeActiveCameras(setsList.at(0) -> getActiveCameras());
 }
