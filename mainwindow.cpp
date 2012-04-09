@@ -243,6 +243,10 @@ void MainWindow::makeButtons()
     prevButton -> setIcon(QIcon("images/prev.png"));
     resetButton -> setIcon(QIcon("images/reset.png"));
     nextButton -> setIcon(QIcon("images/next.png"));
+    QSize s(32,32);
+    prevButton -> setIconSize(s);
+    resetButton -> setIconSize(s);
+    nextButton -> setIconSize(s);
     connect(nextButton,SIGNAL(clicked()),this,SLOT(nextGroup()));
     connect(prevButton,SIGNAL(clicked()),this,SLOT(prevGroup()));
     connect(resetButton,SIGNAL(clicked()),this,SLOT(resetGroup()));
