@@ -238,9 +238,9 @@ void Set::makeFourSquare()
     QGridLayout *grid = new QGridLayout(this);
     grid->setMargin(0);
     setLayout(grid);
-    for(int i = 0; i < 8; i++)
+    for(int i = 0; i < 4; i++)
     {
-        for(int j = 0; j < 6; j++)
+        for(int j = 0; j < 4; j++)
         {
             VideoWidget *v = new VideoWidget();
             videoList << v;
@@ -519,7 +519,7 @@ int Set::amountOfCells(int tp)
         }
         case(5):
         {
-            return 48;
+            return 16;
         }
     }
     return 0;
