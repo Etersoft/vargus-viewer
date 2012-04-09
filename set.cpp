@@ -326,7 +326,7 @@ QList<Camera*> Set::getActiveCameras()
 {
     QList<Camera *> res;
     QList<Camera *>::iterator it = stc.at(tp)->begin();
-    for(int i = 0; i < activeCameras; i++,it++)
+    for(int i = 0; (i < videoList.length()) && (i < stc.at(tp)->length()) ; i++,it++)
         res << (*it);
     return res;
 }
