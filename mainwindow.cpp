@@ -5,7 +5,8 @@
 #include<QDir>
 #include<QMenuBar>
 #include"settingsdialog.h"
-Logger &log = Logger::instance();
+#include <QtCore>
+Logger &vargusLog = Logger::instance();
 bool test = true;
 
 MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
@@ -19,16 +20,16 @@ MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
         server = serverAdr;
         port = portNum;
         loggingEnabled = logging;
-        log.setActive(logging);
+        vargusLog.setActive(logging);
         settingsRead = true;
     }
-    log.setActive(loggingEnabled);
-    if(!log.makeLogFile())
+    vargusLog.setActive(loggingEnabled);
+    if(!vargusLog.makeLogFile())
     {
         int n = QMessageBox::warning(this,"Warning",tr("Невозможно открыть файл для записи логов.\n Продолжить работу?"),tr("Да"),tr("Нет"),QString(),0,1);
         if(n) exit(1);
     }
-    log.writeToFile("PROGRAM STARTED");
+    vargusLog.writeToFile("PROGRAM STARTED");
     setTab = new QTabWidget(this);
     connect(setTab, SIGNAL(currentChanged(int)), this, SLOT(onSetChanged(int)));
     createMenus();
@@ -50,7 +51,7 @@ MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
 bool MainWindow::initData()
 {
     // Сеанс связи с сервером
-    log.writeToFile("Server conection started");
+    vargusLog.writeToFile("Server conection started");
     socket = new QAbstractSocket(QAbstractSocket::TcpSocket, this);
     socket->connectToHost(server, port);
     if(!socket->waitForConnected(5000))
@@ -70,7 +71,7 @@ bool MainWindow::initData()
     socket->write("exit\n");
     socket->disconnect();
     delete socket;
-    log.writeToFile("Connection closed. Initialization ended");
+    vargusLog.writeToFile("Connection closed. Initialization ended");
     return true;
 }
 
@@ -123,6 +124,7 @@ MainWindow::~MainWindow()
     delete delLogFilesAction;
     delete exitAction;
     delete aboutAction;
+    delete fpsCounterAction;
     delete enableLog;
     delete fileMenu;
     delete helpMenu;
@@ -133,13 +135,13 @@ MainWindow::~MainWindow()
     delete resetButton;
     delete nextButton;
 
-    log.writeToFile("PROGRAM ENDED");
-    log.closeFile();
+    vargusLog.writeToFile("PROGRAM ENDED");
+    vargusLog.closeFile();
 }
 
 void MainWindow::onSetChanged(int num)
 {
-    log.writeToFile("New active set " + setsList.at(num)->description());
+    vargusLog.writeToFile("New active set " + setsList.at(num)->description());
     for( int i = 0; i < setsList.length(); i++)
         if(setsList.at(i)->isActive())
         {
@@ -169,6 +171,10 @@ void MainWindow::createActions()
     fileMenu->addAction(delLogFilesAction);
     connect(delLogFilesAction,SIGNAL(triggered()),this,SLOT(deleteLogFiles()));
 
+    fpsCounterAction = new QAction(tr("&Кадры в секунду"),this);
+    fileMenu -> addAction(fpsCounterAction);
+    connect(fpsCounterAction, SIGNAL(triggered()), this, SLOT(showFPS()));
+
     fileMenu->addSeparator();
     exitAction = new QAction(tr("&Выход"),this);
     fileMenu->addAction(exitAction);
@@ -187,12 +193,11 @@ void MainWindow::createActions()
     connectionSettings = new QAction(tr("&Настройки соединения"),this);
     settingsMenu -> addAction(connectionSettings);
     connect(connectionSettings,SIGNAL(triggered()),this,SLOT(changeConnectionSettings()));
-
 }
 
 void MainWindow::about()
 {
-    log.writeToFile("Action about clicked");
+    vargusLog.writeToFile("Action about clicked");
     QMessageBox::about(this, tr("О программе"),
              tr("<h2>VargusViewer</h2><p>Etersoft 2012</p>"));
 
@@ -230,7 +235,7 @@ void MainWindow::changeActiveCameras(QList<Camera *> activeCameras)
 
 void MainWindow::makeButtons()
 {
-    log.writeToFile("Making buttons");
+    vargusLog.writeToFile("Making buttons");
     prevButton = new QPushButton(this);
     prevButton -> setMinimumSize(50,50);
     prevButton -> setMaximumSize(50,50);
@@ -250,12 +255,12 @@ void MainWindow::makeButtons()
     connect(nextButton,SIGNAL(clicked()),this,SLOT(nextGroup()));
     connect(prevButton,SIGNAL(clicked()),this,SLOT(prevGroup()));
     connect(resetButton,SIGNAL(clicked()),this,SLOT(resetGroup()));
-    log.writeToFile("Buttons made");
+    vargusLog.writeToFile("Buttons made");
 }
 
 void MainWindow::nextGroup()
 {
-    log.writeToFile("Clicked next button");
+    vargusLog.writeToFile("Clicked next button");
     QList<Set *>::iterator it = setsList.begin();
     QList<Set *>::iterator end = setsList.end();
     while(it != end)
@@ -271,7 +276,7 @@ void MainWindow::nextGroup()
 
 void MainWindow::prevGroup()
 {
-    log.writeToFile("Clicked previous button");
+    vargusLog.writeToFile("Clicked previous button");
     QList<Set *>::iterator it = setsList.begin();
     QList<Set *>::iterator end = setsList.end();
     while(it != end)
@@ -287,7 +292,7 @@ void MainWindow::prevGroup()
 
 void MainWindow::resetGroup()
 {
-    log.writeToFile("Clicked reset button");
+    vargusLog.writeToFile("Clicked reset button");
     QList<Set *>::iterator it = setsList.begin();
     QList<Set *>::iterator end = setsList.end();
     while(it != end)
@@ -320,7 +325,7 @@ void MainWindow::makeBigVideo(QListWidgetItem * item)
     {
         if(item == camList -> item(i))
         {
-            log.writeToFile("Big video from " + camList -> getCamera(i) -> name());
+            vargusLog.writeToFile("Big video from " + camList -> getCamera(i) -> name());
             activeSet -> showBig(i);
             break;
         }
@@ -351,7 +356,7 @@ void MainWindow::makeSets()
 
 void MainWindow::initCameras()
 {
-    log.writeToFile("Cameras initialization started");
+    vargusLog.writeToFile("Cameras initialization started");
     socket -> write("query camera;quantity\n");
     int cameras = readAnswer().trimmed().toInt();
     for(int i = 0; i < cameras; i++)
@@ -359,41 +364,41 @@ void MainWindow::initCameras()
         QString cam;
         socket -> write(QString("query camera;" + QString::number(i+1) + ";name\n").toAscii());
         cam = readAnswer().trimmed();
-        log.writeToFile("New camera " + cam);
+        vargusLog.writeToFile("New camera " + cam);
         camerasList << new Camera(cam);
         socket -> write(QString("query camera;" + QString::number(i+1) + ";description\n").toAscii());
         cam = readAnswer().trimmed();
-        log.writeToFile("Description " + cam);
+        vargusLog.writeToFile("Description " + cam);
         camerasList.at(i) -> setDescription(cam);
         socket -> write(QString("query camera;" + QString::number(i+1) + ";view:source\n").toAscii());
         cam = readAnswer().trimmed();
-        log.writeToFile("Source " + cam);
+        vargusLog.writeToFile("Source " + cam);
         camerasList.at(i) -> setSource(cam);
         socket -> write(QString("query camera;" + QString::number(i+1) + ";view:preview\n").toAscii());
         cam = readAnswer().trimmed();
-        log.writeToFile("Preview " + cam);
+        vargusLog.writeToFile("Preview " + cam);
         camerasList.at(i) -> setPreview(cam);
         socket -> write(QString("query camera;" + QString::number(i+1) + ";agent\n").toAscii());
         cam = readAnswer().trimmed();
-        log.writeToFile("Agent " + cam);
+        vargusLog.writeToFile("Agent " + cam);
         camerasList.at(i) -> setAgent(cam);
     }
-    log.writeToFile("Cameras initialization ended");
+    vargusLog.writeToFile("Cameras initialization ended");
 }
 
 void MainWindow::initSets()
 {
-    log.writeToFile("Sets initialization started");
+    vargusLog.writeToFile("Sets initialization started");
     QString info;
     socket -> write("query set;quantity\n");
     info = readAnswer().trimmed();
-    log.writeToFile("Set amount " + info);
+    vargusLog.writeToFile("Set amount " + info);
     int sets = info.toInt();
     for(int i = 0; i < sets; i++)
     {
         socket->write(QString("query set;" + QString::number(i+1) + ";description\n").toAscii());
         info = readAnswer().trimmed();
-        log.writeToFile("New set " + info);
+        vargusLog.writeToFile("New set " + info);
         setsList << new Set(info);
         socket -> write(QString("query set;" + QString::number(i+1) + ";cameras\n").toAscii());
         QStringList camlist = readAnswer().trimmed().split(',');
@@ -412,57 +417,57 @@ void MainWindow::initSets()
             }
         }
     }
-    log.writeToFile("Sets initialization ended");
+    vargusLog.writeToFile("Sets initialization ended");
 }
 
 void MainWindow::initViews()
 {
-    log.writeToFile("Views initialization started");
+    vargusLog.writeToFile("Views initialization started");
     socket -> write("query view;quantity\n");
     QString info = readAnswer().trimmed();
-    log.writeToFile("Views amount " + info);
+    vargusLog.writeToFile("Views amount " + info);
     int views = info.toInt();
     for(int i = 0; i < views; i++)
     {
         socket -> write(QString("query view;" + QString::number(i+1) + ";description\n").toAscii());
         info = readAnswer().trimmed();
-        log.writeToFile("New view " + info);
+        vargusLog.writeToFile("New view " + info);
         View *v = new View(info);
         socket -> write(QString("query view;" + QString::number(i+1) + ";geometry:width\n").toAscii());
         info = readAnswer().trimmed();
-        log.writeToFile("Width: " + info);
+        vargusLog.writeToFile("Width: " + info);
         v -> setWidth(info.toInt());
         socket -> write(QString("query view;" + QString::number(i+1) + ";geometry:height\n").toAscii());
         info = readAnswer().trimmed();
-        log.writeToFile("Height: " + info);
+        vargusLog.writeToFile("Height: " + info);
         v -> setHeight(info.toInt());
         socket->write(QString("query view;" + QString::number(i+1) + ";geometry:double\n").toAscii());
         info = readAnswer().trimmed();
-        log.writeToFile("Double frames: " + info);
+        vargusLog.writeToFile("Double frames: " + info);
         v -> setDoubleFrames(info.split(','));
         socket->write(QString("query view;" + QString::number(i+1) + ";geometry:triple\n").toAscii());
         info = readAnswer().trimmed();
-        log.writeToFile("Triple frames: " + info);
+        vargusLog.writeToFile("Triple frames: " + info);
         v -> setTripleFrames(info.split(','));
         socket -> write(QString("query view;" + QString::number(i+1) + ";geometry:quadruple\n").toAscii());
         info = readAnswer().trimmed();
-        log.writeToFile("Quadruple frames " + info);
+        vargusLog.writeToFile("Quadruple frames " + info);
         v -> setQuadrupleFrames(info.split(','));
         v -> createIcons();
         viewsList << v;
     }
-    log.writeToFile("Views initialization ended");
+    vargusLog.writeToFile("Views initialization ended");
 }
 
 void MainWindow::deleteLogFiles()
 {
-    log.writeToFile("Action delete other log files clicked");
+    vargusLog.writeToFile("Action delete other log files clicked");
     QDir d(".");
     d.cd("logs");
     QStringList l;
     l << "*.txt";
     l = d.entryList(l);
-    QString currentlog = log.getFileName();
+    QString currentlog = vargusLog.getFileName();
     QStringList::Iterator it = l.begin();
     QStringList::Iterator end = l.end();
     while(it != end)
@@ -517,14 +522,14 @@ void MainWindow::enableLogging(bool enable)
 {
     if(enable)
     {
-        log.setActive(enable);
+        vargusLog.setActive(enable);
         settings -> setValue("logging",1);
-        log.writeToFile("Logging is enabled");
+        vargusLog.writeToFile("Logging is enabled");
     }
     else {
         settings -> setValue("logging",0);
-        log.writeToFile("Logging is disbled");
-        log.setActive(enable);
+        vargusLog.writeToFile("Logging is disbled");
+        vargusLog.setActive(enable);
     }
     loggingEnabled = enable;
 }
@@ -545,7 +550,7 @@ bool MainWindow::readSettings()
 void MainWindow::changeConnectionSettings()
 {
     SettingsDialog d(this,server,port);
-    connect(&d,SIGNAL(newSettings(QString,int)),this,SLOT(newSettings(QString,int)));
+    connect(&d, SIGNAL(newSettings(QString, int)), this, SLOT(newSettings(QString, int)));
     d.exec();
 }
 
@@ -572,7 +577,7 @@ void MainWindow::saveSettings()
 
 void MainWindow::startConnection()
 {
-    disconnect(setTab,SIGNAL(currentChanged(int)),this,SLOT(onSetChanged(int)));
+    disconnect(setTab, SIGNAL(currentChanged(int)), this, SLOT(onSetChanged(int)));
 
     QList<Camera *>::iterator itc = camerasList.begin();
     QList<Camera *>::iterator endc = camerasList.end();
@@ -607,6 +612,29 @@ void MainWindow::startConnection()
     makeSets();
     setTab -> setCurrentIndex(0);
     onSetChanged(0);
-    connect(setTab,SIGNAL(currentChanged(int)),this,SLOT(onSetChanged(int)));
+    connect(setTab, SIGNAL(currentChanged(int)), this, SLOT(onSetChanged(int)));
     changeActiveCameras(setsList.at(0) -> getActiveCameras());
+}
+
+void MainWindow::showFPS()
+{
+    QList<Set *>::iterator it = setsList.begin();
+    QList<Set *>::iterator end = setsList.end();
+    while( it!= end )
+    {
+        if( (*it) -> isActive() )
+        {
+           countFPS((*it) -> video());
+           break;
+        }
+        it++;
+    }
+}
+
+void MainWindow::countFPS(const QList<VideoWidget *> &video)
+{
+    FPSCounter counter(this);
+    counter.setVideoList(video);
+    counter.start();
+    counter.exec();
 }

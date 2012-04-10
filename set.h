@@ -36,6 +36,7 @@ public:
     QStringList camerasNames();
     QList<Camera *> cameras(){return cameraList;}
     QList<View *> views(){return viewList;}
+    QList<VideoWidget *> video() {return videoList; }
 
     void setActiveView(int index);
     void init();
