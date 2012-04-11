@@ -235,6 +235,7 @@ void MainWindow::changeActiveCameras(QList<Camera *> activeCameras)
 
 void MainWindow::makeButtons()
 {
+    QString imagePath = "/usr/share/vargus-viewer/images/";
     vargusLog.writeToFile("Making buttons");
     prevButton = new QPushButton(this);
     prevButton -> setMinimumSize(50,50);
@@ -245,9 +246,9 @@ void MainWindow::makeButtons()
     nextButton = new QPushButton(this);
     nextButton -> setMinimumSize(50,50);
     nextButton -> setMaximumSize(50,50);
-    prevButton -> setIcon(QIcon("images/prev.png"));
-    resetButton -> setIcon(QIcon("images/reset.png"));
-    nextButton -> setIcon(QIcon("images/next.png"));
+    prevButton -> setIcon(QIcon(imagePath + "prev.png"));
+    resetButton -> setIcon(QIcon(imagePath + "reset.png"));
+    nextButton -> setIcon(QIcon(imagePath + "next.png"));
     QSize s(32,32);
     prevButton -> setIconSize(s);
     resetButton -> setIconSize(s);
