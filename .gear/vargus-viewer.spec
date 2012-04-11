@@ -20,15 +20,18 @@ Qt4 client for vargus server
 %setup
 
 %build
+qmake-qt4
 %make_build
 
 %install
-%makeinstall_std
-#install %name -D %buildroot%_sbindir/%name
+install VargusViewer -D %buildroot%_bindir/VargusViewer
+mkdir -p %buildroot%_datadir/%name/images
+cp images/* %buildroot%_datadir/%name/images/
 
 %files
-%doc README
-%_bindir/%name
+#%doc README
+%_bindir/VargusViewer
+%_datadir/%name/
 
 %changelog
 * Wed Apr 11 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.1-alt1
