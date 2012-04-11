@@ -3,7 +3,7 @@
 #include <QStringList>
 #include<QGridLayout>
 #include<QListIterator>
-extern Logger &log;
+extern Logger &vargusLog;
 Set::Set()
 {
     activeCameras = tp = 0;
@@ -456,7 +456,7 @@ void Set::changeCameras(VideoWidget *first, Camera *second, bool fromAnotherWidg
         int f = videoList.indexOf(first);
         currentList -> removeAt(f);
         currentList -> insert(f,second);
-        log.writeToFile("Change camera in widget " + QString::number(f) + " to " + second->description());
+        vargusLog.writeToFile("Change camera in widget " + QString::number(f) + " to " + second->description());
         emit updateActiveCameras(getActiveCameras());
         return;
     }
@@ -475,7 +475,7 @@ void Set::changeCameras(VideoWidget *first, Camera *second, bool fromAnotherWidg
         it++;
         i++;
     }
-    log.writeToFile("Swap widgets " + QString::number(f) + " " + QString::number(s));
+    vargusLog.writeToFile("Swap widgets " + QString::number(f) + " " + QString::number(s));
     if(f >= currentList -> length())
     {
         int k = f - currentList -> length() + 1;

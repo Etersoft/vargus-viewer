@@ -94,6 +94,8 @@ public slots:
     void ContextMenuAction(const QPoint& z);
     void arhiveMenuPress();
     void waitingDoubleClickTimeout();
+    float getFPS() { return libvlc_media_player_get_fps(vlcPlayer);
+                /*libvlc_media_player_get_time(vlcPlayer);*/}
 signals:
     void arhiveCall();
     void bigSizeCall(VideoWidget *);

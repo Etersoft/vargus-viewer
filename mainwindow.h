@@ -17,6 +17,7 @@
 #include<QSettings>
 #include "cameralist.h"
 #include "logger.h"
+#include<fpscounter.h>
 
 #define MAX_PLAYERS 16
 class MainWindow : public QMainWindow
@@ -34,6 +35,7 @@ class MainWindow : public QMainWindow
     QAction *delLogFilesAction;
     QAction *enableLog;
     QAction *connectionSettings;
+    QAction *fpsCounterAction;
 
     QMenu *fileMenu;
     QMenu *helpMenu;
@@ -78,6 +80,7 @@ private:
     void setDefaultsSettings();
     void saveSettings();
     void startConnection();
+    void countFPS(const QList<VideoWidget *> &video);
 
 private slots:
     void onSetChanged(int num);
@@ -91,6 +94,7 @@ private slots:
     void enableLogging(bool enable);
     void changeConnectionSettings();
     void newSettings(QString newServer, int newPort);
+    void showFPS();
 protected:
     void closeEvent(QCloseEvent *);
 

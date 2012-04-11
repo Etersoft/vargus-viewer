@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     videowidget.cpp \
     cameralist.cpp \
     logger.cpp \
-    settingsdialog.cpp
+    settingsdialog.cpp \
+    fpscounter.cpp
 
 HEADERS  += mainwindow.h \
     set.h \
@@ -30,7 +31,8 @@ HEADERS  += mainwindow.h \
     camera.h \
     cameralist.h \
     logger.h \
-    settingsdialog.h
+    settingsdialog.h \
+    fpscounter.h
 
 FORMS    +=
 
