@@ -5,7 +5,6 @@
 #include <QList>
 #include<QListWidget>
 
-#include <phonon/VideoPlayer>
 #include<QLayout>
 
 #include <camera.h>
