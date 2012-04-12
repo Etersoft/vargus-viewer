@@ -13,6 +13,10 @@ Packager: Konstantin Kondratyuk <kondratyuk@etersoft.ru>
 # Source-git: http://git.etersoft.ru/projects/other/vargus-viewer.git
 Source: %name-%version.tar
 
+# Automatically added by buildreq on Thu Apr 12 2012
+# optimized out: fontconfig libqt4-core libqt4-devel libqt4-gui libqt4-network libstdc++-devel
+BuildRequires: gcc-c++ libvlc-devel libqt4-devel
+
 %description
 Qt4 client for vargus server
 
