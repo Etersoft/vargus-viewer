@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
     makeButtons();
     createActions();
     camList = new CameraList(this);
-    camList->setMaximumWidth(nextButton->width()*4);
+    camList -> setMaximumWidth(nextButton -> width() * 4);
     connect(camList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(makeBigVideo(QListWidgetItem*)));
     setWindowTitle(tr("VargusViewer"));
     createLayouts();
@@ -53,7 +53,7 @@ bool MainWindow::initData()
     // Сеанс связи с сервером
     vargusLog.writeToFile("Server conection started");
     socket = new QAbstractSocket(QAbstractSocket::TcpSocket, this);
-    socket->connectToHost(server, port);
+    socket -> connectToHost(server, port);
     if(!socket->waitForConnected(5000))
     {
         QMessageBox::critical(NULL, tr("Ошибка"), tr("Невозможно подключиться к серверу.\nПожалуйста, измените настройки соединения"));
@@ -68,8 +68,8 @@ bool MainWindow::initData()
     // Инициализация раскладок
     initViews();
 
-    socket->write("exit\n");
-    socket->disconnect();
+    socket -> write("exit\n");
+    socket -> disconnect();
     delete socket;
     vargusLog.writeToFile("Connection closed. Initialization ended");
     return true;
@@ -146,28 +146,28 @@ MainWindow::~MainWindow()
 
 void MainWindow::onSetChanged(int num)
 {
-    vargusLog.writeToFile("New active set " + setsList.at(num)->description());
+    vargusLog.writeToFile("New active set " + setsList.at(num) -> description());
     for( int i = 0; i < setsList.length(); i++)
-        if(setsList.at(i)->isActive())
+        if(setsList.at(i) -> isActive())
         {
-            setsList.at(i)->stopPlay();
-            setsList.at(i)->setActive(false);
+            setsList.at(i) -> stopPlay();
+            setsList.at(i) -> setActive(false);
             break;
         }
     // Заполнение панели раскладок
-    while(!viewLayout->isEmpty())
+    while(!viewLayout -> isEmpty())
     {
-        QWidget *s = viewLayout->takeAt(0)->widget();
-        s->hide();
+        QWidget *s = viewLayout -> takeAt(0) -> widget();
+        s -> hide();
     }
     for(int i = 0; i < viewsList.count(); i++)
     {
         View *view = setsList.at(setTab->currentIndex())->views().at(i);
-        view->show();
-        viewLayout->addWidget(view, i / 2, i % 2);
+        view -> show();
+        viewLayout -> addWidget(view, i / 2, i % 2);
     }
-    setsList.at(num)->setActive(true);
-    setsList.at(num)->restoreState();
+    setsList.at(num) -> setActive(true);
+    setsList.at(num) -> restoreState();
 }
 
 void MainWindow::createActions()

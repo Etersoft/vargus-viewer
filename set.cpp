@@ -19,7 +19,7 @@ Set::Set(const QString &desc)
     buttonClicked = active = false;
     bigPlaying = NULL;
     lastCamNum = NULL;
-    wasChanged = false;
+    wasChanged = NULL;
 
 }
 Set::~Set()
@@ -51,6 +51,8 @@ Set::~Set()
     }
     if(lastCamNum != NULL)
         delete[] lastCamNum;
+    if(wasChanged != NULL)
+        delete[] wasChanged;
 }
 
 void Set::addCamera(Camera* cam)
@@ -104,7 +106,7 @@ void Set::updateActiveView()
         it++;
         n++;
     }
-    setLayouts(type);
+     setLayouts(type);
 }
 
 void Set::makeTwoSquare()
@@ -291,7 +293,6 @@ void Set::setLayouts(int type)
         }
      }
     countActiveAndPlay();
-    wasChanged = true;
     emit updateActiveCameras(getActiveCameras());
 
 }
@@ -299,6 +300,7 @@ void Set::setLayouts(int type)
 void Set::init()
 {
     lastCamNum = new int[viewList.length()];
+    wasChanged = new bool[viewList.length()];
     for(int i = 0; i < viewList.length(); i++)
     {
         QList<Camera *>* tmpc = new QList<Camera *>(cameraList);
@@ -355,6 +357,7 @@ void Set::next()
         lastCamNum[tp] = currentList -> length() - 1;
     emit updateActiveCameras(getActiveCameras());
     buttonClicked = false;
+    wasChanged[tp] = true;
 }
 
 void Set::prev()
@@ -370,7 +373,7 @@ void Set::prev()
 
 void Set::reset()
 {
-    if(!wasChanged)
+    if(!wasChanged[tp])
         return;
     QList<Camera *> *currentList = stc.at(tp);
     currentList -> clear();
@@ -383,7 +386,7 @@ void Set::reset()
     }
     setLayouts(tp);
     lastCamNum[tp] = activeCameras - 1;
-    wasChanged = false;
+    wasChanged[tp] = false;
 }
 
 void Set::bigVideo(VideoWidget *v)
@@ -464,6 +467,7 @@ void Set::changeCameras(VideoWidget *first, Camera *second, bool fromAnotherWidg
         currentList -> insert(f,second);
         vargusLog.writeToFile("Change camera in widget " + QString::number(f) + " to " + second->description());
         emit updateActiveCameras(getActiveCameras());
+        wasChanged[tp] = true;
         return;
     }
     QList<Camera *>::iterator it = currentList -> begin();
@@ -493,9 +497,10 @@ void Set::changeCameras(VideoWidget *first, Camera *second, bool fromAnotherWidg
     {
         currentList -> push_back(NULL);
         lastCamNum[tp]++;
-        s = currentList -> length()-1;
+        s = currentList -> length() - 1;
     }
     currentList -> swap(f,s);
+    wasChanged[tp] = true;
     emit updateActiveCameras(getActiveCameras());
 }
 
@@ -543,4 +548,9 @@ int Set::amountOfPlayingWidgets()
         it++;
     }
     return k;
+}
+
+void Set::restoreState()
+{
+    setLayouts(tp);
 }

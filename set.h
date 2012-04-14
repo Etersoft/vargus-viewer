@@ -20,7 +20,7 @@ class Set : public QWidget
     int activeCameras;
     int* lastCamNum;
     bool buttonClicked;
-    bool wasChanged;
+    bool *wasChanged;
 
     QVector< QList<Camera *>* > stc;//расположение камер(виджетов) под каждый view
 
@@ -50,7 +50,7 @@ public:
     void prev();
     void reset();
 public slots:
-    void restoreState() {setLayouts(tp);}
+    void restoreState();
     void showBig(int num);
 signals:
     void updateActiveCameras(QList<Camera*>);
