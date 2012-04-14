@@ -50,7 +50,7 @@ public:
     void prev();
     void reset();
 public slots:
-    void restoreState();
+    void restoreState() { setLayouts(tp); }
     void showBig(int num);
 signals:
     void updateActiveCameras(QList<Camera*>);

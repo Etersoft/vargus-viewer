@@ -491,7 +491,7 @@ void Set::changeCameras(VideoWidget *first, Camera *second, bool fromAnotherWidg
         int k = f - currentList -> length() + 1;
         for(int i = 0; i < k; i++)
             currentList -> push_back(NULL);
-        lastCamNum[tp]+=k;
+        lastCamNum[tp] += k;
     }
     else if(it == end)
     {
@@ -499,7 +499,7 @@ void Set::changeCameras(VideoWidget *first, Camera *second, bool fromAnotherWidg
         lastCamNum[tp]++;
         s = currentList -> length() - 1;
     }
-    currentList -> swap(f,s);
+    currentList -> swap(f, s);
     wasChanged[tp] = true;
     emit updateActiveCameras(getActiveCameras());
 }
@@ -548,9 +548,4 @@ int Set::amountOfPlayingWidgets()
         it++;
     }
     return k;
-}
-
-void Set::restoreState()
-{
-    setLayouts(tp);
 }
