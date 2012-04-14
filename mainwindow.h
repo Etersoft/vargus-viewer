@@ -65,7 +65,7 @@ public:
 
 private:
     bool initData();
-    QString readAnswer();
+    QStringList readAnswer(int amountOfLines = 1);
     void createMenus();
     void createActions();
     bool okToContinue();

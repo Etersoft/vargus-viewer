@@ -75,26 +75,33 @@ bool MainWindow::initData()
     return true;
 }
 
-QString MainWindow::readAnswer()
+
+QStringList MainWindow::readAnswer(int amountOfLines)
 {
-    QString answer;
+    QStringList ans;
     int tries = 0;
     while(tries < 5)
     {
+        if(amountOfLines < 1)
+            break;
+        QString answer;
         if(!socket->waitForReadyRead(2000))
         {
             tries++;
             continue;
         }
         answer = trUtf8(socket->readLine().data());
-        if(!answer.isEmpty() && answer.at(0) != ':' && answer.at(0) != '>')
-            break;
+        if( answer.at(0) != '>' && answer.at(0) != ':' )
+        {
+            ans.push_back(answer);
+            amountOfLines--;
+        }
     }
-
     if (tries == 5)
         QMessageBox::critical(this, tr("Error"), tr("Server is not response"));
 
-    return answer;
+    return ans;
+
 }
 
 MainWindow::~MainWindow()
@@ -359,30 +366,28 @@ void MainWindow::initCameras()
 {
     vargusLog.writeToFile("Cameras initialization started");
     socket -> write("query camera;quantity\n");
-    int cameras = readAnswer().trimmed().toInt();
+    int cameras = readAnswer().at(0).trimmed().toInt();
+    QString camerasnumbers;
+    for(int i = 1; i < cameras; i++)
+        camerasnumbers += (QString::number(i) + ',');
+    camerasnumbers += QString::number(cameras);
+    socket->write(QString("query camera;" + camerasnumbers +
+                          ";name,description,view:source,view:preview,agent\n").toAscii());
+    QStringList inf = readAnswer(cameras);
     for(int i = 0; i < cameras; i++)
     {
-        QString cam;
-        socket -> write(QString("query camera;" + QString::number(i+1) + ";name\n").toAscii());
-        cam = readAnswer().trimmed();
-        vargusLog.writeToFile("New camera " + cam);
-        camerasList << new Camera(cam);
-        socket -> write(QString("query camera;" + QString::number(i+1) + ";description\n").toAscii());
-        cam = readAnswer().trimmed();
-        vargusLog.writeToFile("Description " + cam);
-        camerasList.at(i) -> setDescription(cam);
-        socket -> write(QString("query camera;" + QString::number(i+1) + ";view:source\n").toAscii());
-        cam = readAnswer().trimmed();
-        vargusLog.writeToFile("Source " + cam);
-        camerasList.at(i) -> setSource(cam);
-        socket -> write(QString("query camera;" + QString::number(i+1) + ";view:preview\n").toAscii());
-        cam = readAnswer().trimmed();
-        vargusLog.writeToFile("Preview " + cam);
-        camerasList.at(i) -> setPreview(cam);
-        socket -> write(QString("query camera;" + QString::number(i+1) + ";agent\n").toAscii());
-        cam = readAnswer().trimmed();
-        vargusLog.writeToFile("Agent " + cam);
-        camerasList.at(i) -> setAgent(cam);
+        QStringList cam = inf.at(i).split(';');
+        vargusLog.writeToFile("New camera " + cam.at(0));
+        Camera *c = new Camera(cam.at(0));
+        vargusLog.writeToFile("Description " + cam.at(1));
+        c -> setDescription(cam.at(1));
+        vargusLog.writeToFile("Source " + cam.at(2));
+        c -> setSource(cam.at(2));
+        vargusLog.writeToFile("Preview " + cam.at(3));
+        c -> setPreview(cam.at(3));
+        vargusLog.writeToFile("Agent " + cam.at(4).trimmed());
+        c -> setAgent(cam.at(4).trimmed());
+        camerasList << c;
     }
     vargusLog.writeToFile("Cameras initialization ended");
 }
@@ -392,17 +397,22 @@ void MainWindow::initSets()
     vargusLog.writeToFile("Sets initialization started");
     QString info;
     socket -> write("query set;quantity\n");
-    info = readAnswer().trimmed();
+    int sets = readAnswer().at(0).trimmed().toInt();
     vargusLog.writeToFile("Set amount " + info);
-    int sets = info.toInt();
+    QString setsnumbers;
+    for(int i = 1; i < sets; i++)
+        setsnumbers += (QString::number(i) + ',');
+    setsnumbers += QString::number(sets);
+    socket -> write(QString("query set;" + setsnumbers + ";description,cameras\n").toAscii());
+    QStringList inf = readAnswer(sets);
     for(int i = 0; i < sets; i++)
     {
-        socket->write(QString("query set;" + QString::number(i+1) + ";description\n").toAscii());
-        info = readAnswer().trimmed();
+        QStringList setinfo = inf.at(i).split(';');
+        info = setinfo.at(0);
         vargusLog.writeToFile("New set " + info);
-        setsList << new Set(info);
-        socket -> write(QString("query set;" + QString::number(i+1) + ";cameras\n").toAscii());
-        QStringList camlist = readAnswer().trimmed().split(',');
+        Set * s = new Set(info);
+        setsList << s;
+        QStringList camlist = setinfo.at(1).trimmed().split(',');
         for(int j = 0; j < camlist.count(); j++)
         {
             QList<Camera *>::iterator it = camerasList.begin();
@@ -411,13 +421,14 @@ void MainWindow::initSets()
             {
                 if(camlist.at(j) == (*it)->name())
                 {
-                    setsList.at(i)->addCamera(*it);
+                    s -> addCamera(*it);
                     break;
                 }
                 it++;
             }
         }
     }
+
     vargusLog.writeToFile("Sets initialization ended");
 }
 
@@ -425,35 +436,30 @@ void MainWindow::initViews()
 {
     vargusLog.writeToFile("Views initialization started");
     socket -> write("query view;quantity\n");
-    QString info = readAnswer().trimmed();
-    vargusLog.writeToFile("Views amount " + info);
-    int views = info.toInt();
+    int views = readAnswer().at(0).trimmed().toInt();
+    vargusLog.writeToFile("Views amount " + QString::number(views));
+    QString viewsnumbers;
+    for(int i = 1; i < views; i++)
+        viewsnumbers += (QString::number(i) + ',');
+    viewsnumbers += QString::number(views);
+    socket->write(QString("query view;" + viewsnumbers +
+      ";description,geometry:width,geometry:height,geometry:double,geometry:triple,geometry:quadruple\n").toAscii());
+    QStringList inf = readAnswer(views);
     for(int i = 0; i < views; i++)
     {
-        socket -> write(QString("query view;" + QString::number(i+1) + ";description\n").toAscii());
-        info = readAnswer().trimmed();
-        vargusLog.writeToFile("New view " + info);
-        View *v = new View(info);
-        socket -> write(QString("query view;" + QString::number(i+1) + ";geometry:width\n").toAscii());
-        info = readAnswer().trimmed();
-        vargusLog.writeToFile("Width: " + info);
-        v -> setWidth(info.toInt());
-        socket -> write(QString("query view;" + QString::number(i+1) + ";geometry:height\n").toAscii());
-        info = readAnswer().trimmed();
-        vargusLog.writeToFile("Height: " + info);
-        v -> setHeight(info.toInt());
-        socket->write(QString("query view;" + QString::number(i+1) + ";geometry:double\n").toAscii());
-        info = readAnswer().trimmed();
-        vargusLog.writeToFile("Double frames: " + info);
-        v -> setDoubleFrames(info.split(','));
-        socket->write(QString("query view;" + QString::number(i+1) + ";geometry:triple\n").toAscii());
-        info = readAnswer().trimmed();
-        vargusLog.writeToFile("Triple frames: " + info);
-        v -> setTripleFrames(info.split(','));
-        socket -> write(QString("query view;" + QString::number(i+1) + ";geometry:quadruple\n").toAscii());
-        info = readAnswer().trimmed();
-        vargusLog.writeToFile("Quadruple frames " + info);
-        v -> setQuadrupleFrames(info.split(','));
+        QStringList info = inf.at(i).split(';');
+        vargusLog.writeToFile("New view " + info.at(0));
+        View *v = new View(info.at(0));
+        vargusLog.writeToFile("Width: " + info.at(1));
+        v -> setWidth(info.at(1).toInt());
+        vargusLog.writeToFile("Height: " + info.at(2));
+        v -> setHeight(info.at(2).toInt());
+        vargusLog.writeToFile("Double frames: " + info.at(3));
+        v -> setDoubleFrames(info.at(3).trimmed().split(','));
+        vargusLog.writeToFile("Triple frames: " + info.at(4));
+        v -> setTripleFrames(info.at(4).trimmed().split(','));
+        vargusLog.writeToFile("Quadruple frames " + info.at(5));
+        v -> setQuadrupleFrames(info.at(5).trimmed().split(','));
         v -> createIcons();
         viewsList << v;
     }
