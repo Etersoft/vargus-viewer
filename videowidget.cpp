@@ -165,6 +165,7 @@ void VideoWidget::stopPlay()
 {
     if(isPlaying)
         libvlc_media_player_stop(vlcPlayer);
+    isPlaying = false;
 }
 
 void VideoWidget::updateInterface()

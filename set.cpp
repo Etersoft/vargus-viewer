@@ -326,7 +326,8 @@ QList<Camera*> Set::getActiveCameras()
 {
     QList<Camera *> res;
     QList<Camera *>::iterator it = stc.at(tp)->begin();
-    for(int i = 0; (i < videoList.length()) && (i < stc.at(tp)->length()) ; i++,it++)
+    int activeCameras = amountOfPlayingWidgets();
+    for(int i = 0; i < activeCameras; i++, it++)
         res << (*it);
     return res;
 }
@@ -523,4 +524,18 @@ int Set::amountOfCells(int tp)
         }
     }
     return 0;
+}
+
+int Set::amountOfPlayingWidgets()
+{
+    QList<VideoWidget *>::iterator it = videoList.begin();
+    QList<VideoWidget *>::iterator end = videoList.end();
+    int k = 0;
+    while( it != end )
+    {
+        if( (*it) -> playing() )
+            k++;
+        it++;
+    }
+    return k;
 }

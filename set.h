@@ -61,6 +61,7 @@ private:
     void makeFiveSquareTwoOneTripple();//квадрат 5*5 два двойных один центральный
     void makeTrippleSquare();//квадрат 3*3
     void makeFourSquare();//квадрат 4*4
+    int amountOfPlayingWidgets();
 
     void countActiveAndPlay();
     void bigVideo(Camera *c);
