@@ -19,6 +19,7 @@ Set::Set(const QString &desc)
     buttonClicked = active = false;
     bigPlaying = NULL;
     lastCamNum = NULL;
+    wasChanged = false;
 
 }
 Set::~Set()
@@ -290,6 +291,7 @@ void Set::setLayouts(int type)
         }
      }
     countActiveAndPlay();
+    wasChanged = true;
     emit updateActiveCameras(getActiveCameras());
 
 }
@@ -360,7 +362,7 @@ void Set::prev()
     int number = amountOfCells(tp);
     if(number >= stc.at(tp)->length() || lastCamNum[tp] == activeCameras - 1)
         return;
-    lastCamNum[tp] = lastCamNum[tp]-number*2;
+    lastCamNum[tp] = lastCamNum[tp] - number * 2;
     if(lastCamNum[tp] < -1)
         lastCamNum[tp] = -1;
     next();
@@ -368,6 +370,8 @@ void Set::prev()
 
 void Set::reset()
 {
+    if(!wasChanged)
+        return;
     QList<Camera *> *currentList = stc.at(tp);
     currentList -> clear();
     QList<Camera *>::iterator itc = cameraList.begin();
@@ -379,6 +383,7 @@ void Set::reset()
     }
     setLayouts(tp);
     lastCamNum[tp] = activeCameras - 1;
+    wasChanged = false;
 }
 
 void Set::bigVideo(VideoWidget *v)
@@ -389,16 +394,16 @@ void Set::bigVideo(VideoWidget *v)
         return;
     }
     QList<Camera *> res;
-    res << v->getCamera();
-    v->stopPlay();
+    res << v -> getCamera();
+    v -> stopPlay();
     stopPlay(v);
     delete layout();
     QGridLayout *grid  = new QGridLayout(this);
     setLayout(grid);
-    grid->setMargin(0);
-    grid->addWidget(v,0,0);
-    v->startPlay(VideoWidget::BIGVIDEO);
-    v->show();
+    grid -> setMargin(0);
+    grid -> addWidget(v,0,0);
+    v -> startPlay(VideoWidget::BIGVIDEO);
+    v -> show();
     bigPlaying = v;
     emit updateActiveCameras(res);
 }
@@ -410,10 +415,10 @@ void Set::bigVideo(Camera *c)
     QGridLayout *grid  = new QGridLayout(this);
     setLayout(grid);
     VideoWidget *v = new VideoWidget();
-	v->setCamera(c);
+    v -> setCamera(c);
     connect(v,SIGNAL(bigSizeCall(VideoWidget*)),this,SLOT(bigVideo(VideoWidget*)));
-    grid->addWidget(v,0,0);
-    v->startPlay(VideoWidget::BIGVIDEO);
+    grid -> addWidget(v,0,0);
+    v -> startPlay(VideoWidget::BIGVIDEO);
     videoList << v;
     bigPlaying = v;
     QList<Camera *> res;
@@ -429,7 +434,7 @@ void Set::showBig(int num)
 void Set::countActiveAndPlay()
 {
     const QList<Camera *> *currentList = stc.at(tp);
-    int len = currentList->length();
+    int len = currentList -> length();
     activeCameras = (len < videoList.length()) ? len : videoList.length();
     if(buttonClicked && (activeCameras + lastCamNum[tp]) > len)
         activeCameras = len - lastCamNum[tp] - 1;

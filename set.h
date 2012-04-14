@@ -20,6 +20,7 @@ class Set : public QWidget
     int activeCameras;
     int* lastCamNum;
     bool buttonClicked;
+    bool wasChanged;
 
     QVector< QList<Camera *>* > stc;//расположение камер(виджетов) под каждый view
 
