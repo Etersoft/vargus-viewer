@@ -99,9 +99,7 @@ QStringList MainWindow::readAnswer(int amountOfLines)
     }
     if (tries == 5)
         QMessageBox::critical(this, tr("Error"), tr("Server is not response"));
-
     return ans;
-
 }
 
 MainWindow::~MainWindow()
@@ -367,11 +365,12 @@ void MainWindow::initCameras()
     vargusLog.writeToFile("Cameras initialization started");
     socket -> write("query camera;quantity\n");
     int cameras = readAnswer().at(0).trimmed().toInt();
+    vargusLog.writeToFile("Amount of cameras " + QString::number(cameras));
     QString camerasnumbers;
     for(int i = 1; i < cameras; i++)
         camerasnumbers += (QString::number(i) + ',');
     camerasnumbers += QString::number(cameras);
-    socket->write(QString("query camera;" + camerasnumbers +
+    socket -> write(QString("query camera;" + camerasnumbers +
                           ";name,description,view:source,view:preview,agent\n").toAscii());
     QStringList inf = readAnswer(cameras);
     for(int i = 0; i < cameras; i++)
@@ -395,10 +394,9 @@ void MainWindow::initCameras()
 void MainWindow::initSets()
 {
     vargusLog.writeToFile("Sets initialization started");
-    QString info;
     socket -> write("query set;quantity\n");
     int sets = readAnswer().at(0).trimmed().toInt();
-    vargusLog.writeToFile("Set amount " + info);
+    vargusLog.writeToFile("Set amount " + QString::number(sets));
     QString setsnumbers;
     for(int i = 1; i < sets; i++)
         setsnumbers += (QString::number(i) + ',');
@@ -408,7 +406,7 @@ void MainWindow::initSets()
     for(int i = 0; i < sets; i++)
     {
         QStringList setinfo = inf.at(i).split(';');
-        info = setinfo.at(0);
+        QString info = setinfo.at(0);
         vargusLog.writeToFile("New set " + info);
         Set * s = new Set(info);
         setsList << s;
@@ -428,7 +426,6 @@ void MainWindow::initSets()
             }
         }
     }
-
     vargusLog.writeToFile("Sets initialization ended");
 }
 
@@ -442,7 +439,7 @@ void MainWindow::initViews()
     for(int i = 1; i < views; i++)
         viewsnumbers += (QString::number(i) + ',');
     viewsnumbers += QString::number(views);
-    socket->write(QString("query view;" + viewsnumbers +
+    socket -> write(QString("query view;" + viewsnumbers +
       ";description,geometry:width,geometry:height,geometry:double,geometry:triple,geometry:quadruple\n").toAscii());
     QStringList inf = readAnswer(views);
     for(int i = 0; i < views; i++)
