@@ -391,6 +391,7 @@ void Set::reset()
 
 void Set::bigVideo(VideoWidget *v)
 {
+    wasChanged[tp] = true;
     if(v == bigPlaying)
     {
         setLayouts(tp);
@@ -413,6 +414,7 @@ void Set::bigVideo(VideoWidget *v)
 
 void Set::bigVideo(Camera *c)
 {
+    wasChanged[tp] = true;
     stopPlay();
     delete layout();
     QGridLayout *grid  = new QGridLayout(this);
