@@ -16,7 +16,7 @@ bool Logger::makeLogFile()
     dir.mkdir("logs");
     dir.cd("logs");
     QDateTime d = QDateTime::currentDateTime();
-    return openLogFile(dir.absolutePath()+"/log "+d.toString(Qt::ISODate)+".txt");
+    return openLogFile(dir.absolutePath() + "/log " + d.toString(Qt::ISODate) + ".txt");
 }
 
 bool Logger::openLogFile(const QString &filename)

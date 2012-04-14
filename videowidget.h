@@ -76,7 +76,7 @@ public:
     void writeTextString(QString string);
     void disableTextString();
     Camera * getCamera() { return camera; }
-    bool playing() {return isPlaying; }
+    bool playing() { return isPlaying; }
 
 private:
     static void clearVlc(libvlc_media_player_t *vlcPlayer,libvlc_media_t *vlcMedia);

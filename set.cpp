@@ -198,27 +198,27 @@ void Set::makeFiveSquareTwoOneTripple()
     setLayout(grid);
     VideoWidget *v = new VideoWidget();
     videoList << v;
-    grid->addWidget(v, 0, 0, 3, 3);
+    grid -> addWidget(v, 0, 0, 3, 3);
 
     v = new VideoWidget();
     videoList << v;
-    grid->addWidget(v, 0, 3, 2, 2);
+    grid -> addWidget(v, 0, 3, 2, 2);
 
     v = new VideoWidget();
     videoList << v;
-    grid->addWidget(v, 2, 3, 2, 2);
+    grid -> addWidget(v, 2, 3, 2, 2);
 
-    for( int i = 0; i < 3; i++)
+    for(int i = 0; i < 3; i++)
     {
         v = new VideoWidget();
         videoList << v;
-        grid->addWidget(v, 3, i);
+        grid -> addWidget(v, 3, i);
     }
-    for( int i = 0; i < 5; i++)
+    for(int i = 0; i < 5; i++)
     {
         v = new VideoWidget();
         videoList << v;
-        grid->addWidget(v, 4, i);
+        grid -> addWidget(v, 4, i);
     }
 }
 
@@ -232,14 +232,14 @@ void Set::makeTrippleSquare()
         {
             VideoWidget *v = new VideoWidget();
             videoList << v;
-            grid->addWidget(v, i, j);
+            grid -> addWidget(v, i, j);
         }
 }
 
 void Set::makeFourSquare()
 {
     QGridLayout *grid = new QGridLayout(this);
-    grid->setMargin(0);
+    grid -> setMargin(0);
     setLayout(grid);
     for(int i = 0; i < 4; i++)
     {
@@ -247,7 +247,7 @@ void Set::makeFourSquare()
         {
             VideoWidget *v = new VideoWidget();
             videoList << v;
-            grid->addWidget(v, i, j);
+            grid -> addWidget(v, i, j);
 
         }
     }
@@ -329,7 +329,7 @@ void Set::stopPlay(VideoWidget *excluding)
 QList<Camera*> Set::getActiveCameras()
 {
     QList<Camera *> res;
-    QList<Camera *>::iterator it = stc.at(tp)->begin();
+    QList<Camera *>::iterator it = stc.at(tp) -> begin();
     int activeCameras = amountOfPlayingWidgets();
     for(int i = 0; i < activeCameras; i++, it++)
         res << (*it);
@@ -454,7 +454,8 @@ void Set::countActiveAndPlay()
     while(it != end)
     {
         connect(*it,SIGNAL(bigSizeCall(VideoWidget*)),this,SLOT(bigVideo(VideoWidget*)));
-        connect(*it,SIGNAL(camerasChanged(VideoWidget *,Camera *,bool)),this,SLOT(changeCameras(VideoWidget*,Camera*,bool)));
+        connect(*it, SIGNAL(camerasChanged(VideoWidget *, Camera *, bool)),
+                this, SLOT(changeCameras(VideoWidget*, Camera*, bool)));
         it++;
     }
 }
@@ -467,7 +468,8 @@ void Set::changeCameras(VideoWidget *first, Camera *second, bool fromAnotherWidg
         int f = videoList.indexOf(first);
         currentList -> removeAt(f);
         currentList -> insert(f,second);
-        vargusLog.writeToFile("Change camera in widget " + QString::number(f) + " to " + second->description());
+        vargusLog.writeToFile("Change camera in widget "
+                              + QString::number(f) + " to " + second -> description());
         emit updateActiveCameras(getActiveCameras());
         wasChanged[tp] = true;
         return;

@@ -31,7 +31,6 @@ int main(int argc, char *argv[])
         int l = p.toInt();
         if(l == 0)
             logging = false;
-
     }
 
     MainWindow w(0,serv,port,logging);
