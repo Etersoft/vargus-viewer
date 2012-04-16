@@ -17,6 +17,7 @@
 #include "cameralist.h"
 #include "logger.h"
 #include<fpscounter.h>
+#include<QSystemTrayIcon>
 
 #define MAX_PLAYERS 16
 class MainWindow : public QMainWindow
@@ -58,6 +59,7 @@ class MainWindow : public QMainWindow
     QString server;
     int port;
     bool loggingEnabled;
+    QSystemTrayIcon *trIcon;
 
 public:
     explicit MainWindow(QWidget *parent = 0, QString server = 0, int portNum = 0, bool logging = false);
@@ -68,6 +70,7 @@ private:
     QStringList readAnswer(int amountOfLines = 1);
     void createMenus();
     void createActions();
+    void createIcons();
     bool okToContinue();
     void makeButtons();
     void makeSets();
@@ -95,6 +98,7 @@ private slots:
     void newSettings(QString newServer, int newPort);
     void showFPS();
     void enableButtons(bool prev, bool next);
+    void showHide(QSystemTrayIcon::ActivationReason);
 protected:
     void closeEvent(QCloseEvent *);
 

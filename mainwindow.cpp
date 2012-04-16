@@ -11,6 +11,7 @@ bool test = true;
 
 MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
 {
+    createIcons();
     settings = new QSettings("Etersoft","VargusViewer");
     bool settingsRead;
     if(serverAdr =="" || portNum == 0)
@@ -139,6 +140,7 @@ MainWindow::~MainWindow()
     delete prevButton;
     delete resetButton;
     delete nextButton;
+    delete trIcon;
 
     vargusLog.writeToFile("PROGRAM ENDED");
     vargusLog.closeFile();
@@ -648,4 +650,26 @@ void MainWindow::enableButtons(bool prev, bool next)
 {
     prevButton -> setEnabled(prev);
     nextButton -> setEnabled(next);
+}
+
+void MainWindow::createIcons()
+{
+    QString imagePath = "/usr/share/vargus-viewer/images/";
+    trIcon = new QSystemTrayIcon();  //инициализируем объект
+    trIcon->setIcon(QIcon(imagePath + "vargus32.png"));  //устанавливаем иконку
+    trIcon->show();  //отображаем объект
+    connect(trIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+            this, SLOT(showHide(QSystemTrayIcon::ActivationReason)));
+}
+
+
+void MainWindow::showHide(QSystemTrayIcon::ActivationReason r) {
+    if (r == QSystemTrayIcon::Trigger)  //если нажато левой кнопкой продолжаем
+    {
+        if (!isVisible()) {  //если окно было не видимо - отображаем его
+            show();
+        } else {
+            hide();  //иначе скрываем
+        }
+    }
 }
