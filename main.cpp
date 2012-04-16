@@ -7,7 +7,9 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-
+    QString imagePath = "/usr/share/vargus-viewer/images/";
+    QIcon icon(imagePath + "vargus_big.png");
+    QApplication::setWindowIcon(icon);
     QTextCodec::setCodecForTr( QTextCodec::codecForName("utf8") );
     QString translatorFileName = QLatin1String("qt_ru");
     QTranslator *translator = new QTranslator(&app);
