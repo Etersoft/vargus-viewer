@@ -1,5 +1,5 @@
 Name: vargus-viewer
-Version: 0.1
+Version: 0.2
 Release: alt1
 
 Summary: Qt4 client for vargus server
@@ -38,5 +38,9 @@ cp images/* %buildroot%_datadir/%name/images/
 %_datadir/%name/
 
 %changelog
+* Mon Apr 16 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.2-alt1
+- add icons
+- new parser of input parameters
+- some bug fixes
 * Wed Apr 11 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.1-alt1
 - initial build
