@@ -107,6 +107,7 @@ void Set::updateActiveView()
         n++;
     }
      setLayouts(type);
+     enableButtons();
 }
 
 void Set::makeTwoSquare()
@@ -358,6 +359,7 @@ void Set::next()
     emit updateActiveCameras(getActiveCameras());
     buttonClicked = false;
     wasChanged[tp] = true;
+    enableButtons();
 }
 
 void Set::prev()
@@ -387,6 +389,7 @@ void Set::reset()
     setLayouts(tp);
     lastCamNum[tp] = activeCameras - 1;
     wasChanged[tp] = false;
+    enableButtons();
 }
 
 void Set::bigVideo(VideoWidget *v)
@@ -552,4 +555,11 @@ int Set::amountOfPlayingWidgets()
         it++;
     }
     return k;
+}
+
+void Set::enableButtons()
+{
+    bool nextButton = !(amountOfCells(tp) >= stc.at(tp) -> length() || lastCamNum[tp] == cameraList.length() - 1);
+    bool prevButton = !(amountOfCells(tp) >= stc.at(tp)->length() || lastCamNum[tp] == activeCameras - 1);
+    emit buttonsEnabled(prevButton,nextButton);
 }

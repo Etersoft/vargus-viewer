@@ -94,6 +94,7 @@ private slots:
     void changeConnectionSettings();
     void newSettings(QString newServer, int newPort);
     void showFPS();
+    void enableButtons(bool prev, bool next);
 protected:
     void closeEvent(QCloseEvent *);
 

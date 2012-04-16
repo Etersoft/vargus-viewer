@@ -43,17 +43,18 @@ public:
     void init();
     void stopPlay(VideoWidget *excluding = NULL);
     bool isActive() {return active;}
-    void setActive(bool act) {active = act;}
+    void setActive(bool act) {active = act; enableButtons();}
     QList<Camera *> getActiveCameras();
 
     void next();
     void prev();
     void reset();
 public slots:
-    void restoreState() { setLayouts(tp); }
+    void restoreState() { setLayouts(tp); enableButtons(); }
     void showBig(int num);
 signals:
     void updateActiveCameras(QList<Camera*>);
+    void buttonsEnabled(bool, bool);
 private:
     void setLayouts(int type);
     void makeTwoSquare();//квадрат 2*2
@@ -72,6 +73,7 @@ private slots:
     void updateActiveView();
     void bigVideo(VideoWidget *v);
     void changeCameras(VideoWidget *first,Camera *second, bool fromAnotherWidget);
+    void enableButtons();
 
 };
 

@@ -355,7 +355,8 @@ void MainWindow::makeSets()
         set -> init();
         set -> setActiveView(0);
         setTab -> addTab(set, set->description());
-        connect(set,SIGNAL(updateActiveCameras(QList<Camera*>)),this,SLOT(changeActiveCameras(QList<Camera*>)));
+        connect(set, SIGNAL(updateActiveCameras(QList<Camera*>)), this, SLOT(changeActiveCameras(QList<Camera*>)));
+        connect(set, SIGNAL(buttonsEnabled(bool, bool)), this, SLOT(enableButtons(bool, bool)));
         it++;
     }
 }
@@ -641,4 +642,10 @@ void MainWindow::countFPS(const QList<VideoWidget *> &video)
     counter.setVideoList(video);
     counter.start();
     counter.exec();
+}
+
+void MainWindow::enableButtons(bool prev, bool next)
+{
+    prevButton -> setEnabled(prev);
+    nextButton -> setEnabled(next);
 }
