@@ -26,11 +26,14 @@ Qt4 client for vargus server
 %build
 qmake-qt4
 %make_build
+lrelease-qt4 lang/lang_ru.ts
 
 %install
 install VargusViewer -D %buildroot%_bindir/VargusViewer
 mkdir -p %buildroot%_datadir/%name/images
 cp images/* %buildroot%_datadir/%name/images/
+mkdir -p %buildroot%_datadir/%name/lang
+cp lang/lang_ru.qm %buildroot%_datadir/%name/lang/
 
 %files
 #%doc README
