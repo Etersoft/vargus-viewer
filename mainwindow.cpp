@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
     vargusLog.setActive(loggingEnabled);
     if(!vargusLog.makeLogFile())
     {
-        int n = QMessageBox::warning(this,"Warning",tr("Can not open file for logging. \n Continue to work?"),tr("Yes"),tr("No"),QString(),0,1);
+        int n = QMessageBox::warning(this,tr("Warning"),tr("Can not open file for logging. \n Continue to work?"),tr("Yes"),tr("No"),QString(),0,1);
         if(n) exit(1);
     }
     vargusLog.writeToFile("PROGRAM STARTED");
@@ -224,7 +224,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 bool MainWindow::okToContinue()
 {
-    int r = QMessageBox::warning(this, tr("Vargus Viewer"), tr("Are you sure you want to quit?"),
+    int r = QMessageBox::warning(this, tr("Exit program"), tr("Are you sure you want to quit?"),
                                  QMessageBox::Yes | QMessageBox::No);
     if(r == QMessageBox::Yes)
         return true;
@@ -252,12 +252,15 @@ void MainWindow::makeButtons()
     prevButton = new QPushButton(this);
     prevButton -> setMinimumSize(50, 50);
     prevButton -> setMaximumSize(50, 50);
+    prevButton->setToolTip(tr("Previous cameras"));
     resetButton = new QPushButton(this);
     resetButton -> setMinimumSize(50, 50);
     resetButton -> setMaximumSize(50, 50);
+    resetButton->setToolTip(tr("Reset"));
     nextButton = new QPushButton(this);
     nextButton -> setMinimumSize(50, 50);
     nextButton -> setMaximumSize(50, 50);
+    nextButton->setToolTip(tr("Next cameras"));
     prevButton -> setIcon(QIcon(imagePath + "prev.png"));
     resetButton -> setIcon(QIcon(imagePath + "reset.png"));
     nextButton -> setIcon(QIcon(imagePath + "next.png"));

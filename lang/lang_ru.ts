@@ -20,8 +20,12 @@
         <translation>Нет</translation>
     </message>
     <message>
+        <location filename="../mainwindow.cpp" line="30"/>
+        <source>Warning</source>
+        <translation>Предупреждение</translation>
+    </message>
+    <message>
         <location filename="../mainwindow.cpp" line="42"/>
-        <location filename="../mainwindow.cpp" line="227"/>
         <source>Vargus Viewer</source>
         <oldsource>VargusViewer</oldsource>
         <translation>Vargus Viewer</translation>
@@ -90,17 +94,37 @@ Please, change the connection settings.</source>
         <translation>Вы уверены, что хотите выйти?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="497"/>
+        <location filename="../mainwindow.cpp" line="227"/>
+        <source>Exit program</source>
+        <translation>Выход из программы</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="255"/>
+        <source>Previous cameras</source>
+        <translation>Предыдущие камеры</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="259"/>
+        <source>Reset</source>
+        <translation>Сброс</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="263"/>
+        <source>Next cameras</source>
+        <translation>Следующие камеры</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="500"/>
         <source>&amp;File</source>
         <translation>&amp;Файл</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="499"/>
+        <location filename="../mainwindow.cpp" line="502"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="501"/>
+        <location filename="../mainwindow.cpp" line="504"/>
         <source>&amp;Help</source>
         <translation>&amp;Помощь</translation>
     </message>
