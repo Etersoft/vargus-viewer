@@ -48,7 +48,7 @@ void SettingsDialog::createLayouts()
 void SettingsDialog::createButtons()
 {
     okButton = new QPushButton(this);
-    okButton -> setText(tr("&Ok"));
+    okButton -> setText(tr("&OK"));
     okButton -> setEnabled(false);
     cancelButton = new QPushButton(this);
     cancelButton -> setText(tr("&Cancel"));

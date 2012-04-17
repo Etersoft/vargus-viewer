@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
     camList = new CameraList(this);
     camList -> setMaximumWidth(nextButton -> width() * 4);
     connect(camList,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(makeBigVideo(QListWidgetItem*)));
-    setWindowTitle(tr("VargusViewer"));
+    setWindowTitle(tr("Vargus Viewer"));
     createLayouts();
     if(settingsRead)
     {
@@ -57,7 +57,7 @@ bool MainWindow::initData()
     socket -> connectToHost(server, port);
     if(!socket->waitForConnected(5000))
     {
-        QMessageBox::critical(NULL, tr("Error"), tr("Can not connect to server.\nPlease, change the connection settings"));
+        QMessageBox::critical(NULL, tr("Error"), tr("Can not connect to server.\nPlease, change the connection settings."));
         delete socket;
         return false;
     }
@@ -99,7 +99,7 @@ QStringList MainWindow::readAnswer(int amountOfLines)
         }
     }
     if (tries == 5)
-        QMessageBox::critical(this, tr("Error"), tr("Server is not response"));
+        QMessageBox::critical(this, tr("Error"), tr("Server is not response."));
     return ans;
 }
 
@@ -206,7 +206,7 @@ void MainWindow::about()
 {
     vargusLog.writeToFile("Action about clicked");
     QMessageBox::about(this, tr("About"),
-             tr("<h2>VargusViewer</h2><p>Etersoft 2012</p>"));
+             tr("<h2>Vargus Viewer</h2><p>Etersoft 2012</p>"));
 
 }
 

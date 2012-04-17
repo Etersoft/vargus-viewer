@@ -36,4 +36,6 @@ HEADERS  += mainwindow.h \
 
 FORMS    +=
 
+TRANSLATIONS += langs/vargusviewer_ru.ts
+
 unix|win32: LIBS += -lvlc
