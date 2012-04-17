@@ -269,7 +269,7 @@ void VideoWidget::setupContextMenu()
     frame->setContextMenuPolicy(Qt::CustomContextMenu);
     contextMenu=new QMenu(this);
     arhiveCallAction=new QAction(this);
-    arhiveCallAction->setText(trUtf8("Архив"));
+    arhiveCallAction->setText(tr("Archive"));
 
     connect(frame, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(ContextMenuAction(const QPoint& z)));
 }

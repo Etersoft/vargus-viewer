@@ -7,102 +7,102 @@
         <location filename="../mainwindow.cpp" line="30"/>
         <source>Can not open file for logging. 
  Continue to work?</source>
-        <translation type="unfinished">Невозможно открыть файл для записи логов. Продолжить работу?</translation>
+        <translation>Невозможно открыть файл для записи логов. Продолжить работу?</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="30"/>
         <source>Yes</source>
-        <translation type="unfinished">Да</translation>
+        <translation>Да</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="30"/>
         <source>No</source>
-        <translation type="unfinished">Нет</translation>
+        <translation>Нет</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="42"/>
-        <location filename="../mainwindow.cpp" line="223"/>
+        <location filename="../mainwindow.cpp" line="227"/>
         <source>Vargus Viewer</source>
         <oldsource>VargusViewer</oldsource>
-        <translation type="unfinished">Vargus Viewer</translation>
+        <translation>Vargus Viewer</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="60"/>
         <location filename="../mainwindow.cpp" line="102"/>
         <source>Error</source>
-        <translation type="unfinished">Ошибка</translation>
+        <translation>Ошибка</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="60"/>
         <source>Can not connect to server.
 Please, change the connection settings.</source>
-        <translation type="unfinished">Невозможно подключиться к серверу. Пожалуйста, измените настройки соединения.</translation>
+        <translation>Невозможно подключиться к серверу. Пожалуйста, измените настройки соединения.</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="102"/>
         <source>Server is not response.</source>
-        <translation type="unfinished">Сервер не отвечает.</translation>
+        <translation>Сервер не отвечает.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="177"/>
+        <location filename="../mainwindow.cpp" line="178"/>
         <source>&amp;Delete log files</source>
-        <translation type="unfinished">&amp;Удалить файлы логов</translation>
+        <translation>&amp;Удалить файлы логов</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="181"/>
+        <location filename="../mainwindow.cpp" line="182"/>
         <source>&amp;Frames per second</source>
-        <translation type="unfinished">&amp;Кадры в секунду</translation>
+        <translation>&amp;Кадры в секунду</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="186"/>
+        <location filename="../mainwindow.cpp" line="187"/>
         <source>&amp;Exit</source>
-        <translation type="unfinished">&amp;Выход</translation>
+        <translation>&amp;Выход</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="190"/>
+        <location filename="../mainwindow.cpp" line="191"/>
         <source>&amp;About</source>
-        <translation type="unfinished">&amp;О программе</translation>
+        <translation>&amp;О программе</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="194"/>
+        <location filename="../mainwindow.cpp" line="195"/>
         <source>&amp;Logging enabled</source>
-        <translation type="unfinished">&amp;Вести лог</translation>
+        <translation>&amp;Вести лог</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="200"/>
+        <location filename="../mainwindow.cpp" line="201"/>
         <source>&amp;Connection settings</source>
-        <translation type="unfinished">&amp;Настройки соединения</translation>
+        <translation>&amp;Настройки соединения</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="208"/>
+        <location filename="../mainwindow.cpp" line="212"/>
         <source>About</source>
-        <translation type="unfinished">О программе</translation>
+        <translation>О программе</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="209"/>
+        <location filename="../mainwindow.cpp" line="213"/>
         <source>&lt;h2&gt;Vargus Viewer&lt;/h2&gt;&lt;p&gt;Etersoft 2012&lt;/p&gt;</source>
         <oldsource>&lt;h2&gt;VargusViewer&lt;/h2&gt;&lt;p&gt;Etersoft 2012&lt;/p&gt;</oldsource>
-        <translation type="unfinished">&lt;h2&gt;Vargus Viewer&lt;/h2&gt;&lt;p&gt;Etersoft 2012&lt;/p&gt;</translation>
+        <translation>&lt;h2&gt;Vargus Viewer&lt;/h2&gt;&lt;p&gt;Etersoft 2012&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="223"/>
+        <location filename="../mainwindow.cpp" line="227"/>
         <source>Are you sure you want to quit?</source>
-        <translation type="unfinished">Вы уверены, что хотите выйти?</translation>
+        <translation>Вы уверены, что хотите выйти?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="492"/>
+        <location filename="../mainwindow.cpp" line="497"/>
         <source>&amp;File</source>
-        <translation type="unfinished">&amp;Файл</translation>
+        <translation>&amp;Файл</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="494"/>
+        <location filename="../mainwindow.cpp" line="499"/>
         <source>&amp;Settings</source>
-        <translation type="unfinished">&amp;Настройки</translation>
+        <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="496"/>
+        <location filename="../mainwindow.cpp" line="501"/>
         <source>&amp;Help</source>
-        <translation type="unfinished">&amp;Помощь</translation>
+        <translation>&amp;Помощь</translation>
     </message>
 </context>
 <context>
@@ -110,36 +110,36 @@ Please, change the connection settings.</source>
     <message>
         <location filename="../settingsdialog.cpp" line="10"/>
         <source>Connection settings</source>
-        <translation type="unfinished">Настройки соединения</translation>
+        <translation>Настройки соединения</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="11"/>
         <source>&amp;Server adress</source>
-        <translation type="unfinished">&amp;Адрес сервера</translation>
+        <translation>&amp;Адрес сервера</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="12"/>
         <source>&amp;Port</source>
-        <translation type="unfinished">&amp;Порт</translation>
+        <translation>&amp;Порт</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="51"/>
         <source>&amp;OK</source>
         <oldsource>&amp;Ok</oldsource>
-        <translation type="unfinished">&amp;ОК</translation>
+        <translation>&amp;ОК</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="54"/>
         <source>&amp;Cancel</source>
-        <translation type="unfinished">&amp;Отмена</translation>
+        <translation>&amp;Отмена</translation>
     </message>
 </context>
 <context>
     <name>VideoWidget</name>
-    <message utf8="true">
+    <message>
         <location filename="../videowidget.cpp" line="272"/>
-        <source>Архив</source>
-        <translation type="unfinished">Archive</translation>
+        <source>Archive</source>
+        <translation>Архив</translation>
     </message>
 </context>
 </TS>
