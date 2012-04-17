@@ -2,6 +2,7 @@
 #include <QTextCodec>
 #include <QTranslator>
 #include <QString>
+#include <QLibraryInfo>
 #include "mainwindow.h"
 
 int main(int argc, char *argv[])
@@ -12,18 +13,17 @@ int main(int argc, char *argv[])
     QIcon icon(imagePath + "vargus_big.png");
     QApplication::setWindowIcon(icon);
     QTextCodec::setCodecForTr( QTextCodec::codecForName("utf8") );
-    QString translatorFileName = "vargusviewer_" + QLocale::system().name();
+
+    QTranslator qtTranslator;
+    qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    app.installTranslator(&qtTranslator);
+
     QTranslator *translator = new QTranslator(&app);
-    if (translator->load(translatorFileName,"/usr/share/vargus-viewer/langs/"))
+    if (translator->load("lang_" + QLocale::system().name(), QString(DATADIR) + "lang/"))
     {
         app.installTranslator(translator);
     }
-     /*QString translatorFileName = "qt_" + QLocale::system().name();
-     QTranslator *translator = new QTranslator(&app);
-     if (translator->load(translatorFileName,"$QTDIR/translations/"))
-     {
-         app.installTranslator(translator);
-     }*/
+
     QString serv;
     int port = 0;
     bool logging = true;

@@ -247,7 +247,7 @@ void MainWindow::changeActiveCameras(QList<Camera *> activeCameras)
 
 void MainWindow::makeButtons()
 {
-    QString imagePath = "/usr/share/vargus-viewer/images/";
+    QString imagePath = QString(DATADIR) + "images/";
     vargusLog.writeToFile("Making buttons");
     prevButton = new QPushButton(this);
     prevButton -> setMinimumSize(50, 50);

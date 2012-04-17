@@ -6,12 +6,8 @@
 
 QT       += core gui network
 
-# FIXME: absolute path to headers
-INCLUDEPATH += /usr/include/kde4
-
 TARGET = VargusViewer
 TEMPLATE = app
-
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -37,5 +33,7 @@ HEADERS  += mainwindow.h \
 FORMS    +=
 
 TRANSLATIONS += langs/vargusviewer_ru.ts
+
+DEFINES += DATADIR=\\\"/usr/share/vargus-viewer/\\\"
 
 unix|win32: LIBS += -lvlc
