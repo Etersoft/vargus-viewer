@@ -1,5 +1,5 @@
 Name: vargus-viewer
-Version: 0.2
+Version: 0.3
 Release: alt1
 
 Summary: Qt4 client for vargus server
@@ -41,6 +41,10 @@ cp lang/lang_ru.qm %buildroot%_datadir/%name/lang/
 %_datadir/%name/
 
 %changelog
+* Tue Apr 17 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.3-alt1
+- add icons
+- add trayIcon
+- add russian translation
 * Mon Apr 16 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.2-alt1
 - add icons
 - new parser of input parameters
