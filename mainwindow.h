@@ -40,6 +40,7 @@ class MainWindow : public QMainWindow
     QMenu *fileMenu;
     QMenu *helpMenu;
     QMenu *settingsMenu;
+    QMenu *contextMenu;
 
     QTabWidget *setTab;
 

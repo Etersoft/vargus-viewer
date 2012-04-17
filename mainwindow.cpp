@@ -135,6 +135,7 @@ MainWindow::~MainWindow()
     delete fileMenu;
     delete helpMenu;
     delete settingsMenu;
+    delete contextMenu;
     delete setTab;
     delete centralLayout;
     delete prevButton;
@@ -174,32 +175,35 @@ void MainWindow::onSetChanged(int num)
 
 void MainWindow::createActions()
 {
-    delLogFilesAction = new QAction(tr("&Delete log files"),this);
-    fileMenu->addAction(delLogFilesAction);
-    connect(delLogFilesAction,SIGNAL(triggered()),this,SLOT(deleteLogFiles()));
+    delLogFilesAction = new QAction(tr("&Delete log files"), this);
+    fileMenu -> addAction(delLogFilesAction);
+    connect(delLogFilesAction, SIGNAL(triggered()), this, SLOT(deleteLogFiles()));
 
-    fpsCounterAction = new QAction(tr("&Frames per second"),this);
+    fpsCounterAction = new QAction(tr("&Frames per second"), this);
     fileMenu -> addAction(fpsCounterAction);
     connect(fpsCounterAction, SIGNAL(triggered()), this, SLOT(showFPS()));
 
-    fileMenu->addSeparator();
-    exitAction = new QAction(tr("&Exit"),this);
-    fileMenu->addAction(exitAction);
-    connect(exitAction,SIGNAL(triggered()),this,SLOT(close()));
+    fileMenu -> addSeparator();
+    exitAction = new QAction(tr("&Exit"), this);
+    fileMenu -> addAction(exitAction);
+    connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
 
-    aboutAction = new QAction(tr("&About"),this);
-    helpMenu->addAction(aboutAction);
-    connect(aboutAction,SIGNAL(triggered()),this,SLOT(about()));
+    aboutAction = new QAction(tr("&About"), this);
+    helpMenu -> addAction(aboutAction);
+    connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));
 
     enableLog = new QAction(tr("&Logging enabled"),this);
     enableLog -> setCheckable(true);
     enableLog -> setChecked(loggingEnabled);
     settingsMenu -> addAction(enableLog);
-    connect(enableLog,SIGNAL(toggled(bool)),this,SLOT(enableLogging(bool)));
+    connect(enableLog, SIGNAL(toggled(bool)), this, SLOT(enableLogging(bool)));
 
-    connectionSettings = new QAction(tr("&Connection settings"),this);
+    connectionSettings = new QAction(tr("&Connection settings"), this);
     settingsMenu -> addAction(connectionSettings);
-    connect(connectionSettings,SIGNAL(triggered()),this,SLOT(changeConnectionSettings()));
+    connect(connectionSettings, SIGNAL(triggered()), this ,SLOT(changeConnectionSettings()));
+
+    contextMenu -> addAction(connectionSettings);
+    contextMenu -> addAction(exitAction);
 }
 
 void MainWindow::about()
@@ -215,12 +219,13 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     if(okToContinue())
         QMainWindow::closeEvent(event);
-    else event->ignore();
+    else event -> ignore();
 }
 
 bool MainWindow::okToContinue()
 {
-    int r = QMessageBox::warning(this,tr("Vargus Viewer"),tr("Are you sure you want to quit?"), QMessageBox::Yes|QMessageBox::No);
+    int r = QMessageBox::warning(this, tr("Vargus Viewer"), tr("Are you sure you want to quit?"),
+                                 QMessageBox::Yes | QMessageBox::No);
     if(r == QMessageBox::Yes)
         return true;
     else return false;
@@ -228,7 +233,7 @@ bool MainWindow::okToContinue()
 
 void MainWindow::changeActiveCameras(QList<Camera *> activeCameras)
 {
-    QList<Set *>::iterator it =setsList.begin();
+    QList<Set *>::iterator it = setsList.begin();
     QList<Set *>::iterator end = setsList.end();
     while(it != end)
     {
@@ -245,24 +250,24 @@ void MainWindow::makeButtons()
     QString imagePath = "/usr/share/vargus-viewer/images/";
     vargusLog.writeToFile("Making buttons");
     prevButton = new QPushButton(this);
-    prevButton -> setMinimumSize(50,50);
-    prevButton -> setMaximumSize(50,50);
+    prevButton -> setMinimumSize(50, 50);
+    prevButton -> setMaximumSize(50, 50);
     resetButton = new QPushButton(this);
-    resetButton -> setMinimumSize(50,50);
-    resetButton -> setMaximumSize(50,50);
+    resetButton -> setMinimumSize(50, 50);
+    resetButton -> setMaximumSize(50, 50);
     nextButton = new QPushButton(this);
-    nextButton -> setMinimumSize(50,50);
-    nextButton -> setMaximumSize(50,50);
+    nextButton -> setMinimumSize(50, 50);
+    nextButton -> setMaximumSize(50, 50);
     prevButton -> setIcon(QIcon(imagePath + "prev.png"));
     resetButton -> setIcon(QIcon(imagePath + "reset.png"));
     nextButton -> setIcon(QIcon(imagePath + "next.png"));
-    QSize s(32,32);
+    QSize s(32, 32);
     prevButton -> setIconSize(s);
     resetButton -> setIconSize(s);
     nextButton -> setIconSize(s);
-    connect(nextButton,SIGNAL(clicked()),this,SLOT(nextGroup()));
-    connect(prevButton,SIGNAL(clicked()),this,SLOT(prevGroup()));
-    connect(resetButton,SIGNAL(clicked()),this,SLOT(resetGroup()));
+    connect(nextButton, SIGNAL(clicked()), this, SLOT(nextGroup()));
+    connect(prevButton, SIGNAL(clicked()), this, SLOT(prevGroup()));
+    connect(resetButton, SIGNAL(clicked()), this, SLOT(resetGroup()));
     vargusLog.writeToFile("Buttons made");
 }
 
@@ -495,6 +500,9 @@ void MainWindow::createMenus()
     menuBar() -> addMenu(settingsMenu);
     helpMenu = new QMenu(tr("&Help"),this);
     menuBar() -> addMenu(helpMenu);
+    contextMenu = new QMenu(this);
+    menuBar() -> addMenu(contextMenu);
+    trIcon -> setContextMenu(contextMenu);
 }
 
 void MainWindow::createLayouts()
@@ -656,8 +664,8 @@ void MainWindow::createIcons()
 {
     QString imagePath = "/usr/share/vargus-viewer/images/";
     trIcon = new QSystemTrayIcon();  //инициализируем объект
-    trIcon->setIcon(QIcon(imagePath + "vargus32.png"));  //устанавливаем иконку
-    trIcon->show();  //отображаем объект
+    trIcon -> setIcon(QIcon(imagePath + "vargus32.png"));  //устанавливаем иконку
+    trIcon -> show();  //отображаем объект
     connect(trIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(showHide(QSystemTrayIcon::ActivationReason)));
 }
@@ -666,10 +674,16 @@ void MainWindow::createIcons()
 void MainWindow::showHide(QSystemTrayIcon::ActivationReason r) {
     if (r == QSystemTrayIcon::Trigger)  //если нажато левой кнопкой продолжаем
     {
+        vargusLog.writeToFile("Tray icon clicked (LMB)");
         if (!isVisible()) {  //если окно было не видимо - отображаем его
             show();
         } else {
             hide();  //иначе скрываем
         }
+    }
+    else if(r == QSystemTrayIcon::Context)
+    {
+        vargusLog.writeToFile("Tray icon clicked (RMB)");
+        contextMenu -> show();
     }
 }
