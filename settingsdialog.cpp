@@ -7,9 +7,9 @@
 SettingsDialog::SettingsDialog(QWidget *parent, QString server, int port) :
     QDialog(parent)
 {
-    setWindowTitle(tr("Настройки соединения"));
-    serverLabel = new QLabel(tr("&Адрес сервера"),this);
-    portLabel = new QLabel(tr("&Порт"),this);
+    setWindowTitle(tr("Connection settings"));
+    serverLabel = new QLabel(tr("&Server adress"),this);
+    portLabel = new QLabel(tr("&Port"),this);
     serverLineEdit = new QLineEdit(this);
     portLineEdit = new QLineEdit(this);
     connect(serverLineEdit,SIGNAL(textChanged(QString)),this,SLOT(enableOk()));
@@ -48,10 +48,10 @@ void SettingsDialog::createLayouts()
 void SettingsDialog::createButtons()
 {
     okButton = new QPushButton(this);
-    okButton -> setText(tr("&Ок"));
+    okButton -> setText(tr("&Ok"));
     okButton -> setEnabled(false);
     cancelButton = new QPushButton(this);
-    cancelButton -> setText(tr("&Отмена"));
+    cancelButton -> setText(tr("&Cancel"));
     connect(okButton,SIGNAL(clicked()),this,SLOT(okButtonClicked()));
     connect(cancelButton,SIGNAL(clicked()),this,SLOT(close()));
 }

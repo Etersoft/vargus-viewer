@@ -11,9 +11,9 @@ int main(int argc, char *argv[])
     QIcon icon(imagePath + "vargus_big.png");
     QApplication::setWindowIcon(icon);
     QTextCodec::setCodecForTr( QTextCodec::codecForName("utf8") );
-    QString translatorFileName = QLatin1String("qt_ru");
+    QString translatorFileName = QLatin1String("qt_ru.qm");
     QTranslator *translator = new QTranslator(&app);
-    if (translator->load(translatorFileName, "./"))
+    if (translator->load(translatorFileName,"/usr/lib64/qt3/translations/"))
     {
         app.installTranslator(translator);
     }

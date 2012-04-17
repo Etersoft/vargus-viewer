@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
     vargusLog.setActive(loggingEnabled);
     if(!vargusLog.makeLogFile())
     {
-        int n = QMessageBox::warning(this,"Warning",tr("Невозможно открыть файл для записи логов.\n Продолжить работу?"),tr("Да"),tr("Нет"),QString(),0,1);
+        int n = QMessageBox::warning(this,"Warning",tr("Can not open file for logging. \n Continue to work?"),tr("Yes"),tr("No"),QString(),0,1);
         if(n) exit(1);
     }
     vargusLog.writeToFile("PROGRAM STARTED");
@@ -57,7 +57,7 @@ bool MainWindow::initData()
     socket -> connectToHost(server, port);
     if(!socket->waitForConnected(5000))
     {
-        QMessageBox::critical(NULL, tr("Ошибка"), tr("Невозможно подключиться к серверу.\nПожалуйста, измените настройки соединения"));
+        QMessageBox::critical(NULL, tr("Error"), tr("Can not connect to server.\nPlease, change the connection settings"));
         delete socket;
         return false;
     }
@@ -174,30 +174,30 @@ void MainWindow::onSetChanged(int num)
 
 void MainWindow::createActions()
 {
-    delLogFilesAction = new QAction(tr("&Удалить log файлы"),this);
+    delLogFilesAction = new QAction(tr("&Delete log files"),this);
     fileMenu->addAction(delLogFilesAction);
     connect(delLogFilesAction,SIGNAL(triggered()),this,SLOT(deleteLogFiles()));
 
-    fpsCounterAction = new QAction(tr("&Кадры в секунду"),this);
+    fpsCounterAction = new QAction(tr("&Frames per second"),this);
     fileMenu -> addAction(fpsCounterAction);
     connect(fpsCounterAction, SIGNAL(triggered()), this, SLOT(showFPS()));
 
     fileMenu->addSeparator();
-    exitAction = new QAction(tr("&Выход"),this);
+    exitAction = new QAction(tr("&Exit"),this);
     fileMenu->addAction(exitAction);
     connect(exitAction,SIGNAL(triggered()),this,SLOT(close()));
 
-    aboutAction = new QAction(tr("&О программе"),this);
+    aboutAction = new QAction(tr("&About"),this);
     helpMenu->addAction(aboutAction);
     connect(aboutAction,SIGNAL(triggered()),this,SLOT(about()));
 
-    enableLog = new QAction(tr("&Вести лог"),this);
+    enableLog = new QAction(tr("&Logging enabled"),this);
     enableLog -> setCheckable(true);
     enableLog -> setChecked(loggingEnabled);
     settingsMenu -> addAction(enableLog);
     connect(enableLog,SIGNAL(toggled(bool)),this,SLOT(enableLogging(bool)));
 
-    connectionSettings = new QAction(tr("&Настройки соединения"),this);
+    connectionSettings = new QAction(tr("&Connection settings"),this);
     settingsMenu -> addAction(connectionSettings);
     connect(connectionSettings,SIGNAL(triggered()),this,SLOT(changeConnectionSettings()));
 }
@@ -205,7 +205,7 @@ void MainWindow::createActions()
 void MainWindow::about()
 {
     vargusLog.writeToFile("Action about clicked");
-    QMessageBox::about(this, tr("О программе"),
+    QMessageBox::about(this, tr("About"),
              tr("<h2>VargusViewer</h2><p>Etersoft 2012</p>"));
 
 }
@@ -220,7 +220,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 bool MainWindow::okToContinue()
 {
-    int r = QMessageBox::warning(this,tr("Vargus Viewer"),tr("Вы уверены, что хотите выйти?"), QMessageBox::Yes|QMessageBox::No);
+    int r = QMessageBox::warning(this,tr("Vargus Viewer"),tr("Are you sure you want to quit?"), QMessageBox::Yes|QMessageBox::No);
     if(r == QMessageBox::Yes)
         return true;
     else return false;
@@ -489,11 +489,11 @@ void MainWindow::deleteLogFiles()
 void MainWindow::createMenus()
 {
 
-    fileMenu = new QMenu(tr("&Файл"),this);
+    fileMenu = new QMenu(tr("&File"),this);
     menuBar() -> addMenu(fileMenu);
-    settingsMenu = new QMenu(tr("&Настройки"),this);
+    settingsMenu = new QMenu(tr("&Settings"),this);
     menuBar() -> addMenu(settingsMenu);
-    helpMenu = new QMenu(tr("&Помощь"),this);
+    helpMenu = new QMenu(tr("&Help"),this);
     menuBar() -> addMenu(helpMenu);
 }
 
