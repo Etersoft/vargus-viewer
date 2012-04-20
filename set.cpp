@@ -85,9 +85,9 @@ void Set::setActiveView(int index)
     QList<View *>::iterator it = viewList.begin();
     QList<View *>::iterator end = viewList.end();
     int n = 0;
-    while(it!=end)
+    while(it != end)
     {
-        (*it)->setActive( n == index);
+        (*it) -> setActive( n == index);
         it++;
         n++;
     }
@@ -315,7 +315,7 @@ void Set::stopPlay(VideoWidget *excluding)
 {
     QList<VideoWidget *>::iterator it = videoList.begin();
     QList<VideoWidget *>::iterator end = videoList.end();
-    while(it!=end)
+    while(it != end)
     {
         if(*it != excluding)
             delete *it;
@@ -567,5 +567,5 @@ void Set::enableButtons()
 {
     bool nextButton = !(amountOfCells(tp) >= stc.at(tp) -> length() || lastCamNum[tp] == cameraList.length() - 1);
     bool prevButton = !(amountOfCells(tp) >= stc.at(tp)->length() || lastCamNum[tp] == activeCameras - 1);
-    emit buttonsEnabled(prevButton,nextButton);
+    emit buttonsEnabled(prevButton, nextButton);
 }

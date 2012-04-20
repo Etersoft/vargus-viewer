@@ -114,17 +114,45 @@ Please, change the connection settings.</source>
         <translation>Следующие камеры</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="500"/>
+        <location filename="../mainwindow.cpp" line="482"/>
+        <source>Complete</source>
+        <translation>Завершено</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="482"/>
+        <source>Log files are deleted.</source>
+        <translation>Log файлы удалены.</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="485"/>
+        <source>Log files are not deleted.</source>
+        <translation>Log файлы не удалены.</translation>
+    </message>
+    <message>
+        <source>Log files are deleted</source>
+        <translation type="obsolete">Log файлы удалены.</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="485"/>
+        <source>Unable to process</source>
+        <translation>Невозможно выполнить</translation>
+    </message>
+    <message>
+        <source>Log files are not deleted</source>
+        <translation type="obsolete">Log файлы не удалены.</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="491"/>
         <source>&amp;File</source>
         <translation>&amp;Файл</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="502"/>
+        <location filename="../mainwindow.cpp" line="493"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="504"/>
+        <location filename="../mainwindow.cpp" line="495"/>
         <source>&amp;Help</source>
         <translation>&amp;Помощь</translation>
     </message>

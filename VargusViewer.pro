@@ -30,10 +30,14 @@ HEADERS  += mainwindow.h \
     settingsdialog.h \
     fpscounter.h
 
-FORMS    +=
-
-TRANSLATIONS += langs/lang_ru.ts
+TRANSLATIONS += lang/lang_ru.ts
 
 DEFINES += DATADIR=\\\"/usr/share/vargus-viewer/\\\"
+unix {
+   DEFINES += WORKDIR=\\\"$(HOME)/vargus-viewer/\\\"
+}
+!unix {
+   DEFINES += WORKDIR=\\\".\\\"
+}
 
 unix|win32: LIBS += -lvlc

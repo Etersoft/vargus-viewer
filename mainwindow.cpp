@@ -477,21 +477,12 @@ void MainWindow::initViews()
 void MainWindow::deleteLogFiles()
 {
     vargusLog.writeToFile("Action delete other log files clicked");
-    QDir d(".");
-    d.cd("logs");
-    QStringList l;
-    l << "*.txt";
-    l = d.entryList(l);
-    QString currentlog = vargusLog.getFileName();
-    QStringList::Iterator it = l.begin();
-    QStringList::Iterator end = l.end();
-    while(it != end)
+    if( vargusLog.deleteLogFiles() )
     {
-        QString tmp = d.absoluteFilePath(*it);
-        if(tmp != currentlog)
-            QFile::remove(tmp);
-        it++;
+        QMessageBox::information(this,tr("Complete"),tr("Log files are deleted."));
     }
+    else
+        QMessageBox::information(this,tr("Unable to process"),tr("Log files are not deleted."));
 }
 
 void MainWindow::createMenus()

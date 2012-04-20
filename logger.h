@@ -12,6 +12,7 @@ public:
     void closeFile();
     QString getFileName();
     void setActive(bool isEnabled);
+    bool deleteLogFiles();
 private:
     static Logger* myInstance;
     Logger(){ file = NULL; enabled = true;}
