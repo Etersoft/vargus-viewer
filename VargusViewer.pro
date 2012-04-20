@@ -32,7 +32,7 @@ HEADERS  += mainwindow.h \
 
 FORMS    +=
 
-TRANSLATIONS += langs/vargusviewer_ru.ts
+TRANSLATIONS += langs/lang_ru.ts
 
 DEFINES += DATADIR=\\\"/usr/share/vargus-viewer/\\\"
 
