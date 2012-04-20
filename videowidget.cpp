@@ -13,6 +13,8 @@
 
 libvlc_instance_t *VideoWidget::vlcInstance = 0;
 RunningTextSettings *VideoWidget::runningTextSetting = 0;
+RunningString *VideoWidget::runningString = 0;
+
 RunningTextSettings::RunningTextSettings()
 {
     color = 0xFFFFFF;
@@ -91,6 +93,10 @@ VideoWidget::VideoWidget(): QWidget()
     {
         vlcInstance=libvlc_new(sizeof(vlc_args) / sizeof(vlc_args[0]), vlc_args);
     }
+    if(!runningString)
+    {
+        runningString = new RunningString();
+    }
     if(!runningTextSetting)
     {
         runningTextSetting = new RunningTextSettings();
@@ -149,8 +155,11 @@ void VideoWidget::startPlay(sizeVideo size)
             vlcMedia = libvlc_media_new_path(vlcInstance, camera->preview().toAscii());
             break;
     }
-
+    libvlc_media_set_meta (vlcMedia,  libvlc_meta_Title, camera->name().toAscii());
     libvlc_media_player_set_media (vlcPlayer, vlcMedia);
+
+    //Set this class for write camera events
+    runningString->addPrintMethod(camera->name(),this);
 
     //#FIXME For linux only
     int windid = frame->winId();
@@ -286,6 +295,11 @@ void VideoWidget::ContextMenuAction(const QPoint& z)
 void VideoWidget::arhiveMenuPress()
 {
     emit arhiveCall();
+}
+
+void VideoWidget::printString(QString rString)
+{
+    writeTextString( rString );
 }
 
 void VideoWidget::writeTextString(QString string)
