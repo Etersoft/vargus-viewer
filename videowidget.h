@@ -8,6 +8,7 @@
 
 #include <vlc/vlc.h>
 #include "camera.h"
+#include "runningstring.h"
 
 class QFrame;
 
@@ -39,7 +40,7 @@ public:
     QString AddStringGetLine(QString string);
 };
 
-class VideoWidget: public QWidget
+class VideoWidget: public QWidget, public PrintRunningString
 {
     Q_OBJECT
     QFrame *frame;
@@ -53,6 +54,8 @@ class VideoWidget: public QWidget
     libvlc_media_t *vlcMedia;
 
     Camera *camera;
+
+    static RunningString* runningString;
 
     QMenu* contextMenu;
     QAction *arhiveCallAction;
@@ -80,6 +83,7 @@ public:
 
 private:
     static void clearVlc(libvlc_media_player_t *vlcPlayer,libvlc_media_t *vlcMedia);
+    void printString(QString rString);
 
 protected:
     void mousePressEvent ( QMouseEvent * e );

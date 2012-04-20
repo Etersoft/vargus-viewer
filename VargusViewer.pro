@@ -18,7 +18,9 @@ SOURCES += main.cpp\
     cameralist.cpp \
     logger.cpp \
     settingsdialog.cpp \
-    fpscounter.cpp
+    fpscounter.cpp \
+    runningstring.cpp \
+    worksock.cpp
 
 HEADERS  += mainwindow.h \
     set.h \
@@ -28,7 +30,9 @@ HEADERS  += mainwindow.h \
     cameralist.h \
     logger.h \
     settingsdialog.h \
-    fpscounter.h
+    fpscounter.h \
+    runningstring.h \
+    worksock.h
 
 TRANSLATIONS += lang/lang_ru.ts
 
