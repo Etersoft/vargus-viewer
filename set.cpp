@@ -120,7 +120,7 @@ void Set::makeTwoSquare()
         for( int j = 0; j < 2; j++)
         {
             VideoWidget *v = new VideoWidget();
-            grid->addWidget(v, i, j);
+            grid -> addWidget(v, i, j);
             videoList << v;
         }
     }
@@ -133,22 +133,22 @@ void Set::makeFourSquareTripple()
     setLayout(grid);
 
     VideoWidget *v = new VideoWidget();
-    grid->addWidget(v, 0, 0, 2, 2);
+    grid -> addWidget(v, 0, 0, 2, 2);
     videoList << v;
 
     v = new VideoWidget();
-    grid->addWidget(v, 0, 2);
+    grid -> addWidget(v, 0, 2);
     videoList << v;
 
     v = new VideoWidget();
     videoList << v;
-    grid->addWidget(v, 1, 2);
+    grid -> addWidget(v, 1, 2);
 
     for(int i = 0; i < 3; i++)
     {
         v = new VideoWidget();
         videoList << v;
-        grid->addWidget(v, 2, i);
+        grid -> addWidget(v, 2, i);
     }
 }
 
@@ -161,34 +161,34 @@ void Set::makeFourSquareOneCentral()
     {
         VideoWidget *v = new VideoWidget();
         videoList << v;
-        grid->addWidget(v, 0, i);
+        grid -> addWidget(v, 0, i);
     }
     VideoWidget *v = new VideoWidget();
     videoList << v;
-    grid->addWidget(v, 1, 0);
+    grid -> addWidget(v, 1, 0);
 
     v = new VideoWidget();
     videoList << v;
-    grid->addWidget(v, 1, 1, 2, 2);
+    grid -> addWidget(v, 1, 1, 2, 2);
 
     v = new VideoWidget();
     videoList << v;
-    grid->addWidget(v, 1, 3);
+    grid -> addWidget(v, 1, 3);
 
     v = new VideoWidget();
     videoList << v;
-    grid->addWidget(v, 2, 0);
+    grid -> addWidget(v, 2, 0);
 
     v = new VideoWidget();
     videoList << v;
-    grid->addWidget(v, 2, 3);
+    grid -> addWidget(v, 2, 3);
 
 
     for(int i = 0; i < 4; i++)
     {
         v = new VideoWidget();
         videoList << v;
-        grid->addWidget(v, 3, i);
+        grid -> addWidget(v, 3, i);
     }
 }
 
@@ -304,7 +304,7 @@ void Set::init()
     wasChanged = new bool[viewList.length()];
     for(int i = 0; i < viewList.length(); i++)
     {
-        QList<Camera *>* tmpc = new QList<Camera *>(cameraList);
+        QList<Camera *> * tmpc = new QList<Camera *>(cameraList);
         stc << tmpc;
         lastCamNum[i] = (amountOfCells(i) < cameraList.length()) ? (amountOfCells(i) - 1) : (cameraList.length() - 1);
     }
@@ -330,10 +330,16 @@ void Set::stopPlay(VideoWidget *excluding)
 QList<Camera*> Set::getActiveCameras()
 {
     QList<Camera *> res;
-    QList<Camera *>::iterator it = stc.at(tp) -> begin();
-    int activeCameras = amountOfPlayingWidgets();
-    for(int i = 0; i < activeCameras; i++, it++)
-        res << (*it);
+    QList<VideoWidget *>::iterator it = videoList.begin();
+    QList<VideoWidget *>::iterator end = videoList.end();
+    while(it != end)
+    {
+        if( (*it) -> playing() )
+        {
+            res << (*it) -> getCamera();
+        }
+        it++;
+    }
     return res;
 }
 
