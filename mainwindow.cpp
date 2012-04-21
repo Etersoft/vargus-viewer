@@ -6,6 +6,7 @@
 #include<QMenuBar>
 #include"settingsdialog.h"
 #include <QtCore>
+#include<QFileDialog>
 Logger &vargusLog = Logger::instance();
 bool test = true;
 
@@ -24,6 +25,7 @@ MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
         vargusLog.setActive(logging);
         settingsRead = true;
     }
+    vargusLog.changeDirectory(pathForLogs);
     vargusLog.setActive(loggingEnabled);
     if(!vargusLog.makeLogFile())
     {
@@ -131,6 +133,7 @@ MainWindow::~MainWindow()
     delete exitAction;
     delete aboutAction;
     delete fpsCounterAction;
+    delete defaultPathForLogs;
     delete enableLog;
     delete fileMenu;
     delete helpMenu;
@@ -144,7 +147,6 @@ MainWindow::~MainWindow()
     delete trIcon;
 
     vargusLog.writeToFile("PROGRAM ENDED");
-    vargusLog.closeFile();
 }
 
 void MainWindow::onSetChanged(int num)
@@ -204,6 +206,14 @@ void MainWindow::createActions()
 
     contextMenu -> addAction(connectionSettings);
     contextMenu -> addAction(exitAction);
+
+    loggingPathAction = new QAction(tr("&Folder for log files"),this);
+    settingsMenu -> addAction(loggingPathAction);
+    connect(loggingPathAction, SIGNAL(triggered()), this, SLOT(changeLoggingFolder()));
+
+    defaultPathForLogs = new QAction(tr("&Default folder for logs."),this);
+    settingsMenu -> addAction(defaultPathForLogs);
+    connect(defaultPathForLogs, SIGNAL(triggered()), this, SLOT(defaultLoggingFolder()));
 }
 
 void MainWindow::about()
@@ -551,6 +561,12 @@ bool MainWindow::readSettings()
     if(t == 1 || t == -1)
         loggingEnabled = true;
     else loggingEnabled = false;
+    pathForLogs = settings -> value("Directory for logs","").toString();
+    if(pathForLogs == "")
+    {
+        pathForLogs = WORKDIR;
+        pathForLogs += "logs/";
+    }
     if(server == "" || port < 0 || port > 65535)
         return false;
     return true;
@@ -582,6 +598,7 @@ void MainWindow::saveSettings()
         settings -> setValue("logging",1);
     else
         settings -> setValue("logging",0);
+    settings -> setValue("Directory for logs", pathForLogs);
 }
 
 void MainWindow::startConnection()
@@ -680,4 +697,24 @@ void MainWindow::showHide(QSystemTrayIcon::ActivationReason r) {
         vargusLog.writeToFile("Tray icon clicked (RMB)");
         contextMenu -> show();
     }
+}
+
+void MainWindow::changeLoggingFolder()
+{
+    vargusLog.writeToFile("Change log file directory");
+    QString newPath = QFileDialog::getExistingDirectory(this,tr("Chose directory for saving log files."));
+    vargusLog.writeToFile("Change log file directory to " + newPath);
+    if(vargusLog.changeDirectory(newPath))
+    {
+        settings -> setValue("Directory for logs", newPath);
+        pathForLogs = newPath;
+    }
+}
+
+void MainWindow::defaultLoggingFolder()
+{
+    QString newPath = WORKDIR;
+    newPath += "logs/";
+    vargusLog.changeDirectory(newPath);
+    settings -> setValue("Directory for logs", newPath);
 }

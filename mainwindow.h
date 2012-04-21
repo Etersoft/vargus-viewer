@@ -36,6 +36,8 @@ class MainWindow : public QMainWindow
     QAction *enableLog;
     QAction *connectionSettings;
     QAction *fpsCounterAction;
+    QAction *loggingPathAction;
+    QAction *defaultPathForLogs;
 
     QMenu *fileMenu;
     QMenu *helpMenu;
@@ -59,6 +61,7 @@ class MainWindow : public QMainWindow
     QSettings *settings;
     QString server;
     int port;
+    QString pathForLogs;
     bool loggingEnabled;
     QSystemTrayIcon *trIcon;
 
@@ -100,6 +103,8 @@ private slots:
     void showFPS();
     void enableButtons(bool prev, bool next);
     void showHide(QSystemTrayIcon::ActivationReason);
+    void changeLoggingFolder();
+    void defaultLoggingFolder();
 protected:
     void closeEvent(QCloseEvent *);
 

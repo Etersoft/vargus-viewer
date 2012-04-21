@@ -1,6 +1,6 @@
 #include "logger.h"
 #include<QDateTime>
-#include<QDir>
+
 Logger *Logger::myInstance = 0;
 Logger &Logger::instance()
 {
@@ -9,23 +9,33 @@ Logger &Logger::instance()
     return *myInstance;
 }
 
+Logger::Logger()
+{
+   file = NULL;
+   enabled = true;
+   currentDir = NULL;
+}
+
 bool Logger::makeLogFile()
 {
     if(!enabled) return true;
-    QString path = WORKDIR;
-    path += "logs";
-    QDir dir;
-    dir.mkpath(path);
-    dir.cd(path);
+    if(currentDir == NULL)
+    {
+        QString path = WORKDIR;
+        path += "logs";
+        currentDir = new QDir();
+        currentDir -> mkpath(path);
+        currentDir -> cd(path);
+    }
     QDateTime d = QDateTime::currentDateTime();
-    return openLogFile(dir.absolutePath() + "/log " + d.toString(Qt::ISODate) + ".txt");
+    return openLogFile(currentDir -> absolutePath() + "/log " + d.toString(Qt::ISODate) + ".txt");
 }
 
 bool Logger::openLogFile(const QString &filename)
 {
     if(!enabled) return true;
     file = new QFile(filename);
-    if(file->open(QIODevice::WriteOnly | QIODevice::Append))
+    if(file -> open(QIODevice::WriteOnly | QIODevice::Append))
         return true;
     return false;
 }
@@ -42,19 +52,21 @@ bool Logger::writeToFile(const QString &text)
     return true;
 }
 
-void Logger::closeFile()
+Logger::~Logger()
 {
-    if(!file) return;
-    if(file -> isOpen())
+    if( file && file -> isOpen() )
         file -> close();
-    delete file;
+    if(file)
+        delete file;
+    if(currentDir)
+        delete currentDir;
 }
 
 QString Logger::getFileName()
 {
     if(!file)
         return QDateTime::currentDateTime().toString(Qt::ISODate);
-    return file->fileName();
+    return file -> fileName();
 }
 
 void Logger::setActive(bool isEnabled)
@@ -66,22 +78,58 @@ void Logger::setActive(bool isEnabled)
 
 bool Logger::deleteLogFiles()
 {
-    QString s = WORKDIR;
-    s += "logs";
-    QDir d;
-    if(!d.cd(s)) return false;
+    if(!currentDir) return false;
     QStringList l;
     l << "*.txt";
-    l = d.entryList(l);
+    l = currentDir -> entryList(l);
     QStringList::Iterator it = l.begin();
     QStringList::Iterator end = l.end();
     QString fname = getFileName();
     while(it != end)
     {
-        QString tmp = d.absoluteFilePath(*it);
+        QString tmp = currentDir -> absoluteFilePath(*it);
         if(tmp != fname)
             QFile::remove(tmp);
         it++;
     }
     return true;
+}
+
+bool Logger::changeDirectory(const QString &_path)
+{
+    if(!currentDir)
+    {
+        currentDir = new QDir();
+        if( ! (currentDir -> mkpath(_path)) )
+            return false;
+        currentDir -> cd(_path);
+        return true;
+    }
+    if(currentDir -> absolutePath() == _path)
+        return true;
+    if( ! (currentDir -> mkpath(_path)) )
+        return false;
+    if(file)
+    {
+        if( file -> isOpen() )
+        {
+            file -> close();
+        }
+        QString fname = file -> fileName();
+        QString newFname = _path +
+                fname.right( fname.length() -
+                             currentDir -> absolutePath().length());
+
+        file -> rename( newFname);
+        currentDir -> cd(_path);
+        if(file -> open(QIODevice::WriteOnly | QIODevice::Append))
+        {
+            return true;
+        }
+        return false;
+    }
+    currentDir -> cd(_path);
+    return true;
+
+
 }
