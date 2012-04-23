@@ -1,5 +1,7 @@
 #include "view.h"
 #include <QPainter>
+#include<logger.h>
+extern Logger &vargusLog;
 
 View::View()
 {
@@ -22,21 +24,21 @@ View::~View()
 
 View::View(View* view)
 {
-    view_description = view->description();
-    view_width = view->width();
-    view_height = view->height();
-    view_double = view->doubleCells();
-    view_triple = view->tripleCells();
+    view_description = view -> description();
+    view_width = view -> width();
+    view_height = view -> height();
+    view_double = view -> doubleCells();
+    view_triple = view -> tripleCells();
     view_quadruple = view->quadrupleCells();
-    view_icon = new QIcon(*view->passiveIcon());
-    view_active_icon = new QIcon(*view->activeIcon());
+    view_icon = new QIcon(*view -> passiveIcon());
+    view_active_icon = new QIcon(*view -> activeIcon());
 
     active = false;
     waitActive = false;
 
     setIcon(*view_icon);
     setFixedSize(ICON_WIDTH, ICON_HEIGHT);
-    setIconSize(this->size());
+    setIconSize(size());
     setToolTip(view_description);
 
     connect(this, SIGNAL(clicked()), this, SLOT(onClick()));
@@ -79,7 +81,7 @@ void View::createIcons()
 
     setIcon(*view_icon);
     setFixedSize(ICON_WIDTH, ICON_HEIGHT);
-    setIconSize(this->size());
+    setIconSize(size());
 }
 
 QPixmap View::createIconImage(QColor color, QColor bkColor)
@@ -156,13 +158,14 @@ void View::setActive(bool a)
 {
     active = a;
     if(active)
-        this->setIcon(*view_active_icon);
+        setIcon(*view_active_icon);
     else
-        this->setIcon(*view_icon);
+        setIcon(*view_icon);
 }
 
 void View::onClick()
 {
+    vargusLog.writeToFile("View clicked " + view_description);
     waitActive = true;
     emit(waitForUpdate());
 }
