@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     settingsdialog.cpp \
     fpscounter.cpp \
     runningstring.cpp \
-    worksock.cpp
+    worksock.cpp \
+    videosettingsdialog.cpp
 
 HEADERS  += mainwindow.h \
     set.h \
@@ -32,7 +33,8 @@ HEADERS  += mainwindow.h \
     settingsdialog.h \
     fpscounter.h \
     runningstring.h \
-    worksock.h
+    worksock.h \
+    videosettingsdialog.h
 
 TRANSLATIONS += lang/lang_ru.ts
 
@@ -45,3 +47,6 @@ unix {
 }
 
 unix|win32: LIBS += -lvlc
+
+FORMS += \
+    dialog.ui
