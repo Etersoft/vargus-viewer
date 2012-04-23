@@ -211,7 +211,7 @@ void MainWindow::createActions()
     settingsMenu -> addAction(loggingPathAction);
     connect(loggingPathAction, SIGNAL(triggered()), this, SLOT(changeLoggingFolder()));
 
-    defaultPathForLogs = new QAction(tr("&Default folder for logs."),this);
+    defaultPathForLogs = new QAction(tr("&Default folder for logs"),this);
     settingsMenu -> addAction(defaultPathForLogs);
     connect(defaultPathForLogs, SIGNAL(triggered()), this, SLOT(defaultLoggingFolder()));
 }
