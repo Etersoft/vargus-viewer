@@ -8,6 +8,7 @@
 #include <QtCore>
 #include<QFileDialog>
 #include<logger.h>
+#include<videosettingsdialog.h>
 extern Logger &vargusLog;
 bool test = true;
 
@@ -134,6 +135,7 @@ MainWindow::~MainWindow()
     delete exitAction;
     delete aboutAction;
     delete fpsCounterAction;
+    delete videoSettingsAction;
     delete defaultPathForLogs;
     delete enableLog;
     delete fileMenu;
@@ -215,6 +217,10 @@ void MainWindow::createActions()
     defaultPathForLogs = new QAction(tr("&Default folder for logs"),this);
     settingsMenu -> addAction(defaultPathForLogs);
     connect(defaultPathForLogs, SIGNAL(triggered()), this, SLOT(defaultLoggingFolder()));
+
+    videoSettingsAction = new QAction(tr("&Video settings"),this);
+    settingsMenu -> addAction(videoSettingsAction);
+    connect(videoSettingsAction, SIGNAL(triggered()), this, SLOT(changeVideoSettings()));
 }
 
 void MainWindow::about()
@@ -718,4 +724,11 @@ void MainWindow::defaultLoggingFolder()
     newPath += "logs/";
     vargusLog.changeDirectory(newPath);
     settings -> setValue("Directory for logs", newPath);
+}
+
+void MainWindow::changeVideoSettings()
+{
+    VideoSettingsDialog vd;
+    vd.show();
+    vd.exec();
 }

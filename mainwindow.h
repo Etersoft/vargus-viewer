@@ -37,6 +37,7 @@ class MainWindow : public QMainWindow
     QAction *fpsCounterAction;
     QAction *loggingPathAction;
     QAction *defaultPathForLogs;
+    QAction *videoSettingsAction;
 
     QMenu *fileMenu;
     QMenu *helpMenu;
@@ -104,6 +105,7 @@ private slots:
     void showHide(QSystemTrayIcon::ActivationReason);
     void changeLoggingFolder();
     void defaultLoggingFolder();
+    void changeVideoSettings();
 protected:
     void closeEvent(QCloseEvent *);
 
