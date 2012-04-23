@@ -15,7 +15,6 @@
 #include<QCloseEvent>
 #include<QSettings>
 #include "cameralist.h"
-#include "logger.h"
 #include<fpscounter.h>
 #include<QSystemTrayIcon>
 

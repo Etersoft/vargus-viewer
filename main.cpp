@@ -4,10 +4,43 @@
 #include <QString>
 #include <QLibraryInfo>
 #include "mainwindow.h"
+#include<signal.h>
+#include<logger.h>
+
+Logger &vargusLog = Logger::instance();
+
+
+
+
+void signal_handler(int sig)
+{
+    switch(sig)
+    {
+        case SIGHUP:
+            vargusLog.writeToFile("Signal SIGHUP");
+            break;
+        case SIGTERM:
+            vargusLog.writeToFile("Signal SIGTERM");
+            break;
+        case SIGABRT:
+            vargusLog.writeToFile("Signal SIGABRT");
+            break;
+        case SIGKILL:
+            vargusLog.writeToFile("Signal SIGKILL");
+            break;
+        default:
+            vargusLog.writeToFile("Signal id" + QString::number(sig));
+    }
+}
+
+
 
 int main(int argc, char *argv[])
 {
-
+    signal(SIGKILL, signal_handler);
+    signal(SIGHUP, signal_handler);
+    signal(SIGABRT, signal_handler);
+    signal(SIGTERM, signal_handler);
     QApplication app(argc, argv);
     QString imagePath = "/usr/share/vargus-viewer/images/";
     QIcon icon(imagePath + "vargus_big.png");

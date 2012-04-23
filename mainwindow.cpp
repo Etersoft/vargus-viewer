@@ -7,7 +7,8 @@
 #include"settingsdialog.h"
 #include <QtCore>
 #include<QFileDialog>
-Logger &vargusLog = Logger::instance();
+#include<logger.h>
+extern Logger &vargusLog;
 bool test = true;
 
 MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
