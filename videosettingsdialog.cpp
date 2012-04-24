@@ -16,7 +16,7 @@ VideoSettingsDialog::VideoSettingsDialog(VPlayingType t, QWidget *parent) :
 
 void VideoSettingsDialog::makeButtons()
 {
-    b1 = new QRadioButton(tr("&X-window"),this);
+    b1 = new QRadioButton(tr("&X Window"),this);
     b2 = new QRadioButton(tr("&OpenGL"),this);
 
     buttonOk = new QPushButton(tr("&OK"), this);
