@@ -79,8 +79,8 @@ VideoWidget::VideoWidget(): QWidget()
              "" }; /* "--no-video-title-show" */
 
 
-    isPlaying=false;
-    frame=new QFrame(this);
+    isPlaying = false;
+    frame = new QFrame(this);
 
     QVBoxLayout* layout = new QVBoxLayout;
     layout->setContentsMargins(0,0,0,0);

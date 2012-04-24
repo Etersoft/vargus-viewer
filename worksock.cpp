@@ -8,14 +8,14 @@ worksock::worksock():nextBlockSize(0)
     createSocket();
 }
 
-worksock::worksock(QString _host, int _port):nextBlockSize(0)
+worksock::worksock(const QString &_host, int _port):nextBlockSize(0)
 {
     host = _host;
     port = _port;
     createSocket();
 }
 
-void worksock::setServerAddres(QString _host, int _port)
+void worksock::setServerAddres(const QString &_host, int _port)
 {
     host = _host;
     port = _port;
@@ -26,12 +26,19 @@ void worksock::createSocket()
     wsocket = new QTcpSocket(this);
     connect(wsocket, SIGNAL(readyRead()), this, SLOT(receiveData()));
     connect(wsocket, SIGNAL(connected()), this, SLOT(connectProcessing()));
-    connect(wsocket,SIGNAL(error(QAbstractSocket::SocketError)),this,SLOT(errorProcessing(QAbstractSocket::SocketError)));
+    connect(wsocket, SIGNAL(error(QAbstractSocket::SocketError)),
+            this, SLOT(errorProcessing(QAbstractSocket::SocketError)));
 }
 
 void worksock::sconnect()
 {
-    wsocket->connectToHost(host, port);
+    wsocket -> connectToHost(host, port);
+}
+
+void worksock::sdisconnect()
+{
+    if(wsocket)
+        wsocket -> disconnect();
 }
 
 void worksock::connectProcessing()

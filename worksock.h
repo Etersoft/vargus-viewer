@@ -21,11 +21,12 @@ protected:
     virtual void receiveDataProcessing(QString inputData) = 0;
 public:
     worksock();
-    worksock(QString _host, int _port);
+    worksock(const QString &_host, int _port);
 
     void sconnect();
+    void sdisconnect();
 
-    void setServerAddres(QString _host, int _port);
+    void setServerAddres(const QString &_host, int _port);
     void tryConnectAlways();
 
 public slots:
