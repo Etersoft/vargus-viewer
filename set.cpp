@@ -10,6 +10,7 @@ Set::Set()
     buttonClicked = active = false;
     bigPlaying = NULL;
     lastCamNum = NULL;
+
 }
 
 Set::Set(const QString &desc)
@@ -298,7 +299,7 @@ void Set::setLayouts(int type)
 
 }
 
-void Set::init()
+void Set::init(VPlayingType t)
 {
     lastCamNum = new int[viewList.length()];
     wasChanged = new bool[viewList.length()];
@@ -308,6 +309,7 @@ void Set::init()
         stc << tmpc;
         lastCamNum[i] = (amountOfCells(i) < cameraList.length()) ? (amountOfCells(i) - 1) : (cameraList.length() - 1);
     }
+    pltp = t;
 
 }
 
@@ -415,7 +417,7 @@ void Set::bigVideo(VideoWidget *v)
     setLayout(grid);
     grid -> setMargin(0);
     grid -> addWidget(v,0,0);
-    v -> startPlay(VideoWidget::BIGVIDEO);
+    v -> startPlay(VideoWidget::BIGVIDEO, pltp);
     v -> show();
     bigPlaying = v;
     emit updateActiveCameras(res);
@@ -432,7 +434,7 @@ void Set::bigVideo(Camera *c)
     v -> setCamera(c);
     connect(v,SIGNAL(bigSizeCall(VideoWidget*)),this,SLOT(bigVideo(VideoWidget*)));
     grid -> addWidget(v,0,0);
-    v -> startPlay(VideoWidget::BIGVIDEO);
+    v -> startPlay(VideoWidget::BIGVIDEO, pltp);
     videoList << v;
     bigPlaying = v;
     QList<Camera *> res;
@@ -456,7 +458,7 @@ void Set::countActiveAndPlay()
     for(int i =  0; i < activeCameras; i++, it++)
     {
         (*it) -> setCamera(currentList -> at(i));
-        (*it) -> startPlay(VideoWidget::SMALLVIDEO);
+        (*it) -> startPlay(VideoWidget::SMALLVIDEO, pltp);
     }
     it = videoList.begin();
     QList<VideoWidget *>::iterator end = videoList.end();
@@ -576,8 +578,14 @@ bool Set::setPlayingType(VPlayingType t)
     QList<VideoWidget *>::iterator end = videoList.end();
     while(it != end)
     {
-        if(((*it) -> setNewPlayingType(t)) == false)
-            return false;
+        if(((*it) -> playing()))
+        {
+            (*it) -> stopPlay();
+            if(bigPlaying)
+                (*it) -> startPlay(VideoWidget::BIGVIDEO, t);
+            else
+                (*it) -> startPlay(VideoWidget::SMALLVIDEO, t);
+        }
         it++;
     }
     pltp = t;

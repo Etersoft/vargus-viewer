@@ -43,7 +43,7 @@ public:
     QList<VideoWidget *> video() {return videoList; }
 
     void setActiveView(int index);
-    void init();
+    void init(VPlayingType t);
     void stopPlay(VideoWidget *excluding = NULL);
     bool isActive() {return active;}
     void setActive(bool act) {active = act; enableButtons();}

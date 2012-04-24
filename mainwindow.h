@@ -102,7 +102,7 @@ private slots:
     void deleteLogFiles();
     void enableLogging(bool enable);
     void changeConnectionSettings();
-    void newSettings(QString newServer, int newPort);
+    void newSettings(QString newServer, int newPort, QString new_t_server, int new_t_port);
     void showFPS();
     void enableButtons(bool prev, bool next);
     void showHide(QSystemTrayIcon::ActivationReason);

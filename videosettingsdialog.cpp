@@ -3,6 +3,7 @@
 VideoSettingsDialog::VideoSettingsDialog(VPlayingType t, QWidget *parent) :
     QDialog(parent)
 {
+    setWindowTitle(tr("VideoSettings"));
     g = new QGroupBox(tr("Way of playing"),this);
     makeButtons();
     createLayouts();
@@ -45,4 +46,13 @@ void VideoSettingsDialog::okClicked()
     else
         emit settingsChanged(OPENGL);
     close();
+}
+
+VideoSettingsDialog::~VideoSettingsDialog()
+{
+    delete b1;
+    delete b2;
+    delete g;
+    delete buttonOk;
+    delete buttonCancel;
 }

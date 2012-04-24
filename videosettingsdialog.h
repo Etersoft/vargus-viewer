@@ -20,7 +20,8 @@ private:
     void makeButtons();
     void createLayouts();
 public:
-    explicit VideoSettingsDialog(VPlayingType t,QWidget *parent = 0);
+    explicit VideoSettingsDialog(VPlayingType t, QWidget *parent = 0);
+    ~VideoSettingsDialog();
     
 signals:
     void settingsChanged(VPlayingType);

@@ -379,7 +379,7 @@ void MainWindow::makeSets()
             set -> addView(*itv);
             itv++;
         }
-        set -> init();
+        set -> init(pltp);
         set -> setActiveView(0);
         setTab -> addTab(set, set->description());
         connect(set, SIGNAL(updateActiveCameras(QList<Camera*>)), this, SLOT(changeActiveCameras(QList<Camera*>)));
@@ -587,11 +587,12 @@ bool MainWindow::readSettings()
 void MainWindow::changeConnectionSettings()
 {
     SettingsDialog d(this,server,port);
-    connect(&d, SIGNAL(newSettings(QString, int)), this, SLOT(newSettings(QString, int)));
+    connect(&d, SIGNAL(newSettings(QString, int, QString, int)),
+            this, SLOT(newSettings(QString, int, QString, int)));
     d.exec();
 }
 
-void MainWindow::newSettings(QString newServer, int newPort)
+void MainWindow::newSettings(QString newServer, int newPort, QString new_t_server, int new_t_port)
 {
     if((server == newServer) && (port == newPort))
         return;

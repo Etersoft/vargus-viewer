@@ -142,7 +142,7 @@ void VideoWidget::setCamera(Camera* _camera)
     camera = _camera;
 }
 
-void VideoWidget::startPlay(sizeVideo size)
+void VideoWidget::startPlay(sizeVideo size, VPlayingType t)
 {
     if(camera == NULL)
            return;
@@ -248,12 +248,12 @@ void VideoWidget::dropEvent(QDropEvent *de)
            return;
         dragVideoWindet->stopPlay();
         dragVideoWindet->setCamera(camera);
-        dragVideoWindet->startPlay(SMALLVIDEO);
+        dragVideoWindet->startPlay(SMALLVIDEO,pltp);
         fromAnotherWidget = true;
    }
    stopPlay();
    camera = dragCamera;
-   startPlay(SMALLVIDEO);
+   startPlay(SMALLVIDEO, pltp);
    emit camerasChanged(this, dragCamera, fromAnotherWidget);
 }
 

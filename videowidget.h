@@ -75,17 +75,17 @@ public:
     void setCamera(Camera *_camera);
 
     enum sizeVideo {BIGVIDEO, SMALLVIDEO};
-    void startPlay(sizeVideo size);
+    void startPlay(sizeVideo size, VPlayingType t);
     void stopPlay();
     void writeTextString(QString string);
     void disableTextString();
     Camera * getCamera() { return camera; }
     bool playing() { return isPlaying; }
-    bool setNewPlayingType(VPlayingType t) {return true; }//need to write
 
 private:
     static void clearVlc(libvlc_media_player_t *vlcPlayer,libvlc_media_t *vlcMedia);
     void printString(QString rString);
+    VPlayingType pltp;
 
 protected:
     void mousePressEvent ( QMouseEvent * e );
