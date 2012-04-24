@@ -34,7 +34,8 @@ HEADERS  += mainwindow.h \
     fpscounter.h \
     runningstring.h \
     worksock.h \
-    videosettingsdialog.h
+    videosettingsdialog.h \
+    enums.h
 
 TRANSLATIONS += lang/lang_ru.ts
 

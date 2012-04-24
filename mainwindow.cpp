@@ -574,6 +574,11 @@ bool MainWindow::readSettings()
         pathForLogs = WORKDIR;
         pathForLogs += "logs/";
     }
+    QString playingTp = settings -> value("playingType", "").toString();
+    if(playingTp == "" || playingTp == "OPENGL")
+        pltp = OPENGL;
+    else
+        pltp = XWINDOW;
     if(server == "" || port < 0 || port > 65535)
         return false;
     return true;
@@ -606,6 +611,10 @@ void MainWindow::saveSettings()
     else
         settings -> setValue("logging",0);
     settings -> setValue("Directory for logs", pathForLogs);
+    if(pltp == XWINDOW)
+        settings -> setValue("playingType", "XWINDOW");
+    else if(pltp == OPENGL)
+        settings -> setValue("playingType", "OPENGL");
 }
 
 void MainWindow::startConnection()
@@ -728,7 +737,36 @@ void MainWindow::defaultLoggingFolder()
 
 void MainWindow::changeVideoSettings()
 {
-    VideoSettingsDialog vd;
+    VideoSettingsDialog vd(pltp);
+    connect(&vd, SIGNAL(settingsChanged(VPlayingType)),
+            this, SLOT(changePlayingType(VPlayingType)));
     vd.show();
     vd.exec();
+}
+
+void MainWindow::changePlayingType(VPlayingType t)
+{
+    if(t == pltp)
+        return;
+    QList<Set *>::iterator it = setsList.begin();
+    QList<Set *>::iterator end = setsList.end();
+    while(it != end)
+    {
+        if((*it) -> isActive())
+        {
+            if((*it) -> setPlayingType(t) == false)
+                return;
+            break;
+        }
+        it++;
+    }
+    it = setsList.begin();
+    while(it != end)
+    {
+        if((*it) -> isActive() == false)
+            (*it) -> setPlayingType(t);
+        it++;
+    }
+    pltp = t;
+    saveSettings();
 }

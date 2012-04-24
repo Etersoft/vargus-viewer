@@ -9,6 +9,7 @@
 #include <vlc/vlc.h>
 #include "camera.h"
 #include "runningstring.h"
+#include<enums.h>
 
 class QFrame;
 
@@ -80,6 +81,7 @@ public:
     void disableTextString();
     Camera * getCamera() { return camera; }
     bool playing() { return isPlaying; }
+    bool setNewPlayingType(VPlayingType t) {return true; }//need to write
 
 private:
     static void clearVlc(libvlc_media_player_t *vlcPlayer,libvlc_media_t *vlcMedia);

@@ -20,8 +20,8 @@ Set::Set(const QString &desc)
     bigPlaying = NULL;
     lastCamNum = NULL;
     wasChanged = NULL;
-
 }
+
 Set::~Set()
 {
     QList<VideoWidget *>::iterator it = videoList.begin();
@@ -568,4 +568,18 @@ void Set::enableButtons()
     bool nextButton = !(amountOfCells(tp) >= stc.at(tp) -> length() || lastCamNum[tp] == cameraList.length() - 1);
     bool prevButton = !(amountOfCells(tp) >= stc.at(tp)->length() || lastCamNum[tp] == activeCameras - 1);
     emit buttonsEnabled(prevButton, nextButton);
+}
+
+bool Set::setPlayingType(VPlayingType t)
+{
+    QList<VideoWidget *>::iterator it = videoList.begin();
+    QList<VideoWidget *>::iterator end = videoList.end();
+    while(it != end)
+    {
+        if(((*it) -> setNewPlayingType(t)) == false)
+            return false;
+        it++;
+    }
+    pltp = t;
+    return true;
 }

@@ -17,6 +17,7 @@
 #include "cameralist.h"
 #include<fpscounter.h>
 #include<QSystemTrayIcon>
+#include<videosettingsdialog.h>
 
 #define MAX_PLAYERS 16
 class MainWindow : public QMainWindow
@@ -63,7 +64,9 @@ class MainWindow : public QMainWindow
     int port;
     QString pathForLogs;
     bool loggingEnabled;
+    VPlayingType pltp;
     QSystemTrayIcon *trIcon;
+
 
 public:
     explicit MainWindow(QWidget *parent = 0, QString server = 0, int portNum = 0, bool logging = false);
@@ -106,6 +109,7 @@ private slots:
     void changeLoggingFolder();
     void defaultLoggingFolder();
     void changeVideoSettings();
+    void changePlayingType(VPlayingType t);
 protected:
     void closeEvent(QCloseEvent *);
 

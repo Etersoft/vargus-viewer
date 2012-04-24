@@ -6,6 +6,8 @@
 #include "view.h"
 #include"videowidget.h"
 #include<QVector>
+#include<enums.h>
+
 class Set : public QWidget
 {
     Q_OBJECT
@@ -25,6 +27,7 @@ class Set : public QWidget
     QVector< QList<Camera *>* > stc;//расположение камер(виджетов) под каждый view
 
     VideoWidget *bigPlaying;
+    VPlayingType pltp;
 
 public:
     explicit Set();
@@ -49,6 +52,8 @@ public:
     void next();
     void prev();
     void reset();
+
+    bool setPlayingType(VPlayingType t);
 public slots:
     void restoreState() { setLayouts(tp); enableButtons(); }
     void showBig(int num);
