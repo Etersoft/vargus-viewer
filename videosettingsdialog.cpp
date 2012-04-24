@@ -3,7 +3,7 @@
 VideoSettingsDialog::VideoSettingsDialog(VPlayingType t, QWidget *parent) :
     QDialog(parent)
 {
-    setWindowTitle(tr("VideoSettings"));
+    setWindowTitle(tr("Video settings"));
     g = new QGroupBox(tr("Way of playing"),this);
     makeButtons();
     createLayouts();
