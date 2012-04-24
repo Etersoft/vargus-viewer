@@ -28,7 +28,6 @@ signals:
     
 private slots:
     void okClicked();
-    
 };
 
 #endif // VIDEOSETTINGSDIALOG_H

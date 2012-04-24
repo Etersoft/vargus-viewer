@@ -13,8 +13,8 @@ SettingsDialog::SettingsDialog(QWidget *parent, const QString &server,
     portLabel = new QLabel(tr("&Port"),this);
     serverLineEdit = new QLineEdit(this);
     portLineEdit = new QLineEdit(this);
-    connect(serverLineEdit,SIGNAL(textChanged(QString)),this,SLOT(enableOk()));
-    connect(portLineEdit,SIGNAL(textChanged(QString)),this,SLOT(enableOk()));    
+    connect(serverLineEdit, SIGNAL(textChanged(QString)), this, SLOT(enableButtons()));
+    connect(portLineEdit, SIGNAL(textChanged(QString)), this, SLOT(enableButtons()));
     serverLabel -> setBuddy(serverLineEdit);
     portLabel -> setBuddy(portLineEdit);
 
@@ -22,8 +22,8 @@ SettingsDialog::SettingsDialog(QWidget *parent, const QString &server,
     t_portLabel = new QLabel(tr("&Port"),this);
     t_serverLineEdit = new QLineEdit(this);
     t_portLineEdit = new QLineEdit(this);
-    connect(t_serverLineEdit,SIGNAL(textChanged(QString)),this,SLOT(enableOk()));
-    connect(t_portLineEdit,SIGNAL(textChanged(QString)),this,SLOT(enableOk()));
+    connect(t_serverLineEdit, SIGNAL(textChanged(QString)), this, SLOT(enableButtons()));
+    connect(t_portLineEdit, SIGNAL(textChanged(QString)), this, SLOT(enableButtons()));
     t_serverLabel -> setBuddy(t_serverLineEdit);
     t_portLabel -> setBuddy(t_portLineEdit);
 
@@ -84,8 +84,8 @@ void SettingsDialog::createButtons()
     okButton -> setEnabled(false);
     cancelButton = new QPushButton(tr("&Cancel"), this);
     cloneButton = new QPushButton(tr("&Clone"), this);
-    connect(okButton,SIGNAL(clicked()),this,SLOT(okButtonClicked()));
-    connect(cancelButton,SIGNAL(clicked()),this,SLOT(close()));
+    connect(okButton, SIGNAL(clicked()), this, SLOT(okButtonClicked()));
+    connect(cancelButton, SIGNAL(clicked()), this, SLOT(close()));
     connect(cloneButton, SIGNAL(clicked()), this, SLOT(clone()));
 }
 
@@ -96,12 +96,14 @@ void SettingsDialog::okButtonClicked()
     close();
 }
 
-void SettingsDialog::enableOk()
+void SettingsDialog::enableButtons()
 {
     okButton -> setEnabled(!(serverLineEdit -> text().isEmpty())
                            && !(portLineEdit -> text().isEmpty())
                            && !(t_serverLineEdit -> text().isEmpty())
                            && !(t_portLineEdit -> text().isEmpty()));
+    cloneButton -> setEnabled((serverLineEdit -> text() != t_serverLineEdit -> text())
+                              || (portLineEdit -> text() != t_portLineEdit -> text()));
 }
 
 SettingsDialog::~SettingsDialog()

@@ -30,7 +30,7 @@ private:
 
  private slots:
     void okButtonClicked();
-    void enableOk();
+    void enableButtons();
     void clone();
 public:
     explicit SettingsDialog(QWidget *parent = 0,

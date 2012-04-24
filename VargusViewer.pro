@@ -49,5 +49,4 @@ unix {
 
 unix|win32: LIBS += -lvlc
 
-FORMS += \
-    dialog.ui
+FORMS +=
