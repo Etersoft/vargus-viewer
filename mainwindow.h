@@ -60,8 +60,11 @@ class MainWindow : public QMainWindow
     QPushButton *nextButton;
 
     QSettings *settings;
+    QString t_server;
     QString server;
+
     int port;
+    int t_port;
     QString pathForLogs;
     bool loggingEnabled;
     VPlayingType pltp;

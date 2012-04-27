@@ -95,7 +95,7 @@ VideoWidget::VideoWidget(): QWidget()
     }
     if(!runningString)
     {
-        runningString = new RunningString();
+        runningString = new RunningString("", 0);
     }
     if(!runningTextSetting)
     {
@@ -320,4 +320,12 @@ void VideoWidget::writeTextString(QString string)
 void VideoWidget::disableTextString()
 {
     libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Enable,0);
+}
+
+void VideoWidget::changeTextServerSettings(const QString &_adress, int _port)
+{
+    if(runningString)
+        runningString -> changeConnection(_adress, _port);
+    else
+        runningString = new RunningString(_adress, _port);
 }

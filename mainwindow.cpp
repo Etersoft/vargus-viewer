@@ -9,6 +9,7 @@
 #include<QFileDialog>
 #include<logger.h>
 #include<videosettingsdialog.h>
+#include <videowidget.h>
 extern Logger &vargusLog;
 bool test = true;
 
@@ -563,8 +564,11 @@ void MainWindow::enableLogging(bool enable)
 bool MainWindow::readSettings()
 {
     server = settings -> value("server", "").toString();
-    port = settings -> value("port", -1).toInt();
+    port = settings -> value("port", 0).toInt();
     int t = settings -> value("logging", -1).toInt();
+    t_server = settings -> value("t_server", "").toString();
+    t_port = settings -> value("t_port", 0).toInt();
+
     if(t == 1 || t == -1)
         loggingEnabled = true;
     else loggingEnabled = false;
@@ -586,7 +590,7 @@ bool MainWindow::readSettings()
 
 void MainWindow::changeConnectionSettings()
 {
-    SettingsDialog d(this,server,port);
+    SettingsDialog d(this, server, port, t_server, t_port);
     connect(&d, SIGNAL(newSettings(QString, int, QString, int)),
             this, SLOT(newSettings(QString, int, QString, int)));
     d.exec();
@@ -594,12 +598,19 @@ void MainWindow::changeConnectionSettings()
 
 void MainWindow::newSettings(QString newServer, int newPort, QString new_t_server, int new_t_port)
 {
-    if((server == newServer) && (port == newPort))
-        return;
-    server = newServer;
-    port = newPort;
+    if((server != newServer) || (port != newPort))
+    {
+        server = newServer;
+        port = newPort;
+        startConnection();
+    }
+    if((new_t_server != t_server) || (new_t_port != t_port))
+    {
+        t_server = new_t_server;
+        t_port = new_t_port;
+        VideoWidget::changeTextServerSettings(t_server, t_port);
+    }
     saveSettings();
-    startConnection();
 }
 
 void MainWindow::saveSettings()
@@ -607,6 +618,8 @@ void MainWindow::saveSettings()
     if(!settings) return;
     settings -> setValue("server",server);
     settings -> setValue("port",port);
+    settings -> setValue("t_server", t_server);
+    settings -> setValue("t_port", t_port);
     if(loggingEnabled)
         settings -> setValue("logging",1);
     else
