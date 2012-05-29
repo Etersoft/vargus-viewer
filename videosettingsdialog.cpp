@@ -17,7 +17,7 @@ VideoSettingsDialog::VideoSettingsDialog(VPlayingType t, QWidget *parent) :
 void VideoSettingsDialog::makeButtons()
 {
     b1 = new QRadioButton(tr("&X Window"),this);
-    b2 = new QRadioButton(tr("&OpenGL"),this);
+    b2 = new QRadioButton(tr("&Low-level painting"),this);
 
     buttonOk = new QPushButton(tr("&OK"), this);
     buttonCancel = new QPushButton(tr("&Cancel"), this);
@@ -44,7 +44,7 @@ void VideoSettingsDialog::okClicked()
     if(b1 -> isChecked())
         emit settingsChanged(XWINDOW);
     else
-        emit settingsChanged(OPENGL);
+        emit settingsChanged(LOWLEVEL);
     close();
 }
 

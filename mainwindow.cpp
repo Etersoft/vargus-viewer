@@ -579,8 +579,8 @@ bool MainWindow::readSettings()
         pathForLogs += "logs/";
     }
     QString playingTp = settings -> value("playingType", "").toString();
-    if(playingTp == "" || playingTp == "OPENGL")
-        pltp = OPENGL;
+    if(playingTp == "" || playingTp == "LOWLEVEL")
+        pltp = LOWLEVEL;
     else
         pltp = XWINDOW;
     if(server == "" || port < 0 || port > 65535)
@@ -627,8 +627,8 @@ void MainWindow::saveSettings()
     settings -> setValue("Directory for logs", pathForLogs);
     if(pltp == XWINDOW)
         settings -> setValue("playingType", "XWINDOW");
-    else if(pltp == OPENGL)
-        settings -> setValue("playingType", "OPENGL");
+    else if(pltp == LOWLEVEL)
+        settings -> setValue("playingType", "LOWLEVEL");
 }
 
 void MainWindow::startConnection()
