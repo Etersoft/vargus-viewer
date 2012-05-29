@@ -6,6 +6,7 @@
 worksock::worksock():nextBlockSize(0)
 {
     createSocket();
+    createTimer();
 }
 
 worksock::worksock(const QString &_host, int _port):nextBlockSize(0)
@@ -13,6 +14,7 @@ worksock::worksock(const QString &_host, int _port):nextBlockSize(0)
     host = _host;
     port = _port;
     createSocket();
+    createTimer();
 }
 
 void worksock::setServerAddres(const QString &_host, int _port)
@@ -28,6 +30,12 @@ void worksock::createSocket()
     connect(wsocket, SIGNAL(connected()), this, SLOT(connectProcessing()));
     connect(wsocket, SIGNAL(error(QAbstractSocket::SocketError)),
             this, SLOT(errorProcessing(QAbstractSocket::SocketError)));
+}
+
+void worksock::createTimer()
+{
+    reconnectTimer = new QTimer(this);
+    connect(reconnectTimer, SIGNAL(timeout()), this, SLOT(tryConnect()));
 }
 
 void worksock::sconnect()
@@ -64,22 +72,20 @@ void worksock::errorProcessing (QAbstractSocket::SocketError error)
         sleep (10000);
     }
     */
-    QtConcurrent::run(&tryConnectAlwaysThis, this);
+    reconnectTimer->start(1000);
 }
 
-void worksock::tryConnectAlways()
+void worksock::tryConnect()
 {
 
-    while(wsocket->state() !=  QTcpSocket::ConnectedState || wsocket->state() != QTcpSocket::ConnectedState)
+    if(wsocket->state() !=  QTcpSocket::ConnectedState || wsocket->state() != QTcpSocket::ConnectingState)
+    {
+        reconnectTimer->stop();
+    }
+    else
     {
         sconnect();
-        sleep (10000);
     }
-}
-
-void worksock::tryConnectAlwaysThis(worksock* ws)
-{
-    ws->tryConnectAlways();
 }
 
 

@@ -4,6 +4,7 @@
 #include <QTcpSocket>
 #include <QtCore>
 #include <QApplication>
+#include <QTimer>
 
 class worksock: public QObject
 {
@@ -16,7 +17,9 @@ private:
     quint16 nextBlockSize;
 
     QTcpSocket *wsocket;
-    static void tryConnectAlwaysThis(worksock* ws);
+    QTimer *reconnectTimer;
+    void createTimer();
+    void tryConnect();
 protected:
     virtual void receiveDataProcessing(QString inputData) = 0;
 public:
@@ -27,7 +30,6 @@ public:
     void sdisconnect();
 
     void setServerAddres(const QString &_host, int _port);
-    void tryConnectAlways();
 
 public slots:
     void receiveData ();
