@@ -9,6 +9,7 @@
 #include <vlc/vlc.h>
 #include "camera.h"
 #include "runningstring.h"
+#include "videowidgetlowlevelpainting.h"
 #include <enums.h>
 
 class QFrame;
@@ -41,7 +42,7 @@ public:
     QString AddStringGetLine(QString string);
 };
 
-class VideoWidget: public QWidget, public PrintRunningString
+class VideoWidget: public VideoWidgetLowLevelPainting, public PrintRunningString
 {
     Q_OBJECT
     QFrame *frame;
@@ -88,6 +89,10 @@ private:
     void printString(QString rString);
     VPlayingType pltp;
 
+    virtual void drawImage();
+    virtual libvlc_media_player_t * getvlcPlayer();
+    virtual void startvlcPlayer();
+    virtual void stoptvlcPlayer();
 protected:
     void mousePressEvent ( QMouseEvent * e );
     void mouseDoubleClickEvent ( QMouseEvent * event );

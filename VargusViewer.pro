@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     fpscounter.cpp \
     runningstring.cpp \
     worksock.cpp \
-    videosettingsdialog.cpp
+    videosettingsdialog.cpp \
+    videowidgetlowlevelpainting.cpp
 
 HEADERS  += mainwindow.h \
     set.h \
@@ -35,7 +36,8 @@ HEADERS  += mainwindow.h \
     runningstring.h \
     worksock.h \
     videosettingsdialog.h \
-    enums.h
+    enums.h \
+    videowidgetlowlevelpainting.h
 
 TRANSLATIONS += lang/lang_ru.ts
 

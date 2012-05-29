@@ -37,6 +37,9 @@ void signal_handler(int sig)
 
 int main(int argc, char *argv[])
 {
+    //logging = true;
+    vargusLog.makeLogFile();
+    vargusLog.writeToFile("Start Stas");
     signal(SIGKILL, signal_handler);
     signal(SIGHUP, signal_handler);
     signal(SIGABRT, signal_handler);

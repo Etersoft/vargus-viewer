@@ -10,6 +10,8 @@
 
 #include <QApplication>
 #include <QtCore>
+#include"logger.h"
+extern Logger &vargusLog;
 
 libvlc_instance_t *VideoWidget::vlcInstance = 0;
 RunningTextSettings *VideoWidget::runningTextSetting = 0;
@@ -43,8 +45,6 @@ void LimitLine::AddString(QString string)
     strings->append(string);
     if(strings->count() > numLimitLine)
     {
-        //strings->erase();
-        //strings->first().clear();
         strings->pop_front();
     }
 }
@@ -65,7 +65,7 @@ QString LimitLine::AddStringGetLine(QString string)
     return getLimitLine();
 }
 
-VideoWidget::VideoWidget(): QWidget()
+VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
 {
 
     const char * const vlc_args[] = {
@@ -77,7 +77,6 @@ VideoWidget::VideoWidget(): QWidget()
               "--verbose=2", /* be much more verbose then normal for debugging purpose */
 #endif
              "" }; /* "--no-video-title-show" */
-
 
     isPlaying = false;
     frame = new QFrame(this);
@@ -119,13 +118,14 @@ VideoWidget::VideoWidget(): QWidget()
 
 VideoWidget::~VideoWidget()
 {
+    vargusLog.writeToFile("destroy VideoWidget()");
     this->hide();
-    QtConcurrent::run(&VideoWidget::clearVlc, vlcPlayer, vlcMedia);
+    stopPlay();
+    clearVlc(vlcPlayer, vlcMedia);
 }
 
 void VideoWidget::clearVlc(libvlc_media_player_t *vlcPlayer,libvlc_media_t *vlcMedia)
 {
-    //stopPlay();
     libvlc_media_player_stop(vlcPlayer);
     libvlc_media_player_release (vlcPlayer);
     if(vlcMedia)
@@ -144,6 +144,8 @@ void VideoWidget::setCamera(Camera* _camera)
 
 void VideoWidget::startPlay(sizeVideo size, VPlayingType t)
 {
+    vargusLog.writeToFile("startPlay");
+
     if(camera == NULL)
            return;
     switch(size)
@@ -161,11 +163,31 @@ void VideoWidget::startPlay(sizeVideo size, VPlayingType t)
     //Set this class for write camera events
     runningString->addPrintMethod(camera->name(),this);
 
-    //#FIXME For linux only
-    int windid = frame->winId();
-    libvlc_media_player_set_xwindow (vlcPlayer, windid );
+    //For testing and fix bug with t
+    t = LOWLEVEL;
 
-    int ret = libvlc_media_player_play (vlcPlayer);
+    //#FIXME For linux only
+    int ret = 0;
+    if(t == XWINDOW)
+    {
+        vargusLog.writeToFile("stas XWINDOW");
+        int windid = frame->winId();
+        vargusLog.writeToFile("stas windid " + QString::number(windid));
+        if(windid)
+        {
+            libvlc_media_player_set_xwindow (vlcPlayer, windid );
+            ret = libvlc_media_player_play (vlcPlayer);
+        }
+
+    }
+
+    if(t == LOWLEVEL)
+    {
+        vargusLog.writeToFile("stas LOWLEVEL");
+        ret = libvlc_media_player_play (vlcPlayer);
+        activateLowLevelPainting();
+    }
+
     if(ret == 0)
         isPlaying=true;
 }
@@ -174,7 +196,18 @@ void VideoWidget::stopPlay()
 {
     if(isPlaying)
         libvlc_media_player_stop(vlcPlayer);
+        deactivateLowLevelPainting();
     isPlaying = false;
+}
+
+void VideoWidget::startvlcPlayer()
+{
+    libvlc_media_player_play(vlcPlayer);
+}
+
+void VideoWidget::stoptvlcPlayer()
+{
+    libvlc_media_player_stop(vlcPlayer);
 }
 
 void VideoWidget::updateInterface()
@@ -257,6 +290,11 @@ void VideoWidget::dropEvent(QDropEvent *de)
    emit camerasChanged(this, dragCamera, fromAnotherWidget);
 }
 
+void VideoWidget::drawImage()
+{
+
+}
+
 void VideoWidget::dragMoveEvent(QDragMoveEvent *de)
 {
     de->accept();
@@ -269,8 +307,7 @@ void VideoWidget::dragEnterEvent(QDragEnterEvent *event)
 
 void VideoWidget::dragLeaveEvent ( QDragLeaveEvent * event )
 {
-    //stopPlay();
-    int i =0;
+    //empty event
 }
 
 void VideoWidget::setupContextMenu()
@@ -328,4 +365,9 @@ void VideoWidget::changeTextServerSettings(const QString &_adress, int _port)
         runningString -> changeConnection(_adress, _port);
     else
         runningString = new RunningString(_adress, _port);
+}
+
+libvlc_media_player_t * VideoWidget::getvlcPlayer()
+{
+    return vlcPlayer;
 }
