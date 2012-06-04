@@ -19,7 +19,7 @@ private:
     QTcpSocket *wsocket;
     QTimer *reconnectTimer;
     void createTimer();
-    void tryConnect();
+
 protected:
     virtual void receiveDataProcessing(QString inputData) = 0;
 public:
@@ -35,6 +35,7 @@ public slots:
     void receiveData ();
     void errorProcessing (QAbstractSocket::SocketError error);
     void connectProcessing ();
+    void tryConnect();
 };
 
 #endif // WORKSOCK_H

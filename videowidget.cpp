@@ -54,7 +54,7 @@ QString LimitLine::getLimitLine()
     QString finalResult = QString("");
     foreach(const QString &sringElement, *strings)
     {
-        finalResult += sringElement + "\n";
+        finalResult += sringElement + "";
     }
     return finalResult;
 }
@@ -95,6 +95,7 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
     if(!runningString)
     {
         runningString = new RunningString("", 0);
+        runningString = new RunningString("vargus-demo.office.etersoft.ru", 7714);
     }
     if(!runningTextSetting)
     {
@@ -341,6 +342,7 @@ void VideoWidget::printString(QString rString)
 
 void VideoWidget::writeTextString(QString string)
 {
+    vargusLog.writeToFile("write text string " + string);
     libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Color,runningTextSetting->color);
     libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Opacity,runningTextSetting->opacity);
     libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Position,runningTextSetting->position);

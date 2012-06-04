@@ -1,6 +1,8 @@
 #include "runningstring.h"
 #include <cstdio>
 #include <QRegExp>
+#include"logger.h"
+extern Logger &vargusLog;
 
 RunningString::RunningString(const QString &_server, int _port)
 {
@@ -24,10 +26,12 @@ void RunningString::print2Cam(QString cam, QString rString)
 
 void RunningString::receiveDataProcessing(QString inputData)
 {
-    QRegExp regexpcam("<cam(\\d*)>");
+    vargusLog.writeToFile("receive data " + inputData);
+    QRegExp regexpcam("cam(\\d*)");
     regexpcam.indexIn(inputData);
     QString cam = "cam" + regexpcam.cap(1);
-    QString rString = inputData.right( inputData.length() - cam.length()-3);    
+    QString rString = inputData.right( inputData.length() - cam.length()-1);
+    vargusLog.writeToFile("receive data cam |" + cam + "| inputData |" + inputData + "|");
     print2Cam(cam,rString);
     //print2Cam("cam1",inputData);
 }

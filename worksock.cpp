@@ -2,6 +2,8 @@
 #include <QtCore>
 #include <QApplication>
 #include <QWidget>
+#include"logger.h"
+extern Logger &vargusLog;
 
 worksock::worksock():nextBlockSize(0)
 {
@@ -40,7 +42,9 @@ void worksock::createTimer()
 
 void worksock::sconnect()
 {
+    vargusLog.writeToFile("connect");
     wsocket -> connectToHost(host, port);
+    vargusLog.writeToFile("status connect to server " + QString::number(wsocket->state()));
 }
 
 void worksock::sdisconnect()
@@ -64,7 +68,7 @@ void worksock::receiveData()
 
 void worksock::errorProcessing (QAbstractSocket::SocketError error)
 {
-
+    vargusLog.writeToFile("errorProcessing " + QString::number(error));
     //QtConcurrent::run(&VideoWidget::clearVlc, vlcPlayer, vlcMedia);
     /*while(status != CONNECTED)
     {
@@ -72,13 +76,13 @@ void worksock::errorProcessing (QAbstractSocket::SocketError error)
         sleep (10000);
     }
     */
-    reconnectTimer->start(1000);
+    reconnectTimer->start(5000);
 }
 
 void worksock::tryConnect()
 {
-
-    if(wsocket->state() !=  QTcpSocket::ConnectedState || wsocket->state() != QTcpSocket::ConnectingState)
+    vargusLog.writeToFile("try connect state " + QString::number(wsocket->state()));
+    if(wsocket->state() ==  QTcpSocket::ConnectedState && wsocket->state() == QTcpSocket::ConnectingState)
     {
         reconnectTimer->stop();
     }
