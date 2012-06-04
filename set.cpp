@@ -309,8 +309,7 @@ void Set::init(VPlayingType t)
         stc << tmpc;
         lastCamNum[i] = (amountOfCells(i) < cameraList.length()) ? (amountOfCells(i) - 1) : (cameraList.length() - 1);
     }
-    pltp = t;
-
+    VideoWidget::setVPlayingType(t);
 }
 
 void Set::stopPlay(VideoWidget *excluding)
@@ -417,7 +416,7 @@ void Set::bigVideo(VideoWidget *v)
     setLayout(grid);
     grid -> setMargin(0);
     grid -> addWidget(v,0,0);
-    v -> startPlay(VideoWidget::BIGVIDEO, pltp);
+    v -> startPlay(VideoWidget::BIGVIDEO);
     v -> show();
     bigPlaying = v;
     emit updateActiveCameras(res);
@@ -434,7 +433,7 @@ void Set::bigVideo(Camera *c)
     v -> setCamera(c);
     connect(v,SIGNAL(bigSizeCall(VideoWidget*)),this,SLOT(bigVideo(VideoWidget*)));
     grid -> addWidget(v,0,0);
-    v -> startPlay(VideoWidget::BIGVIDEO, pltp);
+    v -> startPlay(VideoWidget::BIGVIDEO);
     videoList << v;
     bigPlaying = v;
     QList<Camera *> res;
@@ -458,7 +457,7 @@ void Set::countActiveAndPlay()
     for(int i =  0; i < activeCameras; i++, it++)
     {
         (*it) -> setCamera(currentList -> at(i));
-        (*it) -> startPlay(VideoWidget::SMALLVIDEO, pltp);
+        (*it) -> startPlay(VideoWidget::SMALLVIDEO);
     }
     it = videoList.begin();
     QList<VideoWidget *>::iterator end = videoList.end();
@@ -582,12 +581,12 @@ bool Set::setPlayingType(VPlayingType t)
         {
             (*it) -> stopPlay();
             if(bigPlaying)
-                (*it) -> startPlay(VideoWidget::BIGVIDEO, t);
+                (*it) -> startPlay(VideoWidget::BIGVIDEO);
             else
-                (*it) -> startPlay(VideoWidget::SMALLVIDEO, t);
+                (*it) -> startPlay(VideoWidget::SMALLVIDEO);
         }
         it++;
     }
-    pltp = t;
+    VideoWidget::setVPlayingType(t);
     return true;
 }

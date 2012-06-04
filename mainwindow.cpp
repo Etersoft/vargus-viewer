@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
         vargusLog.setActive(logging);
         settingsRead = true;
     }
+    VideoWidget::setRunningTextAddress(t_server, t_port);
     vargusLog.changeDirectory(pathForLogs);
     vargusLog.setActive(loggingEnabled);
     if(!vargusLog.makeLogFile())

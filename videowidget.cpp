@@ -16,6 +16,9 @@ extern Logger &vargusLog;
 libvlc_instance_t *VideoWidget::vlcInstance = 0;
 RunningTextSettings *VideoWidget::runningTextSetting = 0;
 RunningString *VideoWidget::runningString = 0;
+QString VideoWidget::runningTextip = "";
+int VideoWidget::runningTextport = 0;
+VPlayingType VideoWidget::pltp = LOWLEVEL;
 
 RunningTextSettings::RunningTextSettings()
 {
@@ -94,8 +97,7 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
     }
     if(!runningString)
     {
-        runningString = new RunningString("", 0);
-        runningString = new RunningString("vargus-demo.office.etersoft.ru", 7714);
+        runningString = new RunningString(runningTextip, runningTextport);
     }
     if(!runningTextSetting)
     {
@@ -110,7 +112,7 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
 
     connect(poller, SIGNAL(timeout()), this, SLOT(updateInterface()));
     setAcceptDrops(true);
-    poller->start(100);
+    poller->start(5000);
 
     waitingDoubleClickTimer = new QTimer();
 
@@ -143,7 +145,7 @@ void VideoWidget::setCamera(Camera* _camera)
     camera = _camera;
 }
 
-void VideoWidget::startPlay(sizeVideo size, VPlayingType t)
+void VideoWidget::startPlay(sizeVideo size)
 {
     vargusLog.writeToFile("startPlay");
 
@@ -164,12 +166,9 @@ void VideoWidget::startPlay(sizeVideo size, VPlayingType t)
     //Set this class for write camera events
     runningString->addPrintMethod(camera->name(),this);
 
-    //For testing and fix bug with t
-    t = LOWLEVEL;
-
     //#FIXME For linux only
     int ret = 0;
-    if(t == XWINDOW)
+    if(pltp == XWINDOW)
     {
         vargusLog.writeToFile("stas XWINDOW");
         int windid = frame->winId();
@@ -179,25 +178,25 @@ void VideoWidget::startPlay(sizeVideo size, VPlayingType t)
             libvlc_media_player_set_xwindow (vlcPlayer, windid );
             ret = libvlc_media_player_play (vlcPlayer);
         }
-
     }
 
-    if(t == LOWLEVEL)
+    if(pltp == LOWLEVEL)
     {
         vargusLog.writeToFile("stas LOWLEVEL");
-        ret = libvlc_media_player_play (vlcPlayer);
         activateLowLevelPainting();
+        ret = libvlc_media_player_play (vlcPlayer);
     }
-
-    if(ret == 0)
-        isPlaying=true;
+    isPlaying=true;
 }
 
 void VideoWidget::stopPlay()
 {
     if(isPlaying)
+    {
         libvlc_media_player_stop(vlcPlayer);
-        deactivateLowLevelPainting();
+        if(pltp == LOWLEVEL)
+            deactivateLowLevelPainting();
+    }
     isPlaying = false;
 }
 
@@ -282,12 +281,12 @@ void VideoWidget::dropEvent(QDropEvent *de)
            return;
         dragVideoWindet->stopPlay();
         dragVideoWindet->setCamera(camera);
-        dragVideoWindet->startPlay(SMALLVIDEO,pltp);
+        dragVideoWindet->startPlay(SMALLVIDEO);
         fromAnotherWidget = true;
    }
    stopPlay();
    camera = dragCamera;
-   startPlay(SMALLVIDEO, pltp);
+   startPlay(SMALLVIDEO);
    emit camerasChanged(this, dragCamera, fromAnotherWidget);
 }
 
@@ -372,4 +371,15 @@ void VideoWidget::changeTextServerSettings(const QString &_adress, int _port)
 libvlc_media_player_t * VideoWidget::getvlcPlayer()
 {
     return vlcPlayer;
+}
+
+void VideoWidget::setRunningTextAddress(QString ip, int port)
+{
+    runningTextip = ip;
+    runningTextport = port;
+}
+
+void VideoWidget::setVPlayingType(VPlayingType pt)
+{
+    pltp = pt;
 }

@@ -65,6 +65,8 @@ class VideoWidget: public VideoWidgetLowLevelPainting, public PrintRunningString
 
     static RunningTextSettings* runningTextSetting;
     LimitLine* runningText;
+    static QString runningTextip;
+    static int runningTextport;
 
     enum statusesClick{CLICK, DOUBLE_CLICK};
     statusesClick StatusClick;
@@ -73,10 +75,14 @@ public:
     ~VideoWidget();
     static void staticDestructor();
 
+    static void setRunningTextAddress(QString ip, int port);
+    static void setVPlayingType(VPlayingType pt);
+
+
     void setCamera(Camera *_camera);
 
     enum sizeVideo {BIGVIDEO, SMALLVIDEO};
-    void startPlay(sizeVideo size, VPlayingType t);
+    void startPlay(sizeVideo size);
     void stopPlay();
     void writeTextString(QString string);
     void disableTextString();
@@ -87,7 +93,7 @@ public:
 private:
     static void clearVlc(libvlc_media_player_t *vlcPlayer,libvlc_media_t *vlcMedia);
     void printString(QString rString);
-    VPlayingType pltp;
+    static VPlayingType pltp;
 
     virtual void drawImage();
     virtual libvlc_media_player_t * getvlcPlayer();

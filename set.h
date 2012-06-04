@@ -27,7 +27,6 @@ class Set : public QWidget
     QVector< QList<Camera *>* > stc;//расположение камер(виджетов) под каждый view
 
     VideoWidget *bigPlaying;
-    VPlayingType pltp;
 
 public:
     explicit Set();

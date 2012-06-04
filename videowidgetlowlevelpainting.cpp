@@ -62,6 +62,8 @@ VideoWidgetLowLevelPainting::~VideoWidgetLowLevelPainting()
 
 void VideoWidgetLowLevelPainting::restartPaintVideo()
 {
+    if(!active)
+        return;
     vargusLog.writeToFile("Restart paint video height:"+  QString::number(this->height())  + " width:"+  QString::number(this->width()) );
 
     videoheight = this->height();
@@ -85,8 +87,8 @@ void VideoWidgetLowLevelPainting::updateGeometry()
 
 void VideoWidgetLowLevelPainting::activateLowLevelPainting()
 {
-    restartPaintVideo();
     active = true;
+    restartPaintVideo();
 }
 
 void VideoWidgetLowLevelPainting::deactivateLowLevelPainting()
