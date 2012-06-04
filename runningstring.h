@@ -3,6 +3,7 @@
 
 #include <QMap>
 #include <QString>
+#include <QVector>
 #include "worksock.h"
 
 class PrintRunningString
@@ -14,7 +15,7 @@ public:
 class RunningString: public worksock
 {
 private:
-    QMap<QString, PrintRunningString*> printmethodlist;
+    QMap<QString, QList<PrintRunningString*> > printmethodlist;
 protected:
     virtual void receiveDataProcessing(QString inputData);
 

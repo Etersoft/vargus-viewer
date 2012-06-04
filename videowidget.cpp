@@ -62,9 +62,10 @@ QString LimitLine::getLimitLine()
     return finalResult;
 }
 
-QString LimitLine::AddStringGetLine(QString string)
+QString LimitLine::AddStringGetLine(QString* string)
 {
-    AddString(string);
+    if(string)
+        AddString(*string);
     return getLimitLine();
 }
 
@@ -82,6 +83,7 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
              "" }; /* "--no-video-title-show" */
 
     isPlaying = false;
+    isRunningStringActive = true;
     frame = new QFrame(this);
 
     QVBoxLayout* layout = new QVBoxLayout;
@@ -147,6 +149,7 @@ void VideoWidget::setCamera(Camera* _camera)
 
 void VideoWidget::startPlay(sizeVideo size)
 {
+    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Enable,1);
     vargusLog.writeToFile("startPlay");
 
     if(camera == NULL)
@@ -160,6 +163,7 @@ void VideoWidget::startPlay(sizeVideo size)
             vlcMedia = libvlc_media_new_path(vlcInstance, camera->preview().toAscii());
             break;
     }
+    vargusLog.writeToFile("disconnectAction");
     libvlc_media_set_meta (vlcMedia,  libvlc_meta_Title, camera->name().toAscii());
     libvlc_media_player_set_media (vlcPlayer, vlcMedia);
 
@@ -186,7 +190,10 @@ void VideoWidget::startPlay(sizeVideo size)
         activateLowLevelPainting();
         ret = libvlc_media_player_play (vlcPlayer);
     }
+    vargusLog.writeToFile("Start play ret " + QString::number(ret));
     isPlaying=true;
+    int isp = libvlc_media_player_is_playing (vlcPlayer);
+    vargusLog.writeToFile("startPlay isp " + QString::number(isp));
 }
 
 void VideoWidget::stopPlay()
@@ -316,22 +323,52 @@ void VideoWidget::setupContextMenu()
     contextMenu=new QMenu(this);
     arhiveCallAction=new QAction(this);
     arhiveCallAction->setText(tr("Archive"));
+    changeStateMessageWidgetAction=new QAction(this);
+
+    changeStateMessageCameraAction=new QAction(this);
+    changeStateMessageCameraAction->setText(tr("Disable message on camera"));
 
     connect(frame, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(ContextMenuAction(const QPoint& z)));
 }
 
 void VideoWidget::ContextMenuAction(const QPoint& z)
 {
+    if(isRunningStringActive)
+        changeStateMessageWidgetAction->setText(tr("Disable message on widget"));
+    else
+        changeStateMessageWidgetAction->setText(tr("Anable message on widget"));
     contextMenu->clear();
     disconnect(arhiveCallAction, 0, 0, 0);
+    disconnect(changeStateMessageWidgetAction, 0, 0, 0);
+    disconnect(changeStateMessageCameraAction, 0, 0, 0);
+
+
     contextMenu->addAction(arhiveCallAction);
+    contextMenu->addAction(changeStateMessageWidgetAction);
+    contextMenu->addAction(changeStateMessageCameraAction);
+
+
     connect(arhiveCallAction, SIGNAL(triggered()), this,SLOT(arhiveMenuPress()));
+    connect(changeStateMessageWidgetAction, SIGNAL(triggered()), this,SLOT(changeStateMessageWidgetPress()));
+    connect(changeStateMessageCameraAction, SIGNAL(triggered()), this,SLOT(changeStateMessageCameraPress()));
     contextMenu->exec(mapToGlobal(z));
 }
 
 void VideoWidget::arhiveMenuPress()
 {
     emit arhiveCall();
+}
+
+void VideoWidget::changeStateMessageWidgetPress()
+{
+    isRunningStringActive = !isRunningStringActive;
+    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Enable,(int)isRunningStringActive);
+    writeTextString(NULL);
+}
+
+void VideoWidget::changeStateMessageCameraPress()
+{
+
 }
 
 void VideoWidget::printString(QString rString)
@@ -342,17 +379,20 @@ void VideoWidget::printString(QString rString)
 void VideoWidget::writeTextString(QString string)
 {
     vargusLog.writeToFile("write text string " + string);
-    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Color,runningTextSetting->color);
-    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Opacity,runningTextSetting->opacity);
-    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Position,runningTextSetting->position);
-    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Refresh,runningTextSetting->refresh);
-    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Size,runningTextSetting->size);
-    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Timeout,runningTextSetting->timeout);
-    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_X,runningTextSetting->x);
-    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Y,runningTextSetting->y);
+    if (isRunningStringActive)
+    {
+        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Color,runningTextSetting->color);
+        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Opacity,runningTextSetting->opacity);
+        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Position,runningTextSetting->position);
+        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Refresh,runningTextSetting->refresh);
+        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Size,runningTextSetting->size);
+        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Timeout,runningTextSetting->timeout);
+        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_X,runningTextSetting->x);
+        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Y,runningTextSetting->y);
 
-    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Enable,1);
-    libvlc_video_set_marquee_string(vlcPlayer,libvlc_marquee_Text,runningText->AddStringGetLine(string).toAscii());
+        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Enable,1);
+        libvlc_video_set_marquee_string(vlcPlayer,libvlc_marquee_Text,runningText->AddStringGetLine(&string).toAscii());
+    }
 }
 
 void VideoWidget::disableTextString()

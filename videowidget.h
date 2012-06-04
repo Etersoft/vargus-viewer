@@ -39,7 +39,7 @@ public:
     void setNumLimitLine(int num);
     QString getLimitLine();
     void AddString(QString string);
-    QString AddStringGetLine(QString string);
+    QString AddStringGetLine(QString* string);
 };
 
 class VideoWidget: public VideoWidgetLowLevelPainting, public PrintRunningString
@@ -61,6 +61,8 @@ class VideoWidget: public VideoWidgetLowLevelPainting, public PrintRunningString
 
     QMenu* contextMenu;
     QAction *arhiveCallAction;
+    QAction *changeStateMessageCameraAction;
+    QAction *changeStateMessageWidgetAction;
     void setupContextMenu();
 
     static RunningTextSettings* runningTextSetting;
@@ -99,6 +101,10 @@ private:
     virtual libvlc_media_player_t * getvlcPlayer();
     virtual void startvlcPlayer();
     virtual void stoptvlcPlayer();
+
+    bool isRunningStringActive;
+
+    void disconnectAction();
 protected:
     void mousePressEvent ( QMouseEvent * e );
     void mouseDoubleClickEvent ( QMouseEvent * event );
@@ -112,6 +118,9 @@ public slots:
     void updateInterface();
     void ContextMenuAction(const QPoint& z);
     void arhiveMenuPress();
+    void changeStateMessageWidgetPress();
+    void changeStateMessageCameraPress();
+
     void waitingDoubleClickTimeout();
     float getFPS() { return libvlc_media_player_get_fps(vlcPlayer);
                 /*libvlc_media_player_get_time(vlcPlayer);*/}

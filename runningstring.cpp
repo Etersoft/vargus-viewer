@@ -6,19 +6,18 @@ extern Logger &vargusLog;
 
 RunningString::RunningString(const QString &_server, int _port)
 {
-    setServerAddres(_server, _port/*"192.168.5.23",7714*/);
+    setServerAddres(_server, _port);
     sconnect();
 }
 
 void RunningString::addPrintMethod(QString cam, PrintRunningString* printClass)
 {
-    printmethodlist.insert(cam, printClass);
+    printmethodlist[cam].append(printClass);
 }
 
 void RunningString::print2Cam(QString cam, QString rString)
-{    
-    PrintRunningString* needPrintClass = printmethodlist[cam];
-    if(needPrintClass)
+{
+    foreach (PrintRunningString* needPrintClass, printmethodlist[cam])
     {
         needPrintClass -> printString(rString);
     }
