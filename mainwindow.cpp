@@ -111,6 +111,7 @@ QStringList MainWindow::readAnswer(int amountOfLines)
 
 MainWindow::~MainWindow()
 {
+    VideoWidget::staticDestructor();
     disconnect(setTab,SIGNAL(currentChanged(int)),this,SLOT(onSetChanged(int)));
     QList<Camera *>::iterator itc = camerasList.begin();
     QList<Camera *>::iterator endc = camerasList.end();
