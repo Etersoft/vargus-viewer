@@ -24,6 +24,7 @@ void RunningString::addAppendMethod(QString cam, AppendRunningString* appendClas
 
 void RunningString::dropPrintMethod(QString cam)
 {
+    vargusLog.writeToFile("dropPrintMethod " + cam);
     printmethodlist.remove(cam);
 }
 
@@ -36,12 +37,15 @@ void RunningString::print2Cam(QString cam, QString rString)
 {
      foreach (AppendRunningString* needAppendClass, appendmethodlist[cam])
      {
+         vargusLog.writeToFile("appendString");
          needAppendClass -> appendString(rString);
      }
 
     foreach (PrintRunningString* needPrintClass, printmethodlist[cam])
     {
-        needPrintClass -> printString();
+        vargusLog.writeToFile("printString");
+        if(needPrintClass)
+            needPrintClass -> printString();
     }
 }
 

@@ -19,6 +19,7 @@ void Camera::setStaticParam()
 
 Camera::Camera()
 {
+    isRunningStringActive = true;
     setStaticParam();
     runningText = new LimitLine(runningTextSetting->limitLine) ;
 }
@@ -30,6 +31,7 @@ Camera::~Camera()
 
 Camera::Camera(const QString &cam)
 {
+    isRunningStringActive = true;
     setStaticParam();
     setName(cam);
     runningText = new LimitLine(runningTextSetting->limitLine) ;

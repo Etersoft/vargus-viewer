@@ -36,6 +36,7 @@ public:
     static RunningTextSettings* runningTextSetting;
     static RunningString* runningString;
     LimitLine* runningText;
+    bool isRunningStringActive;
 private:
 
     static QString runningTextip;

@@ -66,6 +66,8 @@ VideoWidget::~VideoWidget()
     vargusLog.writeToFile("destroy VideoWidget()");
     this->hide();
     stopPlay();
+
+
     clearVlc(vlcPlayer, vlcMedia);
 }
 
@@ -310,7 +312,9 @@ void VideoWidget::changeStateMessageWidgetPress()
 
 void VideoWidget::changeStateMessageCameraPress()
 {
-
+    camera->isRunningStringActive = !camera->isRunningStringActive;
+    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Enable,(int)camera->isRunningStringActive);
+    writeTextString();
 }
 
 void VideoWidget::printString()
@@ -321,7 +325,7 @@ void VideoWidget::printString()
 void VideoWidget::writeTextString()
 {
     vargusLog.writeToFile("write text string ");
-    if (isRunningStringActive)
+    if (isRunningStringActive && camera->isRunningStringActive)
     {
         libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Color,camera->runningTextSetting->color);
         libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Opacity,camera->runningTextSetting->opacity);
@@ -335,6 +339,10 @@ void VideoWidget::writeTextString()
         libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Enable,1);
         //libvlc_video_set_marquee_string(vlcPlayer,libvlc_marquee_Text,runningText->AddStringGetLine(&string).toAscii());
         libvlc_video_set_marquee_string(vlcPlayer,libvlc_marquee_Text, camera->runningText->getLimitLine().toAscii());
+    }
+    else
+    {
+        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Enable,0);
     }
 }
 
