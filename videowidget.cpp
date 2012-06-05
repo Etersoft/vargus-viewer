@@ -145,6 +145,7 @@ void VideoWidget::stopPlay()
     if(isPlaying)
     {
         libvlc_media_player_stop(vlcPlayer);
+        camera->runningString->dropPrintMethod(camera->name());
         if(pltp == LOWLEVEL)
             deactivateLowLevelPainting();
     }
