@@ -14,60 +14,9 @@
 extern Logger &vargusLog;
 
 libvlc_instance_t *VideoWidget::vlcInstance = 0;
-RunningTextSettings *VideoWidget::runningTextSetting = 0;
-RunningString *VideoWidget::runningString = 0;
-QString VideoWidget::runningTextip = "";
-int VideoWidget::runningTextport = 0;
 VPlayingType VideoWidget::pltp = LOWLEVEL;
 
-RunningTextSettings::RunningTextSettings()
-{
-    color = 0xFFFFFF;
-    opacity = 255;
-    position = -1;
-    refresh = 1000;
-    size = -1;
-    timeout = 0;
-    x = 0;
-    y = 0;
-    limitLine = 13;
-}
 
-LimitLine::LimitLine(int _numLimitLine) : numLimitLine(_numLimitLine)
-{
-    strings = new QStringList();
-}
-
-LimitLine::~LimitLine()
-{
-    delete strings;
-}
-
-void LimitLine::AddString(QString string)
-{
-    strings->append(string);
-    if(strings->count() > numLimitLine)
-    {
-        strings->pop_front();
-    }
-}
-
-QString LimitLine::getLimitLine()
-{
-    QString finalResult = QString("");
-    foreach(const QString &sringElement, *strings)
-    {
-        finalResult += sringElement + "";
-    }
-    return finalResult;
-}
-
-QString LimitLine::AddStringGetLine(QString* string)
-{
-    if(string)
-        AddString(*string);
-    return getLimitLine();
-}
 
 VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
 {
@@ -97,18 +46,9 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
     {
         vlcInstance=libvlc_new(sizeof(vlc_args) / sizeof(vlc_args[0]), vlc_args);
     }
-    if(!runningString)
-    {
-        runningString = new RunningString(runningTextip, runningTextport);
-    }
-    if(!runningTextSetting)
-    {
-        runningTextSetting = new RunningTextSettings();
-    }
+
     vlcMedia = NULL;
     camera = NULL;
-
-    runningText = new LimitLine(runningTextSetting->limitLine) ;
 
     vlcPlayer = libvlc_media_player_new (vlcInstance);
 
@@ -168,7 +108,7 @@ void VideoWidget::startPlay(sizeVideo size)
     libvlc_media_player_set_media (vlcPlayer, vlcMedia);
 
     //Set this class for write camera events
-    runningString->addPrintMethod(camera->name(),this);
+    camera->runningString->addPrintMethod(camera->name(),this);
 
     //#FIXME For linux only
     int ret = 0;
@@ -190,8 +130,10 @@ void VideoWidget::startPlay(sizeVideo size)
         activateLowLevelPainting();
         ret = libvlc_media_player_play (vlcPlayer);
     }
+
     vargusLog.writeToFile("Start play ret " + QString::number(ret));
     isPlaying=true;
+    writeTextString();
     int isp = libvlc_media_player_is_playing (vlcPlayer);
     vargusLog.writeToFile("startPlay isp " + QString::number(isp));
 }
@@ -363,7 +305,7 @@ void VideoWidget::changeStateMessageWidgetPress()
 {
     isRunningStringActive = !isRunningStringActive;
     libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Enable,(int)isRunningStringActive);
-    writeTextString(NULL);
+    writeTextString();
 }
 
 void VideoWidget::changeStateMessageCameraPress()
@@ -371,27 +313,28 @@ void VideoWidget::changeStateMessageCameraPress()
 
 }
 
-void VideoWidget::printString(QString rString)
+void VideoWidget::printString()
 {
-    writeTextString( rString );
+    writeTextString();
 }
 
-void VideoWidget::writeTextString(QString string)
+void VideoWidget::writeTextString()
 {
-    vargusLog.writeToFile("write text string " + string);
+    vargusLog.writeToFile("write text string ");
     if (isRunningStringActive)
     {
-        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Color,runningTextSetting->color);
-        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Opacity,runningTextSetting->opacity);
-        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Position,runningTextSetting->position);
-        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Refresh,runningTextSetting->refresh);
-        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Size,runningTextSetting->size);
-        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Timeout,runningTextSetting->timeout);
-        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_X,runningTextSetting->x);
-        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Y,runningTextSetting->y);
+        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Color,camera->runningTextSetting->color);
+        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Opacity,camera->runningTextSetting->opacity);
+        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Position,camera->runningTextSetting->position);
+        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Refresh,camera->runningTextSetting->refresh);
+        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Size,camera->runningTextSetting->size);
+        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Timeout,camera->runningTextSetting->timeout);
+        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_X,camera->runningTextSetting->x);
+        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Y,camera->runningTextSetting->y);
 
         libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Enable,1);
-        libvlc_video_set_marquee_string(vlcPlayer,libvlc_marquee_Text,runningText->AddStringGetLine(&string).toAscii());
+        //libvlc_video_set_marquee_string(vlcPlayer,libvlc_marquee_Text,runningText->AddStringGetLine(&string).toAscii());
+        libvlc_video_set_marquee_string(vlcPlayer,libvlc_marquee_Text, camera->runningText->getLimitLine().toAscii());
     }
 }
 
@@ -400,23 +343,9 @@ void VideoWidget::disableTextString()
     libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Enable,0);
 }
 
-void VideoWidget::changeTextServerSettings(const QString &_adress, int _port)
-{
-    if(runningString)
-        runningString -> changeConnection(_adress, _port);
-    else
-        runningString = new RunningString(_adress, _port);
-}
-
 libvlc_media_player_t * VideoWidget::getvlcPlayer()
 {
     return vlcPlayer;
-}
-
-void VideoWidget::setRunningTextAddress(QString ip, int port)
-{
-    runningTextip = ip;
-    runningTextport = port;
 }
 
 void VideoWidget::setVPlayingType(VPlayingType pt)

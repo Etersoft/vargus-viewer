@@ -12,14 +12,36 @@ RunningString::RunningString(const QString &_server, int _port)
 
 void RunningString::addPrintMethod(QString cam, PrintRunningString* printClass)
 {
+    vargusLog.writeToFile("add print method for " + cam);
     printmethodlist[cam].append(printClass);
+}
+
+void RunningString::addAppendMethod(QString cam, AppendRunningString* appendClass)
+{
+    vargusLog.writeToFile("add append string method for " + cam);
+    appendmethodlist[cam].append(appendClass);
+}
+
+void RunningString::dropPrintMethod(QString cam)
+{
+    printmethodlist.remove(cam);
+}
+
+void RunningString::dropAppendMethod(QString cam)
+{
+    appendmethodlist.remove(cam);
 }
 
 void RunningString::print2Cam(QString cam, QString rString)
 {
+     foreach (AppendRunningString* needAppendClass, appendmethodlist[cam])
+     {
+         needAppendClass -> appendString(rString);
+     }
+
     foreach (PrintRunningString* needPrintClass, printmethodlist[cam])
     {
-        needPrintClass -> printString(rString);
+        needPrintClass -> printString();
     }
 }
 

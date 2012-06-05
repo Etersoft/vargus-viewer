@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
         vargusLog.setActive(logging);
         settingsRead = true;
     }
-    VideoWidget::setRunningTextAddress(t_server, t_port);
+    Camera::setRunningTextAddress(t_server, t_port);
     vargusLog.changeDirectory(pathForLogs);
     vargusLog.setActive(loggingEnabled);
     if(!vargusLog.makeLogFile())
@@ -610,7 +610,7 @@ void MainWindow::newSettings(QString newServer, int newPort, QString new_t_serve
     {
         t_server = new_t_server;
         t_port = new_t_port;
-        VideoWidget::changeTextServerSettings(t_server, t_port);
+        Camera::changeTextServerSettings(t_server, t_port);
     }
     saveSettings();
 }

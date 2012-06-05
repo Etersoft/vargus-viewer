@@ -2,8 +2,10 @@
 #define CAMERA_H
 
 #include <QObject>
+#include "runningstring.h"
+#include "limitline.h"
 
-class Camera : public QObject
+class Camera : public QObject, public AppendRunningString
 {
     Q_OBJECT
 
@@ -14,8 +16,9 @@ class Camera : public QObject
     QString cam_agent;
 
 public:
-    explicit Camera(){}
-    Camera(const QString &cam){cam_name = cam;}
+    explicit Camera();
+    Camera(const QString &cam);
+    ~Camera();
     Camera * copy();
 
     QString name() {return cam_name;}
@@ -24,12 +27,27 @@ public:
     QString preview() {return cam_preview;}
     QString agent() {return cam_agent;}
 
-    void setName(const QString &new_value){cam_name = new_value;}
+    void setName(const QString &new_value);
     void setDescription(const QString &new_value){cam_description = new_value;}
     void setSource(const QString &new_value){cam_source = new_value;}
     void setPreview(const QString &new_value){cam_preview = new_value;}
     void setAgent(const QString &new_value){cam_agent = new_value;}
 
+    static RunningTextSettings* runningTextSetting;
+    static RunningString* runningString;
+    LimitLine* runningText;
+private:
+
+    static QString runningTextip;
+    static int runningTextport;
+
+
+    void setStaticParam();
+public:
+    static void setRunningTextAddress(QString ip, int port);
+    static void changeTextServerSettings(const QString &_adress, int _port);
+
+    virtual void appendString(QString str);
 signals:
 
 public slots:
