@@ -271,7 +271,6 @@ void VideoWidget::setupContextMenu()
     changeStateMessageWidgetAction=new QAction(this);
 
     changeStateMessageCameraAction=new QAction(this);
-    changeStateMessageCameraAction->setText(tr("Disable message on camera"));
 
     connect(frame, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(ContextMenuAction(const QPoint& z)));
 }
@@ -282,6 +281,12 @@ void VideoWidget::ContextMenuAction(const QPoint& z)
         changeStateMessageWidgetAction->setText(tr("Disable message on widget"));
     else
         changeStateMessageWidgetAction->setText(tr("Anable message on widget"));
+
+    if(camera->isRunningStringActive)
+        changeStateMessageCameraAction->setText(tr("Disable message on camera"));
+    else
+        changeStateMessageCameraAction->setText(tr("Anable message on camera"));
+
     contextMenu->clear();
     disconnect(arhiveCallAction, 0, 0, 0);
     disconnect(changeStateMessageWidgetAction, 0, 0, 0);
