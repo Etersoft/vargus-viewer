@@ -30,6 +30,7 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
 
     isPlaying = false;
     isRunningStringActive = true;
+    StatusClick = NO_CLICK;
     frame = new QFrame(this);
 
     QVBoxLayout* layout = new QVBoxLayout;
@@ -186,6 +187,11 @@ void VideoWidget::mousePressEvent ( QMouseEvent * e )
     waitingDoubleClickTimer->start(QApplication::doubleClickInterval());
 }
 
+void VideoWidget::mouseReleaseEvent (QMouseEvent * e)
+{
+    StatusClick =  NO_CLICK;
+}
+
 void VideoWidget::startDrag()
 {
     if(camera == NULL)
@@ -205,7 +211,7 @@ void VideoWidget::startDrag()
 
 void VideoWidget::mouseDoubleClickEvent ( QMouseEvent * event )
 {
-    StatusClick =  DOUBLE_CLICK;
+    StatusClick = DOUBLE_CLICK;
     emit bigSizeCall(this);
 }
 
@@ -214,6 +220,7 @@ void VideoWidget::waitingDoubleClickTimeout()
     waitingDoubleClickTimer->stop();
     if(StatusClick ==  CLICK)
     {
+        StatusClick = NO_CLICK;
         startDrag();
     }
 }

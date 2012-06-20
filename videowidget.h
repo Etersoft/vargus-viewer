@@ -37,7 +37,7 @@ class VideoWidget: public VideoWidgetLowLevelPainting, public PrintRunningString
     QAction *changeStateMessageWidgetAction;
     void setupContextMenu();
 
-    enum statusesClick{CLICK, DOUBLE_CLICK};
+    enum statusesClick{CLICK, DOUBLE_CLICK, NO_CLICK};
     statusesClick StatusClick;
 public:
     VideoWidget();
@@ -78,6 +78,7 @@ private:
 
 protected:
     void mousePressEvent ( QMouseEvent * e );
+    void mouseReleaseEvent (QMouseEvent * e);
     void mouseDoubleClickEvent ( QMouseEvent * event );
 
     void dropEvent(QDropEvent *de);
