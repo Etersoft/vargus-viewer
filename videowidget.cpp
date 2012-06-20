@@ -15,21 +15,18 @@ extern Logger &vargusLog;
 
 libvlc_instance_t *VideoWidget::vlcInstance = 0;
 VPlayingType VideoWidget::pltp = LOWLEVEL;
+const char *const *VideoWidget::VlcArgs = 0;
+int VideoWidget::numVlcArgs = 0;
 
 
+void VideoWidget::setVlcArgs( const char *const *_vlcArgs, int _numberVlcArgs)
+{
+    VlcArgs = _vlcArgs;
+    numVlcArgs = _numberVlcArgs;
+}
 
 VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
 {
-
-    const char * const vlc_args[] = {
-              "-I", "dummy", /* Don't use any interface */
-              "--ignore-config", /* Don't use VLC's config */
-              "--no-audio", /* Audio off */
-#ifdef QT_DEBUG
-              "--extraintf=logger", /* log anything */
-              "--verbose=2", /* be much more verbose then normal for debugging purpose */
-#endif
-             "" }; /* "--no-video-title-show" */
 
     isPlaying = false;
     isRunningStringActive = true;
@@ -42,9 +39,10 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
 
     poller=new QTimer(this);
 
+
     if(!vlcInstance)
     {
-        vlcInstance=libvlc_new(sizeof(vlc_args) / sizeof(vlc_args[0]), vlc_args);
+        vlcInstance=libvlc_new(numVlcArgs, VlcArgs);
     }
 
     vlcMedia = NULL;

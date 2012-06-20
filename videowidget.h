@@ -58,6 +58,7 @@ public:
     Camera * getCamera() { return camera; }
     bool playing() { return isPlaying; }
 
+    static void setVlcArgs( const char *const *_vlcArgs, int _numberVlcArgs);
 private:
     static void clearVlc(libvlc_media_player_t *vlcPlayer,libvlc_media_t *vlcMedia);
     void printString();
@@ -71,6 +72,10 @@ private:
     bool isRunningStringActive;
 
     void disconnectAction();
+
+    static int numVlcArgs;
+    static const char *const *VlcArgs;
+
 protected:
     void mousePressEvent ( QMouseEvent * e );
     void mouseDoubleClickEvent ( QMouseEvent * event );
