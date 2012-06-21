@@ -27,7 +27,6 @@ void VideoWidget::setVlcArgs( const char *const *_vlcArgs, int _numberVlcArgs)
 
 VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
 {
-
     isPlaying = false;
     isRunningStringActive = true;
     StatusClick = NO_CLICK;
@@ -99,9 +98,11 @@ void VideoWidget::startPlay(sizeVideo size)
     {
         case BIGVIDEO:
             vlcMedia = libvlc_media_new_path(vlcInstance, camera->source().toAscii());
+            setAspectComply(true);
             break;
         case SMALLVIDEO:
             vlcMedia = libvlc_media_new_path(vlcInstance, camera->preview().toAscii());
+            setAspectComply(false);
             break;
     }
     vargusLog.writeToFile("disconnectAction");

@@ -46,8 +46,11 @@ void VideoWidgetLowLevelPainting::mutexUnlock()
     mutex.unlock();
 }
 
-
-VideoWidgetLowLevelPainting::VideoWidgetLowLevelPainting() : QWidget(), frame(0), videoheight(0), videowidth(0)
+VideoWidgetLowLevelPainting::VideoWidgetLowLevelPainting() :
+    QWidget(), frame(0), widgetheight(0),
+    widgetwidth(0), videosourceheight(0), videosourcewidth(0),
+    aspectComply(false), xdisplacement(0),
+    videoheight(0), videowidth(0)
 {
     active = false;
     repaintTimer = new QTimer(this);
@@ -66,8 +69,22 @@ void VideoWidgetLowLevelPainting::restartPaintVideo()
         return;
     vargusLog.writeToFile("Restart paint video height:"+  QString::number(this->height())  + " width:"+  QString::number(this->width()) );
 
-    videoheight = this->height();
+    if(libvlc_video_get_height(getvlcPlayer()) > 0)
+    {
+        videosourceheight = libvlc_video_get_height(getvlcPlayer());
+    }
+    if(libvlc_video_get_width(getvlcPlayer()) > 0)
+    {
+        videosourcewidth = libvlc_video_get_width(getvlcPlayer());
+    }
+
+    widgetheight = this->height();
+    widgetwidth = this->width();
+
+    videoheight = this->height()/getAspectRatio();
     videowidth = this->width();
+
+    xdisplacement = getXDisplacement();
 
     repaintTimer->stop();
     stoptvlcPlayer();
@@ -78,6 +95,36 @@ void VideoWidgetLowLevelPainting::restartPaintVideo()
     libvlc_video_set_callbacks(getvlcPlayer(), lock, unlock, display, this);
     startvlcPlayer();
     repaintTimer->start(repaintTime);
+}
+
+void VideoWidgetLowLevelPainting::setAspectComply(bool value)
+{
+    aspectComply = value;
+}
+
+float VideoWidgetLowLevelPainting::getAspectRatio()
+{
+    if(aspectComply)
+    {
+        if(videosourcewidth>0 && videosourceheight>0)
+        {
+            return (float)videosourcewidth/(float)videosourceheight;
+        }
+    }
+    return 1.0;
+}
+
+int VideoWidgetLowLevelPainting::getXDisplacement()
+{
+    if(aspectComply)
+    {
+        if( videowidth>0 && videoheight>0 &&
+            widgetheight>0 && widgetwidth>0)
+        {
+            return ((widgetheight - videoheight)/2);
+        }
+    }
+    return 0;
 }
 
 void VideoWidgetLowLevelPainting::updateGeometry()
@@ -106,7 +153,20 @@ void VideoWidgetLowLevelPainting::deactivateLowLevelPainting()
 
 void VideoWidgetLowLevelPainting::paintEvent(QPaintEvent*)
 {
-    if( videoheight != this->height() ||  videowidth != this->width())
+
+    if( widgetheight != this->height() ||
+        widgetwidth != this->width() ||
+        (
+            (
+                videosourceheight != libvlc_video_get_height(getvlcPlayer()) ||
+                videosourcewidth != libvlc_video_get_width(getvlcPlayer())
+            ) &&
+            (
+                libvlc_video_get_width(getvlcPlayer()) > 0 &&
+                libvlc_video_get_height(getvlcPlayer())
+            )
+        )
+      )
     {
         restartPaintVideo();
         return;
@@ -114,7 +174,7 @@ void VideoWidgetLowLevelPainting::paintEvent(QPaintEvent*)
     if (active)
     {
         painter.begin(this);
-        painter.drawImage(QPoint(0, 0),*frame);
+        painter.drawImage(QPoint(0, xdisplacement),*frame);
         painter.end();
     }
 }

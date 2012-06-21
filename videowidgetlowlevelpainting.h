@@ -23,6 +23,9 @@ public:
 
     void activateLowLevelPainting();
     void deactivateLowLevelPainting();
+
+    void setAspectComply(bool value);
+    int getXDisplacement();
 private:
     QMutex mutex;
     QImage *frame;
@@ -33,8 +36,20 @@ private:
     QTimer *repaintTimer;
     static const int repaintTime;
 
+    int videosourceheight;
+    int videosourcewidth;
+
+    int widgetheight;
+    int widgetwidth;
+
     int videoheight;
     int videowidth;
+
+    int xdisplacement;
+
+    float getAspectRatio();
+    bool aspectComply;
+
     bool active;
 
     virtual libvlc_media_player_t *getvlcPlayer() = 0;
