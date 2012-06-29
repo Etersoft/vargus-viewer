@@ -37,6 +37,21 @@ void signal_handler(int sig)
 
 int main(int argc, char *argv[])
 {
+    const char * const vlc_args[] = {
+        "-I", "dummy", /* Don't use any interface */
+        "--ignore-config", /* Don't use VLC's config */
+        "--no-audio", /* Audio off */
+        "--http-reconnect",
+        "--http-continuous",
+    #ifdef QT_DEBUG
+        "--extraintf=logger", /* log anything */
+        "--verbose=2" /* be much more verbose then normal for debugging purpose */
+    #endif
+        ""
+        }; /* "--no-video-title-show" */
+
+    VideoWidget::setVlcArgs(vlc_args,sizeof(vlc_args)/sizeof(vlc_args[0]));
+
     //logging = true;
     vargusLog.makeLogFile();
     vargusLog.writeToFile("Start Stas");
