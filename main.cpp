@@ -43,6 +43,9 @@ int main(int argc, char *argv[])
         "--no-audio", /* Audio off */
         "--http-reconnect",
         "--http-continuous",
+        "--video-title-show",
+        "--video-title-position=9",
+        "--video-title-timeout=0",
     #ifdef QT_DEBUG
         "--extraintf=logger", /* log anything */
         "--verbose=2" /* be much more verbose then normal for debugging purpose */
