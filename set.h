@@ -61,12 +61,6 @@ signals:
     void buttonsEnabled(bool, bool);
 private:
     void setLayouts(int type);
-    void makeTwoSquare();//квадрат 2*2
-    void makeFourSquareTripple();//квадрат 4*4 тройной
-    void makeFourSquareOneCentral();//квадрат 4*4 двойной центральный
-    void makeFiveSquareTwoOneTripple();//квадрат 5*5 два двойных один центральный
-    void makeTrippleSquare();//квадрат 3*3
-    void makeFourSquare();//квадрат 4*4
     int amountOfPlayingWidgets();
 
     void countActiveAndPlay();

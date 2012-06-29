@@ -111,189 +111,87 @@ void Set::updateActiveView()
      enableButtons();
 }
 
-void Set::makeTwoSquare()
-{
-    QGridLayout *grid = new QGridLayout(this);
-    grid -> setMargin(0);
-    setLayout(grid);
-    for( int i = 0; i < 2; i++)
-    {
-        for( int j = 0; j < 2; j++)
-        {
-            VideoWidget *v = new VideoWidget();
-            grid -> addWidget(v, i, j);
-            videoList << v;
-        }
-    }
-}
-
-void Set::makeFourSquareTripple()
-{
-    QGridLayout *grid = new QGridLayout(this);
-    grid -> setMargin(0);
-    setLayout(grid);
-
-    VideoWidget *v = new VideoWidget();
-    grid -> addWidget(v, 0, 0, 2, 2);
-    videoList << v;
-
-    v = new VideoWidget();
-    grid -> addWidget(v, 0, 2);
-    videoList << v;
-
-    v = new VideoWidget();
-    videoList << v;
-    grid -> addWidget(v, 1, 2);
-
-    for(int i = 0; i < 3; i++)
-    {
-        v = new VideoWidget();
-        videoList << v;
-        grid -> addWidget(v, 2, i);
-    }
-}
-
-void Set::makeFourSquareOneCentral()
-{
-    QGridLayout *grid = new QGridLayout(this);
-    grid -> setMargin(0);
-    setLayout(grid);
-    for(int i = 0; i < 4; i++)
-    {
-        VideoWidget *v = new VideoWidget();
-        videoList << v;
-        grid -> addWidget(v, 0, i);
-    }
-    VideoWidget *v = new VideoWidget();
-    videoList << v;
-    grid -> addWidget(v, 1, 0);
-
-    v = new VideoWidget();
-    videoList << v;
-    grid -> addWidget(v, 1, 1, 2, 2);
-
-    v = new VideoWidget();
-    videoList << v;
-    grid -> addWidget(v, 1, 3);
-
-    v = new VideoWidget();
-    videoList << v;
-    grid -> addWidget(v, 2, 0);
-
-    v = new VideoWidget();
-    videoList << v;
-    grid -> addWidget(v, 2, 3);
-
-
-    for(int i = 0; i < 4; i++)
-    {
-        v = new VideoWidget();
-        videoList << v;
-        grid -> addWidget(v, 3, i);
-    }
-}
-
-void Set::makeFiveSquareTwoOneTripple()
-{
-    QGridLayout *grid  = new QGridLayout(this);
-    grid -> setMargin(0);
-    setLayout(grid);
-    VideoWidget *v = new VideoWidget();
-    videoList << v;
-    grid -> addWidget(v, 0, 0, 3, 3);
-
-    v = new VideoWidget();
-    videoList << v;
-    grid -> addWidget(v, 0, 3, 2, 2);
-
-    v = new VideoWidget();
-    videoList << v;
-    grid -> addWidget(v, 2, 3, 2, 2);
-
-    for(int i = 0; i < 3; i++)
-    {
-        v = new VideoWidget();
-        videoList << v;
-        grid -> addWidget(v, 3, i);
-    }
-    for(int i = 0; i < 5; i++)
-    {
-        v = new VideoWidget();
-        videoList << v;
-        grid -> addWidget(v, 4, i);
-    }
-}
-
-void Set::makeTrippleSquare()
-{
-    QGridLayout *grid  = new QGridLayout(this);
-    grid -> setMargin(0);
-    setLayout(grid);
-    for(int i = 0; i < 3; i++)
-        for( int j = 0; j < 3; j++)
-        {
-            VideoWidget *v = new VideoWidget();
-            videoList << v;
-            grid -> addWidget(v, i, j);
-        }
-}
-
-void Set::makeFourSquare()
-{
-    QGridLayout *grid = new QGridLayout(this);
-    grid -> setMargin(0);
-    setLayout(grid);
-    for(int i = 0; i < 4; i++)
-    {
-        for(int j = 0; j < 4; j++)
-        {
-            VideoWidget *v = new VideoWidget();
-            videoList << v;
-            grid -> addWidget(v, i, j);
-
-        }
-    }
-}
-
 void Set::setLayouts(int type)
 {
     if(layout()!= NULL)
         delete layout();
     stopPlay();
     tp = type;
-    switch(type)
+
+
+    QGridLayout *grid = new QGridLayout(this);
+    grid -> setMargin(0);
+
+    QList<int> doubleCells = viewList.at(tp)->doubleCells();
+    QList<int> tripleCells = viewList.at(tp)->tripleCells();
+    QList<int> quadrupleCells = viewList.at(tp)->quadrupleCells();
+    int viewWidth = viewList.at(tp)->width();
+    int viewHeight = viewList.at(tp)->height();
+    bool **net = new bool*[viewHeight];//не забыть удалить
+    for(int i = 0; i < viewHeight; i++)
     {
-        case(0):
+        bool *tmp = new bool[viewWidth];
+        for(int j = 0; j < viewWidth; j++)
+            tmp[j] = true;//свободный
+        net[i] = tmp;
+    }
+
+    int cellNum = 1;
+    for(int i = 0; i < viewHeight; i++)
+    {
+        for(int j = 0; j < viewWidth;)
         {
-            makeTwoSquare();
-            break;
+            while((net[i][j] == false) && (j < viewWidth))
+                j++;
+            if(j == viewWidth)
+                break;
+            VideoWidget *v = new VideoWidget();
+            videoList << v;
+            if(doubleCells.contains(cellNum))
+            {
+                grid -> addWidget(v,i,j,2,2);
+                net[i][j] = false;
+                net[i][j+1] = false;
+                net[i+1][j] = false;
+                net[i+1][j+1] = false;
+                j+=2;
+            }
+            else if(tripleCells.contains(cellNum))
+            {
+                grid -> addWidget(v,i,j,3,3);
+                net[i][j] = false;
+                net[i][j+1] = false;
+                net[i][j+2] = false;
+                net[i+1][j] = false;
+                net[i+1][j+1] = false;
+                net[i+1][j+2] = false;
+                net[i+2][j] = false;
+                net[i+2][j+1] = false;
+                net[i+2][j+2] = false;
+                j+=3;
+            }
+            else if(quadrupleCells.contains(cellNum))
+            {
+                grid -> addWidget(v,i,j,4,4);
+                for(int k = i; k <= i+4; k++)
+                    for(int m = j; m <= j+4; m++)
+                        net[k][m] =false;
+                j+=4;
+            }
+            else
+            {
+                grid->addWidget(v,i,j);
+                net[i][j] = false;
+                j++;
+            }
+            cellNum++;
         }
-        case(1):
-        {
-            makeFourSquareTripple();
-            break;
-        }
-        case(2):
-        {
-            makeFourSquareOneCentral();
-            break;
-        }
-        case(3):
-        {
-            makeFiveSquareTwoOneTripple();
-            break;
-        }
-       case(4):
-        {
-            makeTrippleSquare();
-            break;
-        }
-        case(5):
-        {
-            makeFourSquare();
-            break;
-        }
-     }
+    }
+    for(int i = 0; i < viewHeight; i++)
+    {
+        delete[] net[i];
+    }
+    delete[] net;
     countActiveAndPlay();
     emit updateActiveCameras(getActiveCameras());
 
@@ -520,34 +418,17 @@ void Set::changeCameras(VideoWidget *first, Camera *second, bool fromAnotherWidg
 
 int Set::amountOfCells(int tp)
 {
-    switch(tp)
-    {
-        case(0):
-        {
-            return 4;
-        }
-        case(1):
-        {
-            return 6;
-        }
-        case(2):
-        {
-            return 13;
-        }
-        case(3):
-        {
-            return 11;
-        }
-       case(4):
-        {
-            return 9;
-        }
-        case(5):
-        {
-            return 16;
-        }
-    }
-    return 0;
+
+    QList<int> doubleCells = viewList.at(tp)->doubleCells();
+    QList<int> tripleCells = viewList.at(tp)->tripleCells();
+    QList<int> quadrupleCells = viewList.at(tp)->quadrupleCells();
+    int viewWidth = viewList.at(tp)->width();
+    int viewHeight = viewList.at(tp)->height();
+    int k = viewWidth * viewHeight;
+    k = k - doubleCells.length()*4;
+    k = k - tripleCells.length() * 9;
+    k = k - quadrupleCells.length() * 16;
+    return k;
 }
 
 int Set::amountOfPlayingWidgets()
