@@ -11,7 +11,8 @@
 #include "runningstring.h"
 #include "videowidgetlowlevelpainting.h"
 #include <enums.h>
-
+#include <QVBoxLayout>
+#include <QLabel>
 class QFrame;
 
 
@@ -24,6 +25,7 @@ class VideoWidget: public VideoWidgetLowLevelPainting, public PrintRunningString
     QTimer *poller;
     QTimer *waitingDoubleClickTimer;
     bool isPlaying;
+    bool isStatusNoSignal;
 
     static libvlc_instance_t *vlcInstance;
     libvlc_media_player_t *vlcPlayer;
@@ -76,6 +78,14 @@ private:
     static int numVlcArgs;
     static const char *const *VlcArgs;
 
+    void vlcSetEvent();
+
+    bool isStillPlay;
+    QVBoxLayout* layout;
+    QLabel* statusLabel;
+
+    void setNosignalMessage();
+    void setOffNosignalMessage();
 protected:
     void mousePressEvent ( QMouseEvent * e );
     void mouseReleaseEvent (QMouseEvent * e);
@@ -96,8 +106,10 @@ public slots:
     void waitingDoubleClickTimeout();
     float getFPS() { return libvlc_media_player_get_fps(vlcPlayer);
                 /*libvlc_media_player_get_time(vlcPlayer);*/}
+    void setStillPlay();
 signals:
     void arhiveCall();
+    void disconnectedSignal();
     void bigSizeCall(VideoWidget *);
     void camerasChanged(VideoWidget *,Camera *second, bool fromAnotherWidget);
 };

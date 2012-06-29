@@ -26,6 +26,9 @@ public:
 
     void setAspectComply(bool value);
     int getXDisplacement();
+
+    void paintNoSignal();
+    void paintNothing();
 private:
     QMutex mutex;
     QImage *frame;
@@ -50,7 +53,14 @@ private:
     float getAspectRatio();
     bool aspectComply;
 
-    bool active;
+    enum PaintType{NOTHING, VIDEO, NOSIGNAL};
+    PaintType type;
+
+    bool isActiveLowLevelPainting;
+
+    void checkChangeVideoSize();
+    void printVideoFrame();
+    void printNoSignal();
 
     virtual libvlc_media_player_t *getvlcPlayer() = 0;
     virtual void startvlcPlayer() = 0;

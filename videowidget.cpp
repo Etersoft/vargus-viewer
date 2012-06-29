@@ -10,6 +10,7 @@
 
 #include <QApplication>
 #include <QtCore>
+#include <QLineEdit>
 #include"logger.h"
 extern Logger &vargusLog;
 
@@ -29,13 +30,21 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
 {
     isPlaying = false;
     isRunningStringActive = true;
+    isStillPlay = false;
     StatusClick = NO_CLICK;
+    isStatusNoSignal = false;
+    statusLabel = 0;
     frame = new QFrame(this);
 
-    QVBoxLayout* layout = new QVBoxLayout;
+    //layout = new QVBoxLayout(this);
+    layout = new QVBoxLayout();
     layout->setContentsMargins(0,0,0,0);
     layout->addWidget(frame);
     setLayout(layout);
+
+
+
+
 
     poller=new QTimer(this);
 
@@ -49,6 +58,7 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
     camera = NULL;
 
     vlcPlayer = libvlc_media_player_new (vlcInstance);
+    vlcSetEvent();
 
     connect(poller, SIGNAL(timeout()), this, SLOT(updateInterface()));
     setAcceptDrops(true);
@@ -170,7 +180,50 @@ void VideoWidget::updateInterface()
     libvlc_media_t *curMedia = libvlc_media_player_get_media (vlcPlayer);
     if (curMedia == NULL)
         return;
+
+    int isp = libvlc_media_player_is_playing (vlcPlayer);
+    if(!isp)
+    {
+        emit disconnectedSignal();
+        setNosignalMessage();
+        return;
+    }
+
+    if(!isStillPlay)
+    {
+        setNosignalMessage();
+    }
+    else
+    {
+        setOffNosignalMessage();
+    }
+
+    isStillPlay = false;
 }
+
+void VideoWidget::setNosignalMessage()
+{
+    if(!isStatusNoSignal)
+    {
+        statusLabel = new QLabel();
+        statusLabel->setText("NO SIGNAL");
+        statusLabel->setFixedHeight(15);
+        layout->addWidget(statusLabel);
+        paintNoSignal();
+    }
+    isStatusNoSignal = true;
+}
+
+void VideoWidget::setOffNosignalMessage()
+{
+    if(isStatusNoSignal)
+    {
+        delete statusLabel;
+        paintNothing();
+    }
+    isStatusNoSignal = false;
+}
+
 
 void VideoWidget::mousePressEvent ( QMouseEvent * e )
 {
@@ -372,3 +425,31 @@ void VideoWidget::setVPlayingType(VPlayingType pt)
 {
     pltp = pt;
 }
+
+void eventCallback(const libvlc_event_t *p_event, void *p_user_data)
+{
+    VideoWidget* vw = (VideoWidget*)p_user_data;
+    vw->setStillPlay();
+}
+
+void VideoWidget::setStillPlay()
+{
+    isStillPlay = true;
+}
+
+void VideoWidget::vlcSetEvent()
+{
+    libvlc_event_manager_t* vlcEventManager = libvlc_media_player_event_manager(vlcPlayer);
+    libvlc_event_attach(vlcEventManager, libvlc_MediaPlayerPositionChanged, eventCallback, this);
+}
+
+
+
+
+
+
+
+
+
+
+

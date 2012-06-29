@@ -50,9 +50,9 @@ VideoWidgetLowLevelPainting::VideoWidgetLowLevelPainting() :
     QWidget(), frame(0), widgetheight(0),
     widgetwidth(0), videosourceheight(0), videosourcewidth(0),
     aspectComply(false), xdisplacement(0),
-    videoheight(0), videowidth(0)
+    videoheight(0), videowidth(0),type(NOTHING), isActiveLowLevelPainting(false)
 {
-    active = false;
+
     repaintTimer = new QTimer(this);
     connect(repaintTimer, SIGNAL(timeout()), this, SLOT(animate()));
 }
@@ -65,7 +65,7 @@ VideoWidgetLowLevelPainting::~VideoWidgetLowLevelPainting()
 
 void VideoWidgetLowLevelPainting::restartPaintVideo()
 {
-    if(!active)
+    if(type == NOTHING)
         return;
     vargusLog.writeToFile("Restart paint video height:"+  QString::number(this->height())  + " width:"+  QString::number(this->width()) );
 
@@ -134,13 +134,15 @@ void VideoWidgetLowLevelPainting::updateGeometry()
 
 void VideoWidgetLowLevelPainting::activateLowLevelPainting()
 {
-    active = true;
+    isActiveLowLevelPainting = true;
+    type = VIDEO;
     restartPaintVideo();
 }
 
 void VideoWidgetLowLevelPainting::deactivateLowLevelPainting()
 {
-    active = false;
+    isActiveLowLevelPainting = false;
+    type = NOTHING;
     repaintTimer->stop();
     mutexLock();
     if(frame)
@@ -153,7 +155,23 @@ void VideoWidgetLowLevelPainting::deactivateLowLevelPainting()
 
 void VideoWidgetLowLevelPainting::paintEvent(QPaintEvent*)
 {
+    if(!isActiveLowLevelPainting)
+        return;
 
+    if(type == NOSIGNAL)
+    {
+        printNoSignal();
+    }
+
+    if (type == VIDEO)
+    {
+        checkChangeVideoSize();
+        printVideoFrame();
+    }
+}
+
+void VideoWidgetLowLevelPainting::checkChangeVideoSize()
+{
     if( widgetheight != this->height() ||
         widgetwidth != this->width() ||
         (
@@ -171,12 +189,37 @@ void VideoWidgetLowLevelPainting::paintEvent(QPaintEvent*)
         restartPaintVideo();
         return;
     }
-    if (active)
-    {
-        painter.begin(this);
-        painter.drawImage(QPoint(0, xdisplacement),*frame);
-        painter.end();
-    }
+}
+
+void VideoWidgetLowLevelPainting::printVideoFrame()
+{
+    painter.begin(this);
+    painter.drawImage(QPoint(0, xdisplacement),*frame);
+    painter.end();
+}
+
+void VideoWidgetLowLevelPainting::printNoSignal()
+{
+    painter.begin(this);
+    painter.fillRect(0,0,this->width(), this->height(),Qt::black);
+    painter.setFont(QFont("Arial", 10));
+    painter.setPen(Qt::white);
+    painter.drawText(rect(),Qt::AlignCenter,tr("NO SIGNAL"));
+    painter.end();
+}
+
+
+
+void VideoWidgetLowLevelPainting::paintNoSignal()
+{
+    type = NOSIGNAL;
+    repaint();
+}
+
+void VideoWidgetLowLevelPainting::paintNothing()
+{
+    type = VIDEO;
+    repaint();
 }
 
 void VideoWidgetLowLevelPainting::animate()
