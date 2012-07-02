@@ -19,8 +19,8 @@ class Set : public QWidget
 
     int tp;//тип раскладки, используемой в данный момент
     bool active;
-    int activeCameras;
     int* lastCamNum;
+    int* offset;
     bool buttonClicked;
     bool *wasChanged;
 
