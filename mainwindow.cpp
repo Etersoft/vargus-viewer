@@ -187,10 +187,6 @@ void MainWindow::createActions()
     fileMenu -> addAction(delLogFilesAction);
     connect(delLogFilesAction, SIGNAL(triggered()), this, SLOT(deleteLogFiles()));
 
-    fpsCounterAction = new QAction(tr("&Frames per second"), this);
-    fileMenu -> addAction(fpsCounterAction);
-    connect(fpsCounterAction, SIGNAL(triggered()), this, SLOT(showFPS()));
-
     fileMenu -> addSeparator();
     exitAction = new QAction(tr("&Exit"), this);
     fileMenu -> addAction(exitAction);
@@ -674,28 +670,6 @@ void MainWindow::startConnection()
     changeActiveCameras(setsList.at(0) -> getActiveCameras());
 }
 
-void MainWindow::showFPS()
-{
-    QList<Set *>::iterator it = setsList.begin();
-    QList<Set *>::iterator end = setsList.end();
-    while( it!= end )
-    {
-        if( (*it) -> isActive() )
-        {
-           countFPS((*it) -> video());
-           break;
-        }
-        it++;
-    }
-}
-
-void MainWindow::countFPS(const QList<VideoWidget *> &video)
-{
-    FPSCounter counter(this);
-    counter.setVideoList(video);
-    counter.start();
-    counter.exec();
-}
 
 void MainWindow::enableButtons(bool prev, bool next)
 {

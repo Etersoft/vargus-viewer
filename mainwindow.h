@@ -15,7 +15,6 @@
 #include<QCloseEvent>
 #include<QSettings>
 #include "cameralist.h"
-#include<fpscounter.h>
 #include<QSystemTrayIcon>
 #include<videosettingsdialog.h>
 
@@ -92,7 +91,6 @@ private:
     void setDefaultsSettings();
     void saveSettings();
     void startConnection();
-    void countFPS(const QList<VideoWidget *> &video);
 
 private slots:
     void onSetChanged(int num);
@@ -106,7 +104,6 @@ private slots:
     void enableLogging(bool enable);
     void changeConnectionSettings();
     void newSettings(QString newServer, int newPort, QString new_t_server, int new_t_port);
-    void showFPS();
     void enableButtons(bool prev, bool next);
     void showHide(QSystemTrayIcon::ActivationReason);
     void changeLoggingFolder();

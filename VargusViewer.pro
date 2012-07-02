@@ -18,7 +18,6 @@ SOURCES += main.cpp\
     cameralist.cpp \
     logger.cpp \
     settingsdialog.cpp \
-    fpscounter.cpp \
     runningstring.cpp \
     worksock.cpp \
     videosettingsdialog.cpp \
@@ -33,7 +32,6 @@ HEADERS  += mainwindow.h \
     cameralist.h \
     logger.h \
     settingsdialog.h \
-    fpscounter.h \
     runningstring.h \
     worksock.h \
     videosettingsdialog.h \
