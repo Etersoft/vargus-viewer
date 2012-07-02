@@ -246,10 +246,19 @@ QList<Camera*> Set::getActiveCameras()
 
 void Set::next()
 {
-
     QList<Camera *> *currentList = stc.at(tp);
     currentList -> clear();
     int newFirstCam = offset[tp]*amountOfCells(tp)+lastCamNum[tp] + 1;
+    lastCamNum[tp] = cameraList.length() - (newFirstCam + 1);
+    if(lastCamNum[tp] >= amountOfCells(tp))
+    {
+        lastCamNum[tp] = amountOfCells(tp) - 1;
+    }
+    else if(amountOfCells(tp) > lastCamNum[tp]+1)
+    {
+        newFirstCam = newFirstCam - amountOfCells(tp) + lastCamNum[tp] +1 ;
+        lastCamNum[tp] = amountOfCells(tp)-1;
+    }
     for(int i = newFirstCam; i < cameraList.length(); i++)
     {
         currentList -> push_back(cameraList.at(i));
@@ -258,14 +267,10 @@ void Set::next()
     {
         currentList -> push_back(cameraList.at(i));
     }
-    lastCamNum[tp] = cameraList.length() - (newFirstCam + 1);
     if(lastCamNum[tp] >= amountOfCells(tp))
         lastCamNum[tp] = amountOfCells(tp) - 1;
     offset[tp]++;
     setLayouts(tp);
-    /*lastCamNum[tp] += activeCameras;
-    if(lastCamNum[tp] >= currentList -> length())
-        lastCamNum[tp] = currentList -> length() - 1;*/
     wasChanged[tp] = true;
     enableButtons();
 }
@@ -288,7 +293,6 @@ void Set::prev()
     wasChanged[tp] = true;
     setLayouts(tp);
     enableButtons();
-
 }
 
 void Set::reset()
