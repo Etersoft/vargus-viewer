@@ -235,7 +235,8 @@ void Set::stopPlay(VideoWidget *excluding)
         }
         it++;
     }
-    videoContainer->addVideoWidgets(widgetsToDelete);
+    if(widgetsToDelete.isEmpty() == false)
+        videoContainer->addVideoWidgets(widgetsToDelete);
     bigPlaying = NULL;
     videoList.clear();
     if(excluding)

@@ -25,7 +25,7 @@ class VideoWidgetDeleter : public QThread
     Q_OBJECT
 
     //QList<VideoWidget *> deleterBuffer;
-    //QFile log;
+   // QFile log; uncomment to log
     QMutex mutex;
     volatile bool stop;
     volatile bool finished;

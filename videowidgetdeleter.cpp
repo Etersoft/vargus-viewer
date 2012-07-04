@@ -14,11 +14,10 @@ void Container::addVideoWidgets(QList<VideoWidget *> _vList)
 }
 QList<VideoWidget *> Container::getVideoWidgets()
 {
-    mutex.lock();
+    QMutexLocker locker(&mutex);
     vargusLog.writeToFile(QString("Try to get widgets"));
     QList<VideoWidget *> bufferToReturn = buffer;
     buffer.clear();
-    mutex.unlock();
     return bufferToReturn;
 }
 
@@ -30,7 +29,6 @@ VideoWidgetDeleter::VideoWidgetDeleter(Container *_videoContainer, QObject *pare
     log.write(QString("Constructor of widgetdeleter\n").toUtf8());
     log.flush();*/
     stop = false;
-    finished = false;
     videoContainer = _videoContainer;
     /*log.write(QString("Constructor of widgetdeleter success\n").toUtf8());
     log.flush();*/
@@ -70,7 +68,7 @@ void VideoWidgetDeleter::run()
         }
         else
         {
-            /*log.write(QString("Started delete vidgets\n").toUtf8());
+           /* log.write(QString("Started delete vidgets\n").toUtf8());
             log.flush();
             log.write(QString("There is %1 widgets to delete\n").arg(deleterBuffer.size()).toUtf8());
             log.flush();*/
@@ -89,9 +87,10 @@ void VideoWidgetDeleter::run()
             log.flush();*/
         }
     }
+    deleterBuffer.append(videoContainer->getVideoWidgets());
     if(deleterBuffer.isEmpty() == false)
     {
-        /*log.write(QString("Stopped was recived,but deleterBuffer is not empty. There are %1 elements\n").arg(deleterBuffer.size()).toUtf8());
+       /* log.write(QString("Stopped was recived,but deleterBuffer is not empty. There are %1 elements\n").arg(deleterBuffer.size()).toUtf8());
         log.flush();*/
         QList<VideoWidget*>::iterator it = deleterBuffer.begin();
         QList<VideoWidget*>::iterator end = deleterBuffer.end();
@@ -103,7 +102,6 @@ void VideoWidgetDeleter::run()
             it++;
         }
     }
-    finished = true;
 }
 
 
@@ -113,7 +111,7 @@ void VideoWidgetDeleter::sendstop()
     /*log.write(QString("Recive stop\n").toUtf8());
     log.flush();*/
     stop = true;
-    /*log.write(QString("Made stop := true\n").toUtf8());
+   /* log.write(QString("Made stop := true\n").toUtf8());
     log.flush();*/
     mutex.unlock();
 }
