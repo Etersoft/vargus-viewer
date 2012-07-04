@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     worksock.cpp \
     videosettingsdialog.cpp \
     videowidgetlowlevelpainting.cpp \
-    limitline.cpp
+    limitline.cpp \
+    videowidgetdeleter.cpp
 
 HEADERS  += mainwindow.h \
     set.h \
@@ -37,7 +38,8 @@ HEADERS  += mainwindow.h \
     videosettingsdialog.h \
     enums.h \
     videowidgetlowlevelpainting.h \
-    limitline.h
+    limitline.h \
+    videowidgetdeleter.h
 
 TRANSLATIONS += lang/lang_ru.ts
 

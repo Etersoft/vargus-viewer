@@ -31,6 +31,7 @@ void signal_handler(int sig)
         default:
             vargusLog.writeToFile("Signal id" + QString::number(sig));
     }
+    exit(sig);
 }
 
 

@@ -7,7 +7,7 @@ extern Logger &vargusLog;
 Set::Set()
 {
     tp = 0;
-    buttonClicked = active = false;
+    active = false;
     bigPlaying = NULL;
     lastCamNum = NULL;
 
@@ -17,7 +17,7 @@ Set::Set(const QString &desc)
 {
     tp = 0;
     set_description = desc;
-    buttonClicked = active = false;
+    active = false;
     bigPlaying = NULL;
     lastCamNum = NULL;
     offset = NULL;
@@ -26,13 +26,15 @@ Set::Set(const QString &desc)
 
 Set::~Set()
 {
-    QList<VideoWidget *>::iterator it = videoList.begin();
+    vargusLog.writeToFile(QString("Destructor of set %1 started").arg(description()));
+   /* QList<VideoWidget *>::iterator it = videoList.begin();
     QList<VideoWidget *>::iterator end = videoList.end();
     while(it != end)
     {
-        delete (*it);
+        (*it)->hide();
         it++;
-    }
+    }*/
+    //stopPlay();
     QList<Camera *>::iterator itc = cameraList.begin();
     QList<Camera *>::iterator endc = cameraList.end();
     while(itc != endc)
@@ -55,6 +57,9 @@ Set::~Set()
         delete[] lastCamNum;
     if(wasChanged != NULL)
         delete[] wasChanged;
+    if(offset != NULL)
+        delete[] offset;
+    vargusLog.writeToFile(QString("Destructor of set %1 ended").arg(description()));
 }
 
 void Set::addCamera(Camera* cam)
@@ -93,6 +98,7 @@ void Set::setActiveView(int index)
         it++;
         n++;
     }
+    tp = index;
 }
 
 void Set::updateActiveView()
@@ -197,8 +203,10 @@ void Set::setLayouts(int type)
 
 }
 
-void Set::init(VPlayingType t)
+void Set::init(VPlayingType t, Container *_videoContainer)
 {
+    vargusLog.writeToFile("Init set started");
+    videoContainer = _videoContainer;
     lastCamNum = new int[viewList.length()];
     wasChanged = new bool[viewList.length()];
     offset = new int[viewList.length()];
@@ -214,18 +222,25 @@ void Set::init(VPlayingType t)
 
 void Set::stopPlay(VideoWidget *excluding)
 {
+    vargusLog.writeToFile(QString("Stop play %1").arg(description()));
     QList<VideoWidget *>::iterator it = videoList.begin();
     QList<VideoWidget *>::iterator end = videoList.end();
+    QList<VideoWidget *> widgetsToDelete;
     while(it != end)
     {
         if(*it != excluding)
-            delete *it;
+        {
+            (*it)->hide();
+            widgetsToDelete.push_back(*it);
+        }
         it++;
     }
+    videoContainer->addVideoWidgets(widgetsToDelete);
     bigPlaying = NULL;
     videoList.clear();
     if(excluding)
         videoList << excluding;
+    vargusLog.writeToFile(QString("Stop play %1 return").arg(description()));
 }
 
 QList<Camera*> Set::getActiveCameras()
@@ -493,3 +508,6 @@ bool Set::setPlayingType(VPlayingType t)
     VideoWidget::setVPlayingType(t);
     return true;
 }
+
+ QMutex mutex;
+

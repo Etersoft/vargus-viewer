@@ -15,6 +15,8 @@ bool test = true;
 
 MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
 {
+    videoContainer = new Container();
+    vdeleter = new VideoWidgetDeleter(videoContainer);
     createIcons();
     settings = new QSettings("Etersoft","VargusViewer");
     bool settingsRead;
@@ -53,6 +55,9 @@ MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
     }
     else
         changeConnectionSettings();
+    vargusLog.writeToFile("Start deleterThread");
+    vdeleter->start();
+    vargusLog.writeToFile("DeleterThreadStarted");
 }
 
 bool MainWindow::initData()
@@ -111,15 +116,7 @@ QStringList MainWindow::readAnswer(int amountOfLines)
 
 MainWindow::~MainWindow()
 {
-    VideoWidget::staticDestructor();
     disconnect(setTab,SIGNAL(currentChanged(int)),this,SLOT(onSetChanged(int)));
-    QList<Camera *>::iterator itc = camerasList.begin();
-    QList<Camera *>::iterator endc = camerasList.end();
-    while(itc != endc)
-    {
-        delete (*itc);
-        itc++;
-    }
     QList<View *>::iterator itv = viewsList.begin();
     QList<View *>::iterator endv = viewsList.end();
     while(itv != endv)
@@ -127,17 +124,45 @@ MainWindow::~MainWindow()
         delete (*itv);
         itv++;
     }
+    vargusLog.writeToFile("Destroy of views success");
     QList<Set *>::iterator its = setsList.begin();
     QList<Set *>::iterator ends = setsList.end();
+    while(its != ends)
+    {
+        (*its)->stopPlay();
+        its++;
+    }
+    vargusLog.writeToFile("Destroy of sets success");
+
+    vargusLog.writeToFile("Send stop to deleter thread");
+    vdeleter->sendstop();
+    while(vdeleter->isRunning() != false)
+    {
+        vargusLog.writeToFile("Deleter thread not finished yet, wait");
+        vdeleter->wait(10000);
+    }
+    vargusLog.writeToFile("Try to delete deleter");
+    delete vdeleter;
+    VideoWidget::staticDestructor();
+    vargusLog.writeToFile("staticDestructor of VideoWidget success");
+    QList<Camera *>::iterator itc = camerasList.begin();
+    QList<Camera *>::iterator endc = camerasList.end();
+    while(itc != endc)
+    {
+        delete (*itc);
+        itc++;
+    }
+    vargusLog.writeToFile("Destroy of cameras success");
+    its = setsList.begin();
     while(its != ends)
     {
         delete (*its);
         its++;
     }
+    vargusLog.writeToFile("Destroy of sets success");
     delete delLogFilesAction;
     delete exitAction;
     delete aboutAction;
-    delete fpsCounterAction;
     delete videoSettingsAction;
     delete defaultPathForLogs;
     delete enableLog;
@@ -151,7 +176,7 @@ MainWindow::~MainWindow()
     delete resetButton;
     delete nextButton;
     delete trIcon;
-
+    delete videoContainer;
     vargusLog.writeToFile("PROGRAM ENDED");
 }
 
@@ -378,7 +403,7 @@ void MainWindow::makeSets()
             set -> addView(*itv);
             itv++;
         }
-        set -> init(pltp);
+        set -> init(pltp, videoContainer);
         set -> setActiveView(0);
         setTab -> addTab(set, set->description());
         connect(set, SIGNAL(updateActiveCameras(QList<Camera*>)), this, SLOT(changeActiveCameras(QList<Camera*>)));

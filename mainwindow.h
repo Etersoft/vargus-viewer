@@ -17,6 +17,7 @@
 #include "cameralist.h"
 #include<QSystemTrayIcon>
 #include<videosettingsdialog.h>
+#include<videowidgetdeleter.h>
 
 #define MAX_PLAYERS 16
 class MainWindow : public QMainWindow
@@ -34,7 +35,6 @@ class MainWindow : public QMainWindow
     QAction *delLogFilesAction;
     QAction *enableLog;
     QAction *connectionSettings;
-    QAction *fpsCounterAction;
     QAction *loggingPathAction;
     QAction *defaultPathForLogs;
     QAction *videoSettingsAction;
@@ -68,6 +68,8 @@ class MainWindow : public QMainWindow
     bool loggingEnabled;
     VPlayingType pltp;
     QSystemTrayIcon *trIcon;
+    VideoWidgetDeleter *vdeleter;
+    Container *videoContainer;
 
 
 public:
