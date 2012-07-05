@@ -19,7 +19,8 @@ class VLCSetingsDialog : public QDialog
     QString vlc_args;
 
 public:
-    explicit VLCSetingsDialog(QWidget *parent = 0);
+    explicit VLCSetingsDialog(const QString &currentSettings, QWidget *parent = 0);
+    ~VLCSetingsDialog();
     
 signals:
     void newSettings(QString &settings);

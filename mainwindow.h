@@ -62,6 +62,7 @@ class MainWindow : public QMainWindow
     QSettings *settings;
     QString t_server;
     QString server;
+    QString vlcSettings;
 
     int port;
     int t_port;
@@ -114,6 +115,7 @@ private slots:
     void changeVideoSettings();
     void changePlayingType(VPlayingType t);
     void vlcsettingsDialog();
+    void newSettingsForVLC(QString &_vlcsettings);
 protected:
     void closeEvent(QCloseEvent *);
 

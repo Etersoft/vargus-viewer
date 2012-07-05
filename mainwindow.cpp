@@ -610,6 +610,34 @@ bool MainWindow::readSettings()
         pltp = LOWLEVEL;
     else
         pltp = XWINDOW;
+    vlcSettings = settings->value("vlcsettings", "").toString();
+    if(vlcSettings == "")
+    {
+        vlcSettings.clear();
+        vlcSettings.append("\"-I\" \"dummy\""); /* Don't use any interface */
+        vlcSettings.append(" \"--ignore-config\""); /* Don't use VLC's config */
+        vlcSettings.append(" \"--no-audio\""); /* Audio off */
+        vlcSettings.append(" \"--http-reconnect\" \"--http-continuous\" \"--video-title-show\" \"--video-title-position=9\" \"--video-title-timeout=0\"");
+        #ifdef QT_DEBUG
+        vlcSettings.append(" \"--extraintf=logger\""); /* log anything */
+        vlcSettings.append(" \"--verbose=2\""); /* be much more verbose then normal for debugging purpose */
+        #endif
+        vlcSettings.append(" \"\""); /* "--no-video-title-show" */
+        settings->setValue("vlcsettings", vlcSettings);
+    }
+    QStringList args = vlcSettings.split(" ");
+    int num = args.length();
+    char **argsForVLC = new char*[num];
+    for(int i = 0; i < args.length(); i++)
+    {
+        int len = args.at(i).length();
+        char *word = new char [len + 1];
+        for(int j = 0; j < len; j++)
+            word[j] = args.at(i).at(j).toAscii();
+        word[len] = '\0';
+        argsForVLC[i] = word;
+    }
+    VideoWidget::setVlcArgs( argsForVLC, num);
     if(server == "" || port < 0 || port > 65535)
         return false;
     return true;
@@ -792,7 +820,13 @@ void MainWindow::changePlayingType(VPlayingType t)
 
 void MainWindow::vlcsettingsDialog()
 {
-    VLCSetingsDialog dialog(this);
-    dialog.show();
+    VLCSetingsDialog dialog(vlcSettings, this);
+    connect(&dialog, SIGNAL(newSettings(QString&)), this, SLOT(newSettingsForVLC(QString&)));
     dialog.exec();
+}
+
+void MainWindow::newSettingsForVLC(QString &_vlcsettings)
+{
+    vlcSettings = _vlcsettings;
+    settings->setValue("vlcsettings", vlcSettings);
 }

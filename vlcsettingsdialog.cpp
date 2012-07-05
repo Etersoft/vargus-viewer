@@ -3,7 +3,7 @@
 #include <QHBoxLayout>
 
 
-VLCSetingsDialog::VLCSetingsDialog(QWidget *parent) :
+VLCSetingsDialog::VLCSetingsDialog(const QString &currentSettings, QWidget *parent) :
     QDialog(parent)
 {
     okButton = new QPushButton(tr("OK"));
@@ -31,6 +31,7 @@ VLCSetingsDialog::VLCSetingsDialog(QWidget *parent) :
     vlc_args.append(" \"--verbose=2\""); /* be much more verbose then normal for debugging purpose */
         #endif
     vlc_args.append(" \"\""); /* "--no-video-title-show" */
+    textEdit->setText(currentSettings);
 }
 
 void VLCSetingsDialog::uploadDefault()
@@ -52,4 +53,13 @@ void VLCSetingsDialog::loadNewSettings()
     }
     emit newSettings(settingsToEmit);
     accept();
+}
+
+VLCSetingsDialog::~VLCSetingsDialog()
+{
+    delete okButton;
+    delete cancelButton;
+    delete defaultButton;
+    delete textEdit;
+    delete label;
 }
