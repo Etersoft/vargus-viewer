@@ -13,7 +13,10 @@ VLCSetingsDialog::VLCSetingsDialog(const QString &currentSettings, QWidget *pare
     defaultButton = new QPushButton(tr("Default"));
     connect(defaultButton, SIGNAL(clicked()), this, SLOT(uploadDefault()));
     textEdit = new QTextEdit();
-    label = new QLabel(tr("Input new vlc settings here.\nNew settings will be used after restart."));
+    QString labelText = tr("Input new vlc settings here.");
+    labelText.append("\n");
+    labelText.append(tr("New settings will be used after restart."));
+    label = new QLabel(labelText);
     QVBoxLayout *l = new QVBoxLayout(this);
     l->addWidget(label);
     l->addWidget(textEdit);
@@ -22,15 +25,14 @@ VLCSetingsDialog::VLCSetingsDialog(const QString &currentSettings, QWidget *pare
     buttons->addWidget(cancelButton);
     buttons->addWidget(defaultButton);
     l->addLayout(buttons);
-    vlc_args.append("\"-I\" \"dummy\""); /* Don't use any interface */
-    vlc_args.append(" \"--ignore-config\""); /* Don't use VLC's config */
-    vlc_args.append(" \"--no-audio\""); /* Audio off */
-    vlc_args.append(" \"--http-reconnect\" \"--http-continuous\" \"--video-title-show\" \"--video-title-position=9\" \"--video-title-timeout=0\"");
+    vlc_args.append("-I dummy"); /* Don't use any interface */
+    vlc_args.append(" --ignore-config"); /* Don't use VLC's config */
+    vlc_args.append(" --no-audio"); /* Audio off */
+    vlc_args.append(" --http-reconnect --http-continuous --video-title-show --video-title-position=9 --video-title-timeout=2147483647");
         #ifdef QT_DEBUG
-    vlc_args.append(" \"--extraintf=logger\""); /* log anything */
-    vlc_args.append(" \"--verbose=2\""); /* be much more verbose then normal for debugging purpose */
+    vlc_args.append(" --extraintf=logger"); /* log anything */
+    vlc_args.append(" --verbose=2"); /* be much more verbose then normal for debugging purpose */
         #endif
-    vlc_args.append(" \"\""); /* "--no-video-title-show" */
     textEdit->setText(currentSettings);
 }
 

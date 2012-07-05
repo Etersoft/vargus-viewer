@@ -614,21 +614,20 @@ bool MainWindow::readSettings()
     if(vlcSettings == "")
     {
         vlcSettings.clear();
-        vlcSettings.append("\"-I\" \"dummy\""); /* Don't use any interface */
-        vlcSettings.append(" \"--ignore-config\""); /* Don't use VLC's config */
-        vlcSettings.append(" \"--no-audio\""); /* Audio off */
-        vlcSettings.append(" \"--http-reconnect\" \"--http-continuous\" \"--video-title-show\" \"--video-title-position=9\" \"--video-title-timeout=0\"");
+        vlcSettings.append("-I dummy"); /* Don't use any interface */
+        vlcSettings.append(" --ignore-config"); /* Don't use VLC's config */
+        vlcSettings.append(" --no-audio"); /* Audio off */
+        vlcSettings.append(" --http-reconnect --http-continuous --video-title-show --video-title-position=9 --video-title-timeout=2147483647");
         #ifdef QT_DEBUG
-        vlcSettings.append(" \"--extraintf=logger\""); /* log anything */
-        vlcSettings.append(" \"--verbose=2\""); /* be much more verbose then normal for debugging purpose */
+        vlcSettings.append(" --extraintf=logger"); /* log anything */
+        vlcSettings.append(" --verbose=2"); /* be much more verbose then normal for debugging purpose */
         #endif
-        vlcSettings.append(" \"\""); /* "--no-video-title-show" */
         settings->setValue("vlcsettings", vlcSettings);
     }
     QStringList args = vlcSettings.split(" ");
     int num = args.length();
     char **argsForVLC = new char*[num];
-    for(int i = 0; i < args.length(); i++)
+    for(int i = 0; i < num; i++)
     {
         int len = args.at(i).length();
         char *word = new char [len + 1];
@@ -636,6 +635,7 @@ bool MainWindow::readSettings()
             word[j] = args.at(i).at(j).toAscii();
         word[len] = '\0';
         argsForVLC[i] = word;
+        vargusLog.writeToFile(argsForVLC[i]);
     }
     VideoWidget::setVlcArgs( argsForVLC, num);
     if(server == "" || port < 0 || port > 65535)
