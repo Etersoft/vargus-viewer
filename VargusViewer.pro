@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     videosettingsdialog.cpp \
     videowidgetlowlevelpainting.cpp \
     limitline.cpp \
-    videowidgetdeleter.cpp
+    videowidgetdeleter.cpp \
+    vlcsettingsdialog.cpp
 
 HEADERS  += mainwindow.h \
     set.h \
@@ -39,7 +40,8 @@ HEADERS  += mainwindow.h \
     enums.h \
     videowidgetlowlevelpainting.h \
     limitline.h \
-    videowidgetdeleter.h
+    videowidgetdeleter.h \
+    vlcsettingsdialog.h
 
 TRANSLATIONS += lang/lang_ru.ts
 

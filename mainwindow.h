@@ -18,8 +18,8 @@
 #include<QSystemTrayIcon>
 #include<videosettingsdialog.h>
 #include<videowidgetdeleter.h>
+#include <vlcsettingsdialog.h>
 
-#define MAX_PLAYERS 16
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -38,6 +38,7 @@ class MainWindow : public QMainWindow
     QAction *loggingPathAction;
     QAction *defaultPathForLogs;
     QAction *videoSettingsAction;
+    QAction *vlcsettingsAction;
 
     QMenu *fileMenu;
     QMenu *helpMenu;
@@ -112,6 +113,7 @@ private slots:
     void defaultLoggingFolder();
     void changeVideoSettings();
     void changePlayingType(VPlayingType t);
+    void vlcsettingsDialog();
 protected:
     void closeEvent(QCloseEvent *);
 

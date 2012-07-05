@@ -231,6 +231,10 @@ void MainWindow::createActions()
     settingsMenu -> addAction(connectionSettings);
     connect(connectionSettings, SIGNAL(triggered()), this ,SLOT(changeConnectionSettings()));
 
+    vlcsettingsAction = new QAction(tr("&VLC settings"), this);
+    settingsMenu->addAction(vlcsettingsAction);
+    connect(vlcsettingsAction, SIGNAL(triggered()), this, SLOT(vlcsettingsDialog()));
+
     contextMenu -> addAction(connectionSettings);
     contextMenu -> addAction(exitAction);
 
@@ -784,4 +788,11 @@ void MainWindow::changePlayingType(VPlayingType t)
     }
     pltp = t;
     saveSettings();
+}
+
+void MainWindow::vlcsettingsDialog()
+{
+    VLCSetingsDialog dialog(this);
+    dialog.show();
+    dialog.exec();
 }
