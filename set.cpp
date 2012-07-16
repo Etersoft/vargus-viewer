@@ -233,6 +233,7 @@ void Set::stopPlay(VideoWidget *excluding)
     {
         if(*it != excluding)
         {
+            disconnect((*it), SIGNAL(disconnectedSignal(VideoWidget*)), this, SLOT(restoreVideoWidget(VideoWidget*)));
             (*it)->hide();
             widgetsToDelete.push_back(*it);
         }
