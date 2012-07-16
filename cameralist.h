@@ -18,6 +18,7 @@ public:
     void setCurrentCameras(const QList<Camera *> &cams) { currentCameras = cams; }
     void print();
     Camera * getCamera(int num) { return currentCameras.at(num); }
+    void updateCameraData(Camera *c);
 signals:
 
 protected:

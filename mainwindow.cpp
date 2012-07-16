@@ -849,7 +849,7 @@ void MainWindow::updateCamera(Camera *c)
     int num = 1;
     while(it != end)
     {
-        if(c == (*it))
+        if(c->name() == (*it)->name())
             break;
         num++;
         it++;
@@ -859,8 +859,9 @@ void MainWindow::updateCamera(Camera *c)
     QStringList adresses = inf.at(0).split(';');
     vargusLog.writeToFile(QString("New source %1").arg(adresses.at(0)));
     c->setSource(adresses.at(0));
-    vargusLog.writeToFile(QString("New preview %1").arg(adresses.at(1)));
-    c->setPreview(adresses.at(1));
+    vargusLog.writeToFile(QString("New preview %1").arg(adresses.at(1).trimmed()));
+    c->setPreview(adresses.at(1).trimmed());
+    camList->updateCameraData(c);
     socket -> write("exit\n");
     socket -> disconnect();
     delete socket;

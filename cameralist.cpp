@@ -80,3 +80,18 @@ void CameraList::mouseMoveEvent(QMouseEvent *event)
     }
     QListWidget::mouseMoveEvent(event);
 }
+
+void CameraList::updateCameraData(Camera *c)
+{
+    QList<Camera *>::iterator it = currentCameras.begin();
+    QList<Camera *>::iterator end = currentCameras.end();
+    while(it != end)
+    {
+        if((*it)->name() == c->name())
+        {
+            (*it)->setSource(c->source());
+            (*it)->setPreview(c->preview());
+        }
+        it++;
+    }
+}
