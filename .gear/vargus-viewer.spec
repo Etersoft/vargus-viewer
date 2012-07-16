@@ -1,5 +1,5 @@
 Name: vargus-viewer
-Version: 0.4
+Version: 0.5
 Release: alt1
 
 Summary: Qt4 client for vargus server
@@ -41,6 +41,11 @@ cp lang/lang_ru.qm %buildroot%_datadir/%name/lang/
 %_datadir/%name/
 
 %changelog
+* Mon Jul 16 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.5-alt1
+- add vlc settings
+- add reconnecting video after crash video
+- some bug fixes
+
 * Wed Jun 06 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.4-alt1
 - add low level painting video mode
 - add more settings
