@@ -519,6 +519,7 @@ bool Set::setPlayingType(VPlayingType t)
 void Set::restoreVideoWidget(VideoWidget *v)
 {
     vargusLog.writeToFile("Try to restore videowidget");
+    v->stopPlay();
     Camera *c = v->getCamera();
     mainwindow->updateCamera(c);
     if(bigPlaying == v)

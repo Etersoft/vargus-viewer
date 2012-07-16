@@ -857,8 +857,10 @@ void MainWindow::updateCamera(Camera *c)
     socket -> write(QString("query camera;%1;view:source,view:preview\n").arg(num).toAscii());
     QStringList inf = readAnswer(1);
     QStringList adresses = inf.at(0).split(';');
+    vargusLog.writeToFile(QString("New source %1").arg(adresses.at(0)));
     c->setSource(adresses.at(0));
-    c->setSource(adresses.at(1));
+    vargusLog.writeToFile(QString("New preview %1").arg(adresses.at(1)));
+    c->setPreview(adresses.at(1));
     socket -> write("exit\n");
     socket -> disconnect();
     delete socket;
