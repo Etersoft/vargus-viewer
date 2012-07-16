@@ -45,6 +45,7 @@ void VideoWidgetDeleter::addVideoWidgets(QList<VideoWidget *> _vList)
 */
 void VideoWidgetDeleter::run()
 {
+    QThread::msleep(10000);
     QList<VideoWidget *> deleterBuffer;
     for(;;)
     {
