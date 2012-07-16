@@ -7,7 +7,9 @@
 #include"videowidget.h"
 #include<QVector>
 #include<enums.h>
+#include<videowidgetdeleter.h>
 
+class MainWindow;
 class Set : public QWidget
 {
     Q_OBJECT
@@ -19,18 +21,21 @@ class Set : public QWidget
 
     int tp;//тип раскладки, используемой в данный момент
     bool active;
-    int activeCameras;
     int* lastCamNum;
-    bool buttonClicked;
+    int* offset;
     bool *wasChanged;
 
     QVector< QList<Camera *>* > stc;//расположение камер(виджетов) под каждый view
 
     VideoWidget *bigPlaying;
 
+    Container *videoContainer;
+
+    MainWindow *mainwindow;
+
 public:
-    explicit Set();
-    Set(const QString &desc);
+    explicit Set(MainWindow *_mainwindow);
+    Set(const QString &desc, MainWindow *_mainwindow);
     ~Set();
 
     QString description(){return set_description;}
@@ -42,7 +47,7 @@ public:
     QList<VideoWidget *> video() {return videoList; }
 
     void setActiveView(int index);
-    void init(VPlayingType t);
+    void init(VPlayingType t, Container *_videoContainer);
     void stopPlay(VideoWidget *excluding = NULL);
     bool isActive() {return active;}
     void setActive(bool act) {active = act; enableButtons();}
@@ -67,11 +72,13 @@ private:
     void bigVideo(Camera *c);
     int amountOfCells(int tp);
 
+
 private slots:
     void updateActiveView();
     void bigVideo(VideoWidget *v);
     void changeCameras(VideoWidget *first,Camera *second, bool fromAnotherWidget);
     void enableButtons();
+    void restoreVideoWidget(VideoWidget *);
 
 };
 

@@ -3,35 +3,41 @@
 #include <QStringList>
 #include<QGridLayout>
 #include<QListIterator>
+#include"mainwindow.h"
 extern Logger &vargusLog;
-Set::Set()
+Set::Set(MainWindow *_mainwindow)
 {
-    activeCameras = tp = 0;
-    buttonClicked = active = false;
+    tp = 0;
+    active = false;
     bigPlaying = NULL;
     lastCamNum = NULL;
+    mainwindow = _mainwindow;
 
 }
 
-Set::Set(const QString &desc)
+Set::Set(const QString &desc, MainWindow *_mainwindow)
 {
-    activeCameras = tp = 0;
+    tp = 0;
     set_description = desc;
-    buttonClicked = active = false;
+    active = false;
     bigPlaying = NULL;
     lastCamNum = NULL;
+    offset = NULL;
     wasChanged = NULL;
+    mainwindow = _mainwindow;
 }
 
 Set::~Set()
 {
-    QList<VideoWidget *>::iterator it = videoList.begin();
+    vargusLog.writeToFile(QString("Destructor of set %1 started").arg(description()));
+   /* QList<VideoWidget *>::iterator it = videoList.begin();
     QList<VideoWidget *>::iterator end = videoList.end();
     while(it != end)
     {
-        delete (*it);
+        (*it)->hide();
         it++;
-    }
+    }*/
+    //stopPlay();
     QList<Camera *>::iterator itc = cameraList.begin();
     QList<Camera *>::iterator endc = cameraList.end();
     while(itc != endc)
@@ -54,6 +60,9 @@ Set::~Set()
         delete[] lastCamNum;
     if(wasChanged != NULL)
         delete[] wasChanged;
+    if(offset != NULL)
+        delete[] offset;
+    vargusLog.writeToFile(QString("Destructor of set %1 ended").arg(description()));
 }
 
 void Set::addCamera(Camera* cam)
@@ -92,6 +101,7 @@ void Set::setActiveView(int index)
         it++;
         n++;
     }
+    tp = index;
 }
 
 void Set::updateActiveView()
@@ -136,7 +146,6 @@ void Set::setLayouts(int type)
         net[i] = tmp;
     }
 
-    int cellNum = 1;
     for(int i = 0; i < viewHeight; i++)
     {
         for(int j = 0; j < viewWidth;)
@@ -147,6 +156,7 @@ void Set::setLayouts(int type)
                 break;
             VideoWidget *v = new VideoWidget();
             videoList << v;
+            int cellNum = (j+1) + viewWidth*i;
             if(doubleCells.contains(cellNum))
             {
                 grid -> addWidget(v,i,j,2,2);
@@ -184,7 +194,6 @@ void Set::setLayouts(int type)
                 net[i][j] = false;
                 j++;
             }
-            cellNum++;
         }
     }
     for(int i = 0; i < viewHeight; i++)
@@ -197,33 +206,45 @@ void Set::setLayouts(int type)
 
 }
 
-void Set::init(VPlayingType t)
+void Set::init(VPlayingType t, Container *_videoContainer)
 {
+    vargusLog.writeToFile("Init set started");
+    videoContainer = _videoContainer;
     lastCamNum = new int[viewList.length()];
     wasChanged = new bool[viewList.length()];
+    offset = new int[viewList.length()];
     for(int i = 0; i < viewList.length(); i++)
     {
         QList<Camera *> * tmpc = new QList<Camera *>(cameraList);
         stc << tmpc;
         lastCamNum[i] = (amountOfCells(i) < cameraList.length()) ? (amountOfCells(i) - 1) : (cameraList.length() - 1);
+        offset[i] = 0;
     }
     VideoWidget::setVPlayingType(t);
 }
 
 void Set::stopPlay(VideoWidget *excluding)
 {
+    vargusLog.writeToFile(QString("Stop play %1").arg(description()));
     QList<VideoWidget *>::iterator it = videoList.begin();
     QList<VideoWidget *>::iterator end = videoList.end();
+    QList<VideoWidget *> widgetsToDelete;
     while(it != end)
     {
         if(*it != excluding)
-            delete *it;
+        {
+            (*it)->hide();
+            widgetsToDelete.push_back(*it);
+        }
         it++;
     }
+    if(widgetsToDelete.isEmpty() == false)
+        videoContainer->addVideoWidgets(widgetsToDelete);
     bigPlaying = NULL;
     videoList.clear();
     if(excluding)
         videoList << excluding;
+    vargusLog.writeToFile(QString("Stop play %1 return").arg(description()));
 }
 
 QList<Camera*> Set::getActiveCameras()
@@ -245,37 +266,52 @@ QList<Camera*> Set::getActiveCameras()
 void Set::next()
 {
     QList<Camera *> *currentList = stc.at(tp);
-    if(amountOfCells(tp) >= currentList -> length() || lastCamNum[tp] == cameraList.length() - 1)
-            return;
-    buttonClicked = true;
     currentList -> clear();
-    for(int i = lastCamNum[tp]+1; i < cameraList.length(); i++)
+    int newFirstCam = offset[tp]*amountOfCells(tp)+lastCamNum[tp] + 1;
+    lastCamNum[tp] = cameraList.length() - (newFirstCam + 1);
+    if(lastCamNum[tp] >= amountOfCells(tp))
+    {
+        lastCamNum[tp] = amountOfCells(tp) - 1;
+    }
+    else if(amountOfCells(tp) > lastCamNum[tp]+1)
+    {
+        newFirstCam = newFirstCam - amountOfCells(tp) + lastCamNum[tp] +1 ;
+        lastCamNum[tp] = amountOfCells(tp)-1;
+    }
+    for(int i = newFirstCam; i < cameraList.length(); i++)
     {
         currentList -> push_back(cameraList.at(i));
     }
-    for(int i = 0; i <= lastCamNum[tp]; i++)
+    for(int i = 0; i < newFirstCam; i++)
     {
         currentList -> push_back(cameraList.at(i));
     }
+    if(lastCamNum[tp] >= amountOfCells(tp))
+        lastCamNum[tp] = amountOfCells(tp) - 1;
+    offset[tp]++;
     setLayouts(tp);
-    lastCamNum[tp] += activeCameras;
-    if(lastCamNum[tp] >= currentList -> length())
-        lastCamNum[tp] = currentList -> length() - 1;
-    emit updateActiveCameras(getActiveCameras());
-    buttonClicked = false;
     wasChanged[tp] = true;
     enableButtons();
 }
 
 void Set::prev()
 {
-    int number = amountOfCells(tp);
-    if(number >= stc.at(tp)->length() || lastCamNum[tp] == activeCameras - 1)
-        return;
-    lastCamNum[tp] = lastCamNum[tp] - number * 2;
-    if(lastCamNum[tp] < -1)
-        lastCamNum[tp] = -1;
-    next();
+    QList<Camera *> *currentList = stc.at(tp);
+    currentList -> clear();
+    offset[tp]--;
+    lastCamNum[tp] = amountOfCells(tp) - 1;
+    int newFirstCam = offset[tp]*amountOfCells(tp);
+    for(int i = newFirstCam; i < cameraList.length(); i++)
+    {
+        currentList -> push_back(cameraList.at(i));
+    }
+    for(int i = 0; i < newFirstCam; i++)
+    {
+        currentList -> push_back(cameraList.at(i));
+    }
+    wasChanged[tp] = true;
+    setLayouts(tp);
+    enableButtons();
 }
 
 void Set::reset()
@@ -291,8 +327,12 @@ void Set::reset()
        currentList -> push_back(*itc);
        itc++;
     }
+    offset[tp] = 0;
+    int lastCam = amountOfCells(tp) - 1;
+    if(lastCam >= cameraList.length())
+        lastCam = cameraList.length();
+    lastCamNum[tp] = lastCam;
     setLayouts(tp);
-    lastCamNum[tp] = activeCameras - 1;
     wasChanged[tp] = false;
     enableButtons();
 }
@@ -303,6 +343,7 @@ void Set::bigVideo(VideoWidget *v)
     if(v == bigPlaying)
     {
         setLayouts(tp);
+        bigPlaying = NULL;
         return;
     }
     QList<Camera *> res;
@@ -330,6 +371,7 @@ void Set::bigVideo(Camera *c)
     VideoWidget *v = new VideoWidget();
     v -> setCamera(c);
     connect(v,SIGNAL(bigSizeCall(VideoWidget*)),this,SLOT(bigVideo(VideoWidget*)));
+    connect(v, SIGNAL(disconnectedSignal(VideoWidget*)), this, SLOT(restoreVideoWidget(VideoWidget*)));
     grid -> addWidget(v,0,0);
     v -> startPlay(VideoWidget::BIGVIDEO);
     videoList << v;
@@ -347,12 +389,8 @@ void Set::showBig(int num)
 void Set::countActiveAndPlay()
 {
     const QList<Camera *> *currentList = stc.at(tp);
-    int len = currentList -> length();
-    activeCameras = (len < videoList.length()) ? len : videoList.length();
-    if(buttonClicked && (activeCameras + lastCamNum[tp]) > len)
-        activeCameras = len - lastCamNum[tp] - 1;
     QList<VideoWidget *>::iterator it = videoList.begin();
-    for(int i =  0; i < activeCameras; i++, it++)
+    for(int i =  0; i <= lastCamNum[tp]; i++, it++)
     {
         (*it) -> setCamera(currentList -> at(i));
         (*it) -> startPlay(VideoWidget::SMALLVIDEO);
@@ -364,6 +402,7 @@ void Set::countActiveAndPlay()
         connect(*it,SIGNAL(bigSizeCall(VideoWidget*)),this,SLOT(bigVideo(VideoWidget*)));
         connect(*it, SIGNAL(camerasChanged(VideoWidget *, Camera *, bool)),
                 this, SLOT(changeCameras(VideoWidget*, Camera*, bool)));
+        connect(*it, SIGNAL(disconnectedSignal(VideoWidget*)), this, SLOT(restoreVideoWidget(VideoWidget*)));
         it++;
     }
 }
@@ -425,9 +464,9 @@ int Set::amountOfCells(int tp)
     int viewWidth = viewList.at(tp)->width();
     int viewHeight = viewList.at(tp)->height();
     int k = viewWidth * viewHeight;
-    k = k - doubleCells.length()*4;
-    k = k - tripleCells.length() * 9;
-    k = k - quadrupleCells.length() * 16;
+    k = k - doubleCells.length()*3;
+    k = k - tripleCells.length() * 8;
+    k = k - quadrupleCells.length() * 15;
     return k;
 }
 
@@ -447,8 +486,13 @@ int Set::amountOfPlayingWidgets()
 
 void Set::enableButtons()
 {
-    bool nextButton = !(amountOfCells(tp) >= stc.at(tp) -> length() || lastCamNum[tp] == cameraList.length() - 1);
-    bool prevButton = !(amountOfCells(tp) >= stc.at(tp)->length() || lastCamNum[tp] == activeCameras - 1);
+    int newFirstNextCam = offset[tp]*amountOfCells(tp)+lastCamNum[tp] + 1;
+    bool nextButton = true;
+    if(newFirstNextCam >= cameraList.length())
+        nextButton = false;
+    bool prevButton = true;
+    if(offset[tp] == 0)
+        prevButton = false;
     emit buttonsEnabled(prevButton, nextButton);
 }
 
@@ -471,3 +515,16 @@ bool Set::setPlayingType(VPlayingType t)
     VideoWidget::setVPlayingType(t);
     return true;
 }
+
+void Set::restoreVideoWidget(VideoWidget *v)
+{
+    vargusLog.writeToFile("Try to restore videowidget");
+    Camera *c = v->getCamera();
+    mainwindow->updateCamera(c);
+    if(bigPlaying == v)
+        v->startPlay(VideoWidget::BIGVIDEO);
+    else
+        v->startPlay(VideoWidget::SMALLVIDEO);
+
+}
+

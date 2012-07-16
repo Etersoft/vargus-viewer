@@ -15,11 +15,11 @@
 #include<QCloseEvent>
 #include<QSettings>
 #include "cameralist.h"
-#include<fpscounter.h>
 #include<QSystemTrayIcon>
 #include<videosettingsdialog.h>
+#include<videowidgetdeleter.h>
+#include <vlcsettingsdialog.h>
 
-#define MAX_PLAYERS 16
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -35,10 +35,10 @@ class MainWindow : public QMainWindow
     QAction *delLogFilesAction;
     QAction *enableLog;
     QAction *connectionSettings;
-    QAction *fpsCounterAction;
     QAction *loggingPathAction;
     QAction *defaultPathForLogs;
     QAction *videoSettingsAction;
+    QAction *vlcsettingsAction;
 
     QMenu *fileMenu;
     QMenu *helpMenu;
@@ -62,6 +62,7 @@ class MainWindow : public QMainWindow
     QSettings *settings;
     QString t_server;
     QString server;
+    QString vlcSettings;
 
     int port;
     int t_port;
@@ -69,11 +70,14 @@ class MainWindow : public QMainWindow
     bool loggingEnabled;
     VPlayingType pltp;
     QSystemTrayIcon *trIcon;
+    VideoWidgetDeleter *vdeleter;
+    Container *videoContainer;
 
 
 public:
     explicit MainWindow(QWidget *parent = 0, QString server = 0, int portNum = 0, bool logging = false);
     ~MainWindow();
+    void updateCamera(Camera *c);
 
 private:
     bool initData();
@@ -92,7 +96,6 @@ private:
     void setDefaultsSettings();
     void saveSettings();
     void startConnection();
-    void countFPS(const QList<VideoWidget *> &video);
 
 private slots:
     void onSetChanged(int num);
@@ -106,13 +109,14 @@ private slots:
     void enableLogging(bool enable);
     void changeConnectionSettings();
     void newSettings(QString newServer, int newPort, QString new_t_server, int new_t_port);
-    void showFPS();
     void enableButtons(bool prev, bool next);
     void showHide(QSystemTrayIcon::ActivationReason);
     void changeLoggingFolder();
     void defaultLoggingFolder();
     void changeVideoSettings();
     void changePlayingType(VPlayingType t);
+    void vlcsettingsDialog();
+    void newSettingsForVLC(QString &_vlcsettings);
 protected:
     void closeEvent(QCloseEvent *);
 

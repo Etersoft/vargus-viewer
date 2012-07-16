@@ -42,13 +42,23 @@ bool Logger::openLogFile(const QString &filename)
 
 bool Logger::writeToFile(const QString &text)
 {
-    if(!enabled) return true;
-    if(!file) return false;
+    locker.lock();
+    if(!enabled)
+    {
+        //locker.unlock();
+        return true;
+    }
+    if(!file)
+    {
+        locker.unlock();
+        return false;
+    }
     QDateTime d = QDateTime::currentDateTime();
     QString s;
     s = d.toString(Qt::ISODate) + " " + text + "\n";
     file -> write(s.toUtf8());
     file -> flush();
+    locker.unlock();
     return true;
 }
 

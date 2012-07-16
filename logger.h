@@ -2,6 +2,7 @@
 #define LOGGER_H
 #include<QFile>
 #include<QDir>
+#include<QMutex>
 
 class Logger
 {
@@ -23,6 +24,7 @@ private:
     QFile *file;
     bool enabled;
     QDir *currentDir;
+    mutable QMutex locker;
 
 };
 

@@ -15,6 +15,8 @@ bool test = true;
 
 MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
 {
+    videoContainer = new Container();
+    vdeleter = new VideoWidgetDeleter(videoContainer);
     createIcons();
     settings = new QSettings("Etersoft","VargusViewer");
     bool settingsRead;
@@ -53,6 +55,9 @@ MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
     }
     else
         changeConnectionSettings();
+    vargusLog.writeToFile("Start deleterThread");
+    vdeleter->start();
+    vargusLog.writeToFile("DeleterThreadStarted");
 }
 
 bool MainWindow::initData()
@@ -111,15 +116,7 @@ QStringList MainWindow::readAnswer(int amountOfLines)
 
 MainWindow::~MainWindow()
 {
-    VideoWidget::staticDestructor();
     disconnect(setTab,SIGNAL(currentChanged(int)),this,SLOT(onSetChanged(int)));
-    QList<Camera *>::iterator itc = camerasList.begin();
-    QList<Camera *>::iterator endc = camerasList.end();
-    while(itc != endc)
-    {
-        delete (*itc);
-        itc++;
-    }
     QList<View *>::iterator itv = viewsList.begin();
     QList<View *>::iterator endv = viewsList.end();
     while(itv != endv)
@@ -127,17 +124,45 @@ MainWindow::~MainWindow()
         delete (*itv);
         itv++;
     }
+    vargusLog.writeToFile("Destroy of views success");
     QList<Set *>::iterator its = setsList.begin();
     QList<Set *>::iterator ends = setsList.end();
+    while(its != ends)
+    {
+        (*its)->stopPlay();
+        its++;
+    }
+    vargusLog.writeToFile("Destroy of sets success");
+
+    vargusLog.writeToFile("Send stop to deleter thread");
+    vdeleter->sendstop();
+    while(vdeleter->isRunning() != false)
+    {
+        vargusLog.writeToFile("Deleter thread not finished yet, wait");
+        vdeleter->wait(10000);
+    }
+    vargusLog.writeToFile("Try to delete deleter");
+    delete vdeleter;
+    VideoWidget::staticDestructor();
+    vargusLog.writeToFile("staticDestructor of VideoWidget success");
+    QList<Camera *>::iterator itc = camerasList.begin();
+    QList<Camera *>::iterator endc = camerasList.end();
+    while(itc != endc)
+    {
+        delete (*itc);
+        itc++;
+    }
+    vargusLog.writeToFile("Destroy of cameras success");
+    its = setsList.begin();
     while(its != ends)
     {
         delete (*its);
         its++;
     }
+    vargusLog.writeToFile("Destroy of sets success");
     delete delLogFilesAction;
     delete exitAction;
     delete aboutAction;
-    delete fpsCounterAction;
     delete videoSettingsAction;
     delete defaultPathForLogs;
     delete enableLog;
@@ -151,7 +176,7 @@ MainWindow::~MainWindow()
     delete resetButton;
     delete nextButton;
     delete trIcon;
-
+    delete videoContainer;
     vargusLog.writeToFile("PROGRAM ENDED");
 }
 
@@ -187,10 +212,6 @@ void MainWindow::createActions()
     fileMenu -> addAction(delLogFilesAction);
     connect(delLogFilesAction, SIGNAL(triggered()), this, SLOT(deleteLogFiles()));
 
-    fpsCounterAction = new QAction(tr("&Frames per second"), this);
-    fileMenu -> addAction(fpsCounterAction);
-    connect(fpsCounterAction, SIGNAL(triggered()), this, SLOT(showFPS()));
-
     fileMenu -> addSeparator();
     exitAction = new QAction(tr("&Exit"), this);
     fileMenu -> addAction(exitAction);
@@ -209,6 +230,10 @@ void MainWindow::createActions()
     connectionSettings = new QAction(tr("&Connection settings"), this);
     settingsMenu -> addAction(connectionSettings);
     connect(connectionSettings, SIGNAL(triggered()), this ,SLOT(changeConnectionSettings()));
+
+    vlcsettingsAction = new QAction(tr("&VLC settings"), this);
+    settingsMenu->addAction(vlcsettingsAction);
+    connect(vlcsettingsAction, SIGNAL(triggered()), this, SLOT(vlcsettingsDialog()));
 
     contextMenu -> addAction(connectionSettings);
     contextMenu -> addAction(exitAction);
@@ -382,7 +407,7 @@ void MainWindow::makeSets()
             set -> addView(*itv);
             itv++;
         }
-        set -> init(pltp);
+        set -> init(pltp, videoContainer);
         set -> setActiveView(0);
         setTab -> addTab(set, set->description());
         connect(set, SIGNAL(updateActiveCameras(QList<Camera*>)), this, SLOT(changeActiveCameras(QList<Camera*>)));
@@ -439,7 +464,7 @@ void MainWindow::initSets()
         QStringList setinfo = inf.at(i).split(';');
         QString info = setinfo.at(0);
         vargusLog.writeToFile("New set " + info);
-        Set * s = new Set(info);
+        Set * s = new Set(info, this);
         setsList << s;
         QStringList camlist = setinfo.at(1).trimmed().split(',');
         for(int j = 0; j < camlist.count(); j++)
@@ -585,6 +610,34 @@ bool MainWindow::readSettings()
         pltp = LOWLEVEL;
     else
         pltp = XWINDOW;
+    vlcSettings = settings->value("vlcsettings", "").toString();
+    if(vlcSettings == "")
+    {
+        vlcSettings.clear();
+        vlcSettings.append("-I dummy"); /* Don't use any interface */
+        vlcSettings.append(" --ignore-config"); /* Don't use VLC's config */
+        vlcSettings.append(" --no-audio"); /* Audio off */
+        vlcSettings.append(" --http-reconnect --http-continuous --video-title-show --video-title-position=9 --video-title-timeout=2147483647");
+        #ifdef QT_DEBUG
+        vlcSettings.append(" --extraintf=logger"); /* log anything */
+        vlcSettings.append(" --verbose=2"); /* be much more verbose then normal for debugging purpose */
+        #endif
+        settings->setValue("vlcsettings", vlcSettings);
+    }
+    QStringList args = vlcSettings.split(" ");
+    int num = args.length();
+    char **argsForVLC = new char*[num];
+    for(int i = 0; i < num; i++)
+    {
+        int len = args.at(i).length();
+        char *word = new char [len + 1];
+        for(int j = 0; j < len; j++)
+            word[j] = args.at(i).at(j).toAscii();
+        word[len] = '\0';
+        argsForVLC[i] = word;
+        vargusLog.writeToFile(argsForVLC[i]);
+    }
+    VideoWidget::setVlcArgs( argsForVLC, num);
     if(server == "" || port < 0 || port > 65535)
         return false;
     return true;
@@ -674,28 +727,6 @@ void MainWindow::startConnection()
     changeActiveCameras(setsList.at(0) -> getActiveCameras());
 }
 
-void MainWindow::showFPS()
-{
-    QList<Set *>::iterator it = setsList.begin();
-    QList<Set *>::iterator end = setsList.end();
-    while( it!= end )
-    {
-        if( (*it) -> isActive() )
-        {
-           countFPS((*it) -> video());
-           break;
-        }
-        it++;
-    }
-}
-
-void MainWindow::countFPS(const QList<VideoWidget *> &video)
-{
-    FPSCounter counter(this);
-    counter.setVideoList(video);
-    counter.start();
-    counter.exec();
-}
 
 void MainWindow::enableButtons(bool prev, bool next)
 {
@@ -785,4 +816,50 @@ void MainWindow::changePlayingType(VPlayingType t)
     }
     pltp = t;
     saveSettings();
+}
+
+void MainWindow::vlcsettingsDialog()
+{
+    VLCSetingsDialog dialog(vlcSettings, this);
+    connect(&dialog, SIGNAL(newSettings(QString&)), this, SLOT(newSettingsForVLC(QString&)));
+    dialog.exec();
+}
+
+void MainWindow::newSettingsForVLC(QString &_vlcsettings)
+{
+    vlcSettings = _vlcsettings;
+    settings->setValue("vlcsettings", vlcSettings);
+}
+
+void MainWindow::updateCamera(Camera *c)
+{
+    if(c == NULL)
+        return;
+    vargusLog.writeToFile(QString("Update camera %1").arg(c->name()));
+    socket = new QAbstractSocket(QAbstractSocket::TcpSocket, this);
+    socket -> connectToHost(server, port);
+    if(!socket->waitForConnected(5000))
+    {
+        QMessageBox::critical(NULL, tr("Error"), tr("Can not connect to server.\nPlease, change the connection settings."));
+        delete socket;
+        return;
+    }
+    QList<Camera *>::iterator it = camerasList.begin();
+    QList<Camera *>::iterator end = camerasList.end();
+    int num = 1;
+    while(it != end)
+    {
+        if(c == (*it))
+            break;
+        num++;
+        it++;
+    }
+    socket -> write(QString("query camera;%1;view:source,view:preview\n").arg(num).toAscii());
+    QStringList inf = readAnswer(1);
+    QStringList adresses = inf.at(0).split(';');
+    c->setSource(adresses.at(0));
+    c->setSource(adresses.at(1));
+    socket -> write("exit\n");
+    socket -> disconnect();
+    delete socket;
 }

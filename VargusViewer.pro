@@ -18,12 +18,13 @@ SOURCES += main.cpp\
     cameralist.cpp \
     logger.cpp \
     settingsdialog.cpp \
-    fpscounter.cpp \
     runningstring.cpp \
     worksock.cpp \
     videosettingsdialog.cpp \
     videowidgetlowlevelpainting.cpp \
-    limitline.cpp
+    limitline.cpp \
+    videowidgetdeleter.cpp \
+    vlcsettingsdialog.cpp
 
 HEADERS  += mainwindow.h \
     set.h \
@@ -33,13 +34,14 @@ HEADERS  += mainwindow.h \
     cameralist.h \
     logger.h \
     settingsdialog.h \
-    fpscounter.h \
     runningstring.h \
     worksock.h \
     videosettingsdialog.h \
     enums.h \
     videowidgetlowlevelpainting.h \
-    limitline.h
+    limitline.h \
+    videowidgetdeleter.h \
+    vlcsettingsdialog.h
 
 TRANSLATIONS += lang/lang_ru.ts
 

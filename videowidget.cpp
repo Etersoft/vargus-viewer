@@ -71,11 +71,16 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
 
 VideoWidget::~VideoWidget()
 {
-    vargusLog.writeToFile("destroy VideoWidget()");
-    this->hide();
+    if(camera)
+        vargusLog.writeToFile(
+                    QString("destroy VideoWidget() %1").arg(camera->description()));
+    else
+        vargusLog.writeToFile("destroy VideoWidget()");
+    /*if(isVisible())
+        this->hide(); это нельзя использовать,
+    так как поток удаления может ещё удалять старые виджеты,
+    хотя родитель и менеджер компоновки уже удалены*/
     stopPlay();
-
-
     clearVlc(vlcPlayer, vlcMedia);
 }
 
@@ -186,7 +191,7 @@ void VideoWidget::updateInterface()
         int isp = libvlc_media_player_is_playing (vlcPlayer);
         if(!isp)
         {
-            emit disconnectedSignal();
+            emit disconnectedSignal(this);
             setNosignalMessage();
             return;
         }
