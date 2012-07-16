@@ -84,8 +84,6 @@ private:
     QVBoxLayout* layout;
     QLabel* statusLabel;
 
-    int numCountUpdateInterface;
-
     void setNosignalMessage();
     void setOffNosignalMessage();
 protected:
