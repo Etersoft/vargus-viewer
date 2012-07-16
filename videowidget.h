@@ -109,7 +109,7 @@ public slots:
     void setStillPlay();
 signals:
     void arhiveCall();
-    void disconnectedSignal();
+    void disconnectedSignal(VideoWidget *);
     void bigSizeCall(VideoWidget *);
     void camerasChanged(VideoWidget *,Camera *second, bool fromAnotherWidget);
 };

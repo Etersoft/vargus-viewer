@@ -77,6 +77,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0, QString server = 0, int portNum = 0, bool logging = false);
     ~MainWindow();
+    void updateCamera(Camera *c);
 
 private:
     bool initData();

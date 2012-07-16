@@ -189,7 +189,7 @@ void VideoWidget::updateInterface()
     int isp = libvlc_media_player_is_playing (vlcPlayer);
     if(!isp)
     {
-        emit disconnectedSignal();
+        emit disconnectedSignal(this);
         setNosignalMessage();
         return;
     }

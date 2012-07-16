@@ -464,7 +464,7 @@ void MainWindow::initSets()
         QStringList setinfo = inf.at(i).split(';');
         QString info = setinfo.at(0);
         vargusLog.writeToFile("New set " + info);
-        Set * s = new Set(info);
+        Set * s = new Set(info, this);
         setsList << s;
         QStringList camlist = setinfo.at(1).trimmed().split(',');
         for(int j = 0; j < camlist.count(); j++)
@@ -829,4 +829,37 @@ void MainWindow::newSettingsForVLC(QString &_vlcsettings)
 {
     vlcSettings = _vlcsettings;
     settings->setValue("vlcsettings", vlcSettings);
+}
+
+void MainWindow::updateCamera(Camera *c)
+{
+    if(c == NULL)
+        return;
+    vargusLog.writeToFile(QString("Update camera %1").arg(c->name()));
+    socket = new QAbstractSocket(QAbstractSocket::TcpSocket, this);
+    socket -> connectToHost(server, port);
+    if(!socket->waitForConnected(5000))
+    {
+        QMessageBox::critical(NULL, tr("Error"), tr("Can not connect to server.\nPlease, change the connection settings."));
+        delete socket;
+        return;
+    }
+    QList<Camera *>::iterator it = camerasList.begin();
+    QList<Camera *>::iterator end = camerasList.end();
+    int num = 1;
+    while(it != end)
+    {
+        if(c == (*it))
+            break;
+        num++;
+        it++;
+    }
+    socket -> write(QString("query camera;%1;view:source,view:preview\n").arg(num).toAscii());
+    QStringList inf = readAnswer(1);
+    QStringList adresses = inf.at(0).split(';');
+    c->setSource(adresses.at(0));
+    c->setSource(adresses.at(1));
+    socket -> write("exit\n");
+    socket -> disconnect();
+    delete socket;
 }

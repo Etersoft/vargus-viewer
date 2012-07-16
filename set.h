@@ -9,6 +9,7 @@
 #include<enums.h>
 #include<videowidgetdeleter.h>
 
+class MainWindow;
 class Set : public QWidget
 {
     Q_OBJECT
@@ -30,9 +31,11 @@ class Set : public QWidget
 
     Container *videoContainer;
 
+    MainWindow *mainwindow;
+
 public:
-    explicit Set();
-    Set(const QString &desc);
+    explicit Set(MainWindow *_mainwindow);
+    Set(const QString &desc, MainWindow *_mainwindow);
     ~Set();
 
     QString description(){return set_description;}
@@ -75,6 +78,7 @@ private slots:
     void bigVideo(VideoWidget *v);
     void changeCameras(VideoWidget *first,Camera *second, bool fromAnotherWidget);
     void enableButtons();
+    void restoreVideoWidget(VideoWidget *);
 
 };
 

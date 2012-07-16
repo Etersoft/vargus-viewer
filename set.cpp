@@ -3,17 +3,19 @@
 #include <QStringList>
 #include<QGridLayout>
 #include<QListIterator>
+#include"mainwindow.h"
 extern Logger &vargusLog;
-Set::Set()
+Set::Set(MainWindow *_mainwindow)
 {
     tp = 0;
     active = false;
     bigPlaying = NULL;
     lastCamNum = NULL;
+    mainwindow = _mainwindow;
 
 }
 
-Set::Set(const QString &desc)
+Set::Set(const QString &desc, MainWindow *_mainwindow)
 {
     tp = 0;
     set_description = desc;
@@ -22,6 +24,7 @@ Set::Set(const QString &desc)
     lastCamNum = NULL;
     offset = NULL;
     wasChanged = NULL;
+    mainwindow = _mainwindow;
 }
 
 Set::~Set()
@@ -340,6 +343,7 @@ void Set::bigVideo(VideoWidget *v)
     if(v == bigPlaying)
     {
         setLayouts(tp);
+        bigPlaying = NULL;
         return;
     }
     QList<Camera *> res;
@@ -367,6 +371,7 @@ void Set::bigVideo(Camera *c)
     VideoWidget *v = new VideoWidget();
     v -> setCamera(c);
     connect(v,SIGNAL(bigSizeCall(VideoWidget*)),this,SLOT(bigVideo(VideoWidget*)));
+    connect(v, SIGNAL(disconnectedSignal(VideoWidget*)), this, SLOT(restoreVideoWidget(VideoWidget*)));
     grid -> addWidget(v,0,0);
     v -> startPlay(VideoWidget::BIGVIDEO);
     videoList << v;
@@ -397,6 +402,7 @@ void Set::countActiveAndPlay()
         connect(*it,SIGNAL(bigSizeCall(VideoWidget*)),this,SLOT(bigVideo(VideoWidget*)));
         connect(*it, SIGNAL(camerasChanged(VideoWidget *, Camera *, bool)),
                 this, SLOT(changeCameras(VideoWidget*, Camera*, bool)));
+        connect(*it, SIGNAL(disconnectedSignal(VideoWidget*)), this, SLOT(restoreVideoWidget(VideoWidget*)));
         it++;
     }
 }
@@ -510,5 +516,15 @@ bool Set::setPlayingType(VPlayingType t)
     return true;
 }
 
- QMutex mutex;
+void Set::restoreVideoWidget(VideoWidget *v)
+{
+    vargusLog.writeToFile("Try to restore videowidget");
+    Camera *c = v->getCamera();
+    mainwindow->updateCamera(c);
+    if(bigPlaying == v)
+        v->startPlay(VideoWidget::BIGVIDEO);
+    else
+        v->startPlay(VideoWidget::SMALLVIDEO);
+
+}
 
