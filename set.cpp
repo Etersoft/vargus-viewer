@@ -331,7 +331,7 @@ void Set::reset()
     offset[tp] = 0;
     int lastCam = amountOfCells(tp) - 1;
     if(lastCam >= cameraList.length())
-        lastCam = cameraList.length();
+        lastCam = cameraList.length() - 1;
     lastCamNum[tp] = lastCam;
     setLayouts(tp);
     wasChanged[tp] = false;
