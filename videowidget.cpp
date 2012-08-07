@@ -121,7 +121,7 @@ void VideoWidget::startPlay(sizeVideo size)
             break;
     }
     vargusLog.writeToFile("disconnectAction");
-    libvlc_media_set_meta (vlcMedia,  libvlc_meta_Title, camera->name().toAscii());
+    libvlc_media_set_meta (vlcMedia,  libvlc_meta_Title, ((camera->name() + ":" +  camera->description()).toUtf8()));
     libvlc_media_player_set_media (vlcPlayer, vlcMedia);
 
     //Set this class for write camera events
