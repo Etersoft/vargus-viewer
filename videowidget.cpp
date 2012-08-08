@@ -121,7 +121,17 @@ void VideoWidget::startPlay(sizeVideo size)
             break;
     }
     vargusLog.writeToFile("disconnectAction");
-    libvlc_media_set_meta (vlcMedia,  libvlc_meta_Title, ((camera->name() + ":" +  camera->description()).toUtf8()));
+
+    if(pltp == XWINDOW)
+    {
+       libvlc_media_set_meta (vlcMedia,  libvlc_meta_Title, (camera->name() + ":" + camera->description()).toUtf8() );
+    }
+
+    if(pltp == LOWLEVEL)
+    {
+        libvlc_media_set_meta (vlcMedia,  libvlc_meta_Title, " " );
+        printedTitle = camera->name() + ":" + camera->description();
+    }
     libvlc_media_player_set_media (vlcPlayer, vlcMedia);
 
     //Set this class for write camera events

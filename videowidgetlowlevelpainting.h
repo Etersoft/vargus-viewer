@@ -29,6 +29,7 @@ public:
 
     void paintNoSignal();
     void paintNothing();
+
 private:
     QMutex mutex;
     QImage *frame;
@@ -56,6 +57,8 @@ private:
     enum PaintType{NOTHING, VIDEO, NOSIGNAL};
     PaintType type;
 
+
+
     bool isActiveLowLevelPainting;
 
     void checkChangeVideoSize();
@@ -66,6 +69,7 @@ private:
     virtual void startvlcPlayer() = 0;
     virtual void stoptvlcPlayer() = 0;
 protected:
+    QString printedTitle;
     void restartPaintVideo();
     void updateGeometry();
 public slots:

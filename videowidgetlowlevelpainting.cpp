@@ -50,7 +50,7 @@ VideoWidgetLowLevelPainting::VideoWidgetLowLevelPainting() :
     QWidget(), frame(0), widgetheight(0),
     widgetwidth(0), videosourceheight(0), videosourcewidth(0),
     aspectComply(false), xdisplacement(0),
-    videoheight(0), videowidth(0),type(NOTHING), isActiveLowLevelPainting(false)
+    videoheight(0), videowidth(0),type(NOTHING), isActiveLowLevelPainting(false), printedTitle("")
 {
 
     repaintTimer = new QTimer(this);
@@ -195,6 +195,9 @@ void VideoWidgetLowLevelPainting::printVideoFrame()
 {
     painter.begin(this);
     painter.drawImage(QPoint(0, xdisplacement),*frame);
+    painter.setFont(QFont("Arial", 10));
+    painter.setPen(Qt::white);
+    painter.drawText(rect(),Qt::AlignBottom,printedTitle);
     painter.end();
 }
 
