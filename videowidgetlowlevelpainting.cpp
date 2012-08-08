@@ -71,6 +71,7 @@ void VideoWidgetLowLevelPainting::restartPaintVideo()
 
     if(libvlc_video_get_height(getvlcPlayer()) > 0)
     {
+
         videosourceheight = libvlc_video_get_height(getvlcPlayer());
     }
     if(libvlc_video_get_width(getvlcPlayer()) > 0)
@@ -81,7 +82,7 @@ void VideoWidgetLowLevelPainting::restartPaintVideo()
     widgetheight = this->height();
     widgetwidth = this->width();
 
-    videoheight = this->height()/getAspectRatio();
+    videoheight = this->width()/getAspectRatio();
     videowidth = this->width();
 
     xdisplacement = getXDisplacement();
