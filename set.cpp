@@ -4,6 +4,7 @@
 #include<QGridLayout>
 #include<QListIterator>
 #include <QDesktopServices>
+
 #include"mainwindow.h"
 extern Logger &vargusLog;
 Set::Set(MainWindow *_mainwindow)
@@ -422,7 +423,6 @@ void Set::OpenArhive(QString cam)
     {
         url.setUrl("" + serverAddress + "/vargus/archive.php?camera="+cam);
     }
-    QString a(url.toString());
     if(url.isValid())
     {
         QDesktopServices::openUrl(url);

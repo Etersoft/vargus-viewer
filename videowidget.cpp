@@ -157,12 +157,12 @@ void VideoWidget::startPlay(sizeVideo size)
         activateLowLevelPainting();
         ret = libvlc_media_player_play (vlcPlayer);
     }
-
     vargusLog.writeToFile("Start play ret " + QString::number(ret));
     isPlaying=true;
     writeTextString();
     int isp = libvlc_media_player_is_playing (vlcPlayer);
     vargusLog.writeToFile("startPlay isp " + QString::number(isp));
+    afterStart = 0;
 }
 
 void VideoWidget::stopPlay()
@@ -191,6 +191,12 @@ void VideoWidget::updateInterface()
 {
     if(!isPlaying)
         return;
+
+    if(afterStart<2)
+    {
+        printString();
+        afterStart ++;
+    }
 
     libvlc_media_t *curMedia = libvlc_media_player_get_media (vlcPlayer);
     if (curMedia == NULL)

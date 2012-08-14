@@ -86,6 +86,8 @@ private:
 
     void setNosignalMessage();
     void setOffNosignalMessage();
+
+    int afterStart;
 protected:
     void mousePressEvent ( QMouseEvent * e );
     void mouseReleaseEvent (QMouseEvent * e);
