@@ -24,6 +24,7 @@ class Set : public QWidget
     int* lastCamNum;
     int* offset;
     bool *wasChanged;
+    QString serverAddress;
 
     QVector< QList<Camera *>* > stc;//расположение камер(виджетов) под каждый view
 
@@ -35,7 +36,7 @@ class Set : public QWidget
 
 public:
     explicit Set(MainWindow *_mainwindow);
-    Set(const QString &desc, MainWindow *_mainwindow);
+    Set(const QString &desc, MainWindow *_mainwindow, QString serverAddress);
     ~Set();
 
     QString description(){return set_description;}
@@ -79,6 +80,7 @@ private slots:
     void changeCameras(VideoWidget *first,Camera *second, bool fromAnotherWidget);
     void enableButtons();
     void restoreVideoWidget(VideoWidget *);
+    void OpenArhive(QString cam);
 
 };
 

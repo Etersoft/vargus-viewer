@@ -380,7 +380,7 @@ void VideoWidget::ContextMenuAction(const QPoint& z)
 
 void VideoWidget::arhiveMenuPress()
 {
-    emit arhiveCall();
+    emit arhiveCall(camera->name());
 }
 
 void VideoWidget::changeStateMessageWidgetPress()

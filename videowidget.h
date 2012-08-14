@@ -108,7 +108,7 @@ public slots:
                 /*libvlc_media_player_get_time(vlcPlayer);*/}
     void setStillPlay();
 signals:
-    void arhiveCall();
+    void arhiveCall(QString cam);
     void disconnectedSignal(VideoWidget *);
     void bigSizeCall(VideoWidget *);
     void camerasChanged(VideoWidget *,Camera *second, bool fromAnotherWidget);

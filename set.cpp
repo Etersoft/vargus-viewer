@@ -3,6 +3,7 @@
 #include <QStringList>
 #include<QGridLayout>
 #include<QListIterator>
+#include <QDesktopServices>
 #include"mainwindow.h"
 extern Logger &vargusLog;
 Set::Set(MainWindow *_mainwindow)
@@ -15,7 +16,7 @@ Set::Set(MainWindow *_mainwindow)
 
 }
 
-Set::Set(const QString &desc, MainWindow *_mainwindow)
+Set::Set(const QString &desc, MainWindow *_mainwindow, QString _serverAddress)
 {
     tp = 0;
     set_description = desc;
@@ -25,6 +26,7 @@ Set::Set(const QString &desc, MainWindow *_mainwindow)
     offset = NULL;
     wasChanged = NULL;
     mainwindow = _mainwindow;
+    serverAddress = _serverAddress;
 }
 
 Set::~Set()
@@ -404,7 +406,30 @@ void Set::countActiveAndPlay()
         connect(*it, SIGNAL(camerasChanged(VideoWidget *, Camera *, bool)),
                 this, SLOT(changeCameras(VideoWidget*, Camera*, bool)));
         connect(*it, SIGNAL(disconnectedSignal(VideoWidget*)), this, SLOT(restoreVideoWidget(VideoWidget*)));
+        connect(*it, SIGNAL(arhiveCall(QString)), this, SLOT(OpenArhive(QString)));
         it++;
+    }
+}
+
+void Set::OpenArhive(QString cam)
+{
+    QUrl url;
+    if(serverAddress.left(4).compare("http"))
+    {
+        url.setUrl("http://" + serverAddress + "/vargus/archive.php?camera="+cam);
+    }
+    else
+    {
+        url.setUrl("" + serverAddress + "/vargus/archive.php?camera="+cam);
+    }
+    QString a(url.toString());
+    if(url.isValid())
+    {
+        QDesktopServices::openUrl(url);
+    }
+    else
+    {
+        vargusLog.writeToFile("invalid arhive url" + url.toString());
     }
 }
 

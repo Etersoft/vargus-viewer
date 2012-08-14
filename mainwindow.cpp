@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
         vargusLog.setActive(logging);
         settingsRead = true;
     }
+
     Camera::setRunningTextAddress(t_server, t_port);
     vargusLog.changeDirectory(pathForLogs);
     vargusLog.setActive(loggingEnabled);
@@ -464,7 +465,7 @@ void MainWindow::initSets()
         QStringList setinfo = inf.at(i).split(';');
         QString info = setinfo.at(0);
         vargusLog.writeToFile("New set " + info);
-        Set * s = new Set(info, this);
+        Set * s = new Set(info, this, server);
         setsList << s;
         QStringList camlist = setinfo.at(1).trimmed().split(',');
         for(int j = 0; j < camlist.count(); j++)
