@@ -59,11 +59,16 @@ void worksock::connectProcessing()
 
 void worksock::receiveData()
 {
-    printf ("receiveData\n");
-    QDataStream in;
     QString str;
     str = wsocket->readAll().data();
-    receiveDataProcessing(str);
+    int len = str.left(8).toInt();
+    int k = str.length();
+    while(str.length() < len)
+    {
+        wsocket->waitForReadyRead();
+        str = str + wsocket->readAll().data();
+    }
+    receiveDataProcessing(str.right(str.length()-9));
 }
 
 void worksock::errorProcessing (QAbstractSocket::SocketError error)

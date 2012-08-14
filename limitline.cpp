@@ -10,7 +10,7 @@ RunningTextSettings::RunningTextSettings()
     timeout = 0;
     x = 0;
     y = 0;
-    limitLine = 13;
+    limitLine = 1;
 }
 
 LimitLine::LimitLine(int _numLimitLine) : numLimitLine(_numLimitLine)
