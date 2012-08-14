@@ -60,15 +60,15 @@ void worksock::connectProcessing()
 void worksock::receiveData()
 {
     QString str;
+    const int sendedlenlenght = 8;
     str = wsocket->readAll().data();
-    int len = str.left(8).toInt();
-    int k = str.length();
-    while(str.length() < len)
+    int neededlen = str.left(sendedlenlenght).toInt();
+    while(str.length() < neededlen)
     {
         wsocket->waitForReadyRead();
         str = str + wsocket->readAll().data();
     }
-    receiveDataProcessing(str.right(str.length()-9));
+    receiveDataProcessing(str.right(str.length()-(sendedlenlenght+1)));
 }
 
 void worksock::errorProcessing (QAbstractSocket::SocketError error)
