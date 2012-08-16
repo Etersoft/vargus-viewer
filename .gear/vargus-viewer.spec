@@ -1,5 +1,5 @@
 Name: vargus-viewer
-Version: 0.5
+Version: 0.9.0
 Release: alt1
 
 Summary: Qt4 client for vargus server
@@ -41,6 +41,13 @@ cp lang/lang_ru.qm %buildroot%_datadir/%name/lang/
 %_datadir/%name/
 
 %changelog
+* Thu Aug 16 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.0-alt1
+- implement arhive call in browser
+- changes for text on video
+- fix uncorrect aspect ratio
+- fix for new format sended string
+- some bug fixes
+
 * Mon Jul 16 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.5-alt1
 - add vlc settings
 - add reconnecting video after crash video
