@@ -47,10 +47,13 @@ void VideoWidgetLowLevelPainting::mutexUnlock()
 }
 
 VideoWidgetLowLevelPainting::VideoWidgetLowLevelPainting() :
-    QWidget(), frame(0), widgetheight(0),
-    widgetwidth(0), videosourceheight(0), videosourcewidth(0),
-    aspectComply(false), xdisplacement(0),
-    videoheight(0), videowidth(0),type(NOTHING), isActiveLowLevelPainting(false), printedTitle("")
+    QWidget(), frame(0),
+    videosourceheight(0), videosourcewidth(0),
+    widgetheight(0), widgetwidth(0),
+    videoheight(0), videowidth(0),
+    xdisplacement(0),
+    aspectComply(false),
+    type(NOTHING), isActiveLowLevelPainting(false), printedTitle("")
 {
 
     repaintTimer = new QTimer(this);
