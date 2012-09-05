@@ -16,13 +16,13 @@ extern Logger &vargusLog;
 
 libvlc_instance_t *VideoWidget::vlcInstance = 0;
 VPlayingType VideoWidget::pltp = LOWLEVEL;
-const char *const *VideoWidget::VlcArgs = 0;
+const char **VideoWidget::VlcArgs = 0;
 int VideoWidget::numVlcArgs = 0;
 
 
 void VideoWidget::setVlcArgs( const char *const *_vlcArgs, int _numberVlcArgs)
 {
-    VlcArgs = _vlcArgs;
+    VlcArgs = (const char **)_vlcArgs;
     numVlcArgs = _numberVlcArgs;
 }
 
@@ -51,6 +51,16 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
 
     if(!vlcInstance)
     {
+        if(pltp == LOWLEVEL)
+        {
+            for(int i = 0; i < numVlcArgs; i++ )
+            {
+                if(strcmp(VlcArgs[i],"--video-title-show") == 0)
+                {
+                    VlcArgs[i] = "--no-video-title-show";
+                }
+            }
+        }
         vlcInstance=libvlc_new(numVlcArgs, VlcArgs);
     }
 
@@ -129,7 +139,7 @@ void VideoWidget::startPlay(sizeVideo size)
 
     if(pltp == LOWLEVEL)
     {
-        libvlc_media_set_meta (vlcMedia,  libvlc_meta_Title, " " );
+        libvlc_media_set_meta (vlcMedia,  libvlc_meta_Title, "1" );
         printedTitle = camera->name() + ":" + camera->description();
     }
     libvlc_media_player_set_media (vlcPlayer, vlcMedia);

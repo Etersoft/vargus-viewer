@@ -76,7 +76,7 @@ private:
     void disconnectAction();
 
     static int numVlcArgs;
-    static const char *const *VlcArgs;
+    static const char **VlcArgs;
 
     void vlcSetEvent();
 
