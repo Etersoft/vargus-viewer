@@ -145,7 +145,7 @@ void VideoWidget::startPlay(sizeVideo size)
     libvlc_media_player_set_media (vlcPlayer, vlcMedia);
 
     //Set this class for write camera events
-    camera->runningString->addPrintMethod(camera->name(),this);
+
 
     //#FIXME For linux only
     int ret = 0;
@@ -167,8 +167,10 @@ void VideoWidget::startPlay(sizeVideo size)
         activateLowLevelPainting();
         ret = libvlc_media_player_play (vlcPlayer);
     }
+    camera->runningString->addPrintMethod(camera->name(),this);
     vargusLog.writeToFile("Start play ret " + QString::number(ret));
     isPlaying=true;
+    isRunningStringActive = true;
     writeTextString();
     int isp = libvlc_media_player_is_playing (vlcPlayer);
     vargusLog.writeToFile("startPlay isp " + QString::number(isp));
@@ -179,21 +181,27 @@ void VideoWidget::stopPlay()
 {
     if(isPlaying)
     {
-        libvlc_media_player_stop(vlcPlayer);
+        isPlaying = false;
+        isRunningStringActive = false;
         camera->runningString->dropPrintMethod(camera->name());
+        libvlc_media_player_stop(vlcPlayer);
         if(pltp == LOWLEVEL)
             deactivateLowLevelPainting();
     }
-    isPlaying = false;
+
 }
 
 void VideoWidget::startvlcPlayer()
 {
+    isPlaying = true;
+    isRunningStringActive = true;
     libvlc_media_player_play(vlcPlayer);
 }
 
 void VideoWidget::stoptvlcPlayer()
 {
+    isPlaying = false;
+    isRunningStringActive = false;
     libvlc_media_player_stop(vlcPlayer);
 }
 
