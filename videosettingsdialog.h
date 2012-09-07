@@ -5,12 +5,12 @@
 #include <QRadioButton>
 #include <QPushButton>
 #include <QGroupBox>
-#include<enums.h>
+#include <enums.h>
 
 class VideoSettingsDialog : public QDialog
 {
     Q_OBJECT
-private:
+
     QRadioButton *b1;
     QRadioButton *b2;
     QPushButton *buttonOk;
@@ -19,6 +19,7 @@ private:
 
     void makeButtons();
     void createLayouts();
+
 public:
     explicit VideoSettingsDialog(VPlayingType t, QWidget *parent = 0);
     ~VideoSettingsDialog();

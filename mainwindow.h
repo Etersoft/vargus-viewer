@@ -3,21 +3,21 @@
 
 #include <QMainWindow>
 #include <QList>
-#include<QListWidget>
+#include <QListWidget>
 
-#include<QLayout>
+#include <QLayout>
 
 #include <camera.h>
 #include <set.h>
 #include <view.h>
 #include <QAbstractSocket>
-#include<QMessageBox>
-#include<QCloseEvent>
-#include<QSettings>
+#include <QMessageBox>
+#include <QCloseEvent>
+#include <QSettings>
 #include "cameralist.h"
-#include<QSystemTrayIcon>
-#include<videosettingsdialog.h>
-#include<videowidgetdeleter.h>
+#include <QSystemTrayIcon>
+#include <videosettingsdialog.h>
+#include <videowidgetdeleter.h>
 #include <vlcsettingsdialog.h>
 
 class MainWindow : public QMainWindow
@@ -73,7 +73,6 @@ class MainWindow : public QMainWindow
     VideoWidgetDeleter *vdeleter;
     Container *videoContainer;
 
-
 public:
     explicit MainWindow(QWidget *parent = 0, QString server = 0, int portNum = 0, bool logging = false);
     ~MainWindow();
@@ -117,9 +116,9 @@ private slots:
     void changePlayingType(VPlayingType t);
     void vlcsettingsDialog();
     void newSettingsForVLC(QString &_vlcsettings);
+
 protected:
     void closeEvent(QCloseEvent *);
-
 };
 
 #endif // MAINWINDOW_H

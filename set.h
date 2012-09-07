@@ -4,12 +4,13 @@
 #include <QWidget>
 #include "camera.h"
 #include "view.h"
-#include"videowidget.h"
-#include<QVector>
-#include<enums.h>
-#include<videowidgetdeleter.h>
+#include "videowidget.h"
+#include <QVector>
+#include <enums.h>
+#include <videowidgetdeleter.h>
 
 class MainWindow;
+
 class Set : public QWidget
 {
     Q_OBJECT
@@ -58,21 +59,22 @@ public:
     void prev();
     void reset();
 
-    bool setPlayingType(VPlayingType t);
+    void setPlayingType(VPlayingType t);
+
 public slots:
     void restoreState() { setLayouts(tp); enableButtons(); }
     void showBig(int num);
+
 signals:
     void updateActiveCameras(QList<Camera*>);
     void buttonsEnabled(bool, bool);
+
 private:
     void setLayouts(int type);
     int amountOfPlayingWidgets();
-
     void countActiveAndPlay();
     void bigVideo(Camera *c);
     int amountOfCells(int tp);
-
 
 private slots:
     void updateActiveView();
@@ -81,7 +83,6 @@ private slots:
     void enableButtons();
     void restoreVideoWidget(VideoWidget *);
     void OpenArhive(QString cam);
-
 };
 
 #endif // SET_H

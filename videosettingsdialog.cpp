@@ -4,20 +4,20 @@ VideoSettingsDialog::VideoSettingsDialog(VPlayingType t, QWidget *parent) :
     QDialog(parent)
 {
     setWindowTitle(tr("Video settings"));
-    g = new QGroupBox(tr("Way of playing"),this);
+    g = new QGroupBox(tr("Way of playing"), this);
     makeButtons();
     createLayouts();
     if(t == XWINDOW)
-        b1 -> setChecked(true);
+        b1->setChecked(true);
     else
-        b2 -> setChecked(true);
+        b2->setChecked(true);
     setFixedSize(180, 150);
 }
 
 void VideoSettingsDialog::makeButtons()
 {
-    b1 = new QRadioButton(tr("&X Window"),this);
-    b2 = new QRadioButton(tr("&Low-level painting"),this);
+    b1 = new QRadioButton(tr("&X Window"), this);
+    b2 = new QRadioButton(tr("&Low-level painting"), this);
 
     buttonOk = new QPushButton(tr("&OK"), this);
     buttonCancel = new QPushButton(tr("&Cancel"), this);
@@ -30,18 +30,18 @@ void VideoSettingsDialog::createLayouts()
     QVBoxLayout *l = new QVBoxLayout(this);
     QVBoxLayout *groupLayout = new QVBoxLayout(this);
     QHBoxLayout *buttonsLayout = new QHBoxLayout(this);
-    groupLayout -> addWidget(b1);
-    groupLayout -> addWidget(b2);
-    g -> setLayout(groupLayout);
-    l -> addWidget(g);
-    buttonsLayout -> addWidget(buttonOk);
-    buttonsLayout -> addWidget(buttonCancel);
-    l -> addLayout(buttonsLayout);
+    groupLayout->addWidget(b1);
+    groupLayout->addWidget(b2);
+    g->setLayout(groupLayout);
+    l->addWidget(g);
+    buttonsLayout->addWidget(buttonOk);
+    buttonsLayout->addWidget(buttonCancel);
+    l->addLayout(buttonsLayout);
 }
 
 void VideoSettingsDialog::okClicked()
 {
-    if(b1 -> isChecked())
+    if(b1->isChecked())
         emit settingsChanged(XWINDOW);
     else
         emit settingsChanged(LOWLEVEL);

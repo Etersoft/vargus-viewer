@@ -1,6 +1,7 @@
 #include "view.h"
 #include <QPainter>
-#include<logger.h>
+#include <logger.h>
+
 extern Logger &vargusLog;
 
 View::View()
@@ -19,19 +20,18 @@ View::~View()
         delete view_icon;
     if(view_active_icon != NULL)
         delete view_active_icon;
-
 }
 
 View::View(View* view)
 {
-    view_description = view -> description();
-    view_width = view -> width();
-    view_height = view -> height();
-    view_double = view -> doubleCells();
-    view_triple = view -> tripleCells();
+    view_description = view->description();
+    view_width = view->width();
+    view_height = view->height();
+    view_double = view->doubleCells();
+    view_triple = view->tripleCells();
     view_quadruple = view->quadrupleCells();
-    view_icon = new QIcon(*view -> passiveIcon());
-    view_active_icon = new QIcon(*view -> activeIcon());
+    view_icon = new QIcon(*view->passiveIcon());
+    view_active_icon = new QIcon(*view->activeIcon());
 
     active = false;
     waitActive = false;
@@ -94,8 +94,8 @@ QPixmap View::createIconImage(QColor color, QColor bkColor)
     painter.fillRect(0, 0, ICON_WIDTH - 1, ICON_HEIGHT - 1, bkColor);
 
     // Габариты ячейки
-    int cellwidth = ( ICON_WIDTH - view_width - 1) / view_width + 1;
-    int cellheight = ( ICON_HEIGHT - view_height - 1) / view_height + 1;
+    int cellwidth = (ICON_WIDTH - view_width - 1) / view_width + 1;
+    int cellheight = (ICON_HEIGHT - view_height - 1) / view_height + 1;
 
     // Относительное начало координат (с учётом сдвинутых ячеек)
     int nullx = (ICON_WIDTH - cellwidth * view_width - view_width - 1) / 2;

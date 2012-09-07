@@ -24,10 +24,10 @@ public:
     
 signals:
     void newSettings(QString &settings);
+
 private slots:
     void uploadDefault();
     void loadNewSettings();
-    
 };
 
 #endif // VLCSETTINGSDIALOG_H

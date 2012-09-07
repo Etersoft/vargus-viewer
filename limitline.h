@@ -21,6 +21,7 @@ class LimitLine
 private:
     QStringList* strings;
     int numLimitLine;
+
 public:
     LimitLine(int _numLimitLine);
     ~LimitLine();

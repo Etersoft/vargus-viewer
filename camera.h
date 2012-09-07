@@ -37,22 +37,18 @@ public:
     static RunningString* runningString;
     LimitLine* runningText;
     bool isRunningStringActive;
-private:
 
+private:
     static QString runningTextip;
     static int runningTextport;
 
-
     void setStaticParam();
+
 public:
     static void setRunningTextAddress(QString ip, int port);
     static void changeTextServerSettings(const QString &_adress, int _port);
 
     virtual void appendString(QString str);
-signals:
-
-public slots:
-
 };
 
 #endif // CAMERA_H

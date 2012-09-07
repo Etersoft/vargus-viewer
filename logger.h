@@ -1,8 +1,8 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 #include<QFile>
-#include<QDir>
-#include<QMutex>
+#include <QDir>
+#include <QMutex>
 
 class Logger
 {
@@ -16,6 +16,7 @@ public:
     bool deleteLogFiles();
     bool changeDirectory(const QString &_path);
     ~Logger();
+
 private:
     static Logger* myInstance;
     Logger();
@@ -25,7 +26,6 @@ private:
     bool enabled;
     QDir *currentDir;
     mutable QMutex locker;
-
 };
 
 #endif // LOGGER_H

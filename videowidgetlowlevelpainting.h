@@ -10,10 +10,10 @@
 class VideoWidgetLowLevelPainting: public QWidget
 {
     Q_OBJECT
+
 public:
     VideoWidgetLowLevelPainting();
     ~VideoWidgetLowLevelPainting();
-
 
     uchar* getFrameBits();
     void mutexLock();
@@ -57,8 +57,6 @@ private:
     enum PaintType{NOTHING, VIDEO, NOSIGNAL};
     PaintType type;
 
-
-
     bool isActiveLowLevelPainting;
 
     void checkChangeVideoSize();
@@ -68,10 +66,12 @@ private:
     virtual libvlc_media_player_t *getvlcPlayer() = 0;
     virtual void startvlcPlayer() = 0;
     virtual void stoptvlcPlayer() = 0;
+
 protected:
     QString printedTitle;
     void restartPaintVideo();
     void updateGeometry();
+
 public slots:
     void animate();
 };

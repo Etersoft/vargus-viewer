@@ -4,13 +4,13 @@
 #include <QDialog>
 #include <QLabel>
 #include <QLineEdit>
-#include<QPushButton>
-#include<QGroupBox>
+#include <QPushButton>
+#include <QGroupBox>
 
 class SettingsDialog : public QDialog
 {
     Q_OBJECT
-private:
+
     QLabel *serverLabel;
     QLabel *portLabel;
     QLineEdit *serverLineEdit;
@@ -32,6 +32,7 @@ private:
     void okButtonClicked();
     void enableButtons();
     void clone();
+
 public:
     explicit SettingsDialog(QWidget *parent = 0,
                             const QString &server = "",
@@ -41,9 +42,6 @@ public:
     
 signals:
     void newSettings(QString server, int port, QString t_server, int t_port);
-    
-public slots:
-    
 };
 
 #endif // SETTINGSDIALOG_H

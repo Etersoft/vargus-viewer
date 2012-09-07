@@ -9,6 +9,7 @@
 class worksock: public QObject
 {
     Q_OBJECT
+
 private:
     QString host;
     int port;
@@ -22,6 +23,7 @@ private:
 
 protected:
     virtual void receiveDataProcessing(QString inputData) = 0;
+
 public:
     worksock();
     worksock(const QString &_host, int _port);
@@ -32,6 +34,7 @@ public:
     void setServerAddres(const QString &_host, int _port);
 
 public slots:
+
     void receiveData ();
     void errorProcessing (QAbstractSocket::SocketError error);
     void connectProcessing ();

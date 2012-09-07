@@ -2,7 +2,8 @@
 #include <QtCore>
 #include <QApplication>
 #include <QWidget>
-#include"logger.h"
+#include "logger.h"
+
 extern Logger &vargusLog;
 
 worksock::worksock():nextBlockSize(0)
@@ -43,14 +44,14 @@ void worksock::createTimer()
 void worksock::sconnect()
 {
     vargusLog.writeToFile("connect");
-    wsocket -> connectToHost(host, port);
+    wsocket->connectToHost(host, port);
     vargusLog.writeToFile("status connect to server " + QString::number(wsocket->state()));
 }
 
 void worksock::sdisconnect()
 {
     if(wsocket)
-        wsocket -> disconnect();
+        wsocket->disconnect();
 }
 
 void worksock::connectProcessing()

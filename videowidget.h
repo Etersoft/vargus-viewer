@@ -13,9 +13,8 @@
 #include <enums.h>
 #include <QVBoxLayout>
 #include <QLabel>
+
 class QFrame;
-
-
 
 class VideoWidget: public VideoWidgetLowLevelPainting, public PrintRunningString
 {
@@ -41,14 +40,13 @@ class VideoWidget: public VideoWidgetLowLevelPainting, public PrintRunningString
 
     enum statusesClick{CLICK, DOUBLE_CLICK, NO_CLICK};
     statusesClick StatusClick;
+
 public:
     VideoWidget();
     ~VideoWidget();
     static void staticDestructor();
 
-
     static void setVPlayingType(VPlayingType pt);
-
 
     void setCamera(Camera *_camera);
 
@@ -61,6 +59,7 @@ public:
     bool playing() { return isPlaying; }
 
     static void setVlcArgs( const char *const *_vlcArgs, int _numberVlcArgs);
+
 private:
     static void clearVlc(libvlc_media_player_t *vlcPlayer,libvlc_media_t *vlcMedia);
     void printString();
@@ -88,6 +87,7 @@ private:
     void setOffNosignalMessage();
 
     int afterStart;
+
 protected:
     void mousePressEvent ( QMouseEvent * e );
     void mouseReleaseEvent (QMouseEvent * e);
@@ -98,6 +98,7 @@ protected:
     void dragEnterEvent(QDragEnterEvent *event);
     void dragLeaveEvent ( QDragLeaveEvent * event );
     void startDrag();
+
 public slots:
     void updateInterface();
     void ContextMenuAction(const QPoint& z);
@@ -109,6 +110,7 @@ public slots:
     float getFPS() { return libvlc_media_player_get_fps(vlcPlayer);
                 /*libvlc_media_player_get_time(vlcPlayer);*/}
     void setStillPlay();
+
 signals:
     void arhiveCall(QString cam);
     void disconnectedSignal(VideoWidget *);

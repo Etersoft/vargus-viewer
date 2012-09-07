@@ -42,12 +42,7 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
     layout->addWidget(frame);
     setLayout(layout);
 
-
-
-
-
     poller=new QTimer(this);
-
 
     if(!vlcInstance)
     {
@@ -55,13 +50,13 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
         {
             for(int i = 0; i < numVlcArgs; i++ )
             {
-                if(strcmp(VlcArgs[i],"--video-title-show") == 0)
+                if(strcmp(VlcArgs[i], "--video-title-show") == 0)
                 {
                     VlcArgs[i] = "--no-video-title-show";
                 }
             }
         }
-        vlcInstance=libvlc_new(numVlcArgs, VlcArgs);
+        vlcInstance = libvlc_new(numVlcArgs, VlcArgs);
     }
 
     vlcMedia = NULL;
@@ -114,7 +109,7 @@ void VideoWidget::setCamera(Camera* _camera)
 
 void VideoWidget::startPlay(sizeVideo size)
 {
-    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Enable,1);
+    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Enable, 1);
     vargusLog.writeToFile("startPlay");
 
     if(camera == NULL)
@@ -188,7 +183,6 @@ void VideoWidget::stopPlay()
         if(pltp == LOWLEVEL)
             deactivateLowLevelPainting();
     }
-
 }
 
 void VideoWidget::startvlcPlayer()
@@ -213,7 +207,7 @@ void VideoWidget::updateInterface()
     if(afterStart<2)
     {
         printString();
-        afterStart ++;
+        afterStart++;
     }
 
     libvlc_media_t *curMedia = libvlc_media_player_get_media (vlcPlayer);
@@ -293,8 +287,8 @@ void VideoWidget::startDrag()
     // The data to be transferred by the drag and drop operation is contained in a QMimeData object
 
     QMimeData *data = new QMimeData;
-    data->setUserData(0,(QObjectUserData*)camera);
-    data->setUserData(1,(QObjectUserData*)this);
+    data->setUserData(0, (QObjectUserData*)camera);
+    data->setUserData(1, (QObjectUserData*)this);
 
     // Assign ownership of the QMimeData object to the QDrag object.
     drag->setMimeData(data);
@@ -397,8 +391,8 @@ void VideoWidget::ContextMenuAction(const QPoint& z)
 
 
     connect(arhiveCallAction, SIGNAL(triggered()), this,SLOT(arhiveMenuPress()));
-    connect(changeStateMessageWidgetAction, SIGNAL(triggered()), this,SLOT(changeStateMessageWidgetPress()));
-    connect(changeStateMessageCameraAction, SIGNAL(triggered()), this,SLOT(changeStateMessageCameraPress()));
+    connect(changeStateMessageWidgetAction, SIGNAL(triggered()), this, SLOT(changeStateMessageWidgetPress()));
+    connect(changeStateMessageCameraAction, SIGNAL(triggered()), this, SLOT(changeStateMessageCameraPress()));
     contextMenu->exec(mapToGlobal(z));
 }
 
@@ -410,14 +404,14 @@ void VideoWidget::arhiveMenuPress()
 void VideoWidget::changeStateMessageWidgetPress()
 {
     isRunningStringActive = !isRunningStringActive;
-    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Enable,(int)isRunningStringActive);
+    libvlc_video_set_marquee_int(vlcPlayer, libvlc_marquee_Enable, (int)isRunningStringActive);
     writeTextString();
 }
 
 void VideoWidget::changeStateMessageCameraPress()
 {
     camera->isRunningStringActive = !camera->isRunningStringActive;
-    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Enable,(int)camera->isRunningStringActive);
+    libvlc_video_set_marquee_int(vlcPlayer, libvlc_marquee_Enable, (int)camera->isRunningStringActive);
     writeTextString();
 }
 
@@ -431,28 +425,28 @@ void VideoWidget::writeTextString()
     vargusLog.writeToFile("write text string ");
     if (isRunningStringActive && camera->isRunningStringActive)
     {
-        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Color,camera->runningTextSetting->color);
-        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Opacity,camera->runningTextSetting->opacity);
-        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Position,camera->runningTextSetting->position);
-        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Refresh,camera->runningTextSetting->refresh);
-        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Size,camera->runningTextSetting->size);
-        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Timeout,camera->runningTextSetting->timeout);
-        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_X,camera->runningTextSetting->x);
-        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Y,camera->runningTextSetting->y);
+        libvlc_video_set_marquee_int(vlcPlayer, libvlc_marquee_Color, camera->runningTextSetting->color);
+        libvlc_video_set_marquee_int(vlcPlayer, libvlc_marquee_Opacity, camera->runningTextSetting->opacity);
+        libvlc_video_set_marquee_int(vlcPlayer, libvlc_marquee_Position, camera->runningTextSetting->position);
+        libvlc_video_set_marquee_int(vlcPlayer, libvlc_marquee_Refresh, camera->runningTextSetting->refresh);
+        libvlc_video_set_marquee_int(vlcPlayer, libvlc_marquee_Size, camera->runningTextSetting->size);
+        libvlc_video_set_marquee_int(vlcPlayer, libvlc_marquee_Timeout, camera->runningTextSetting->timeout);
+        libvlc_video_set_marquee_int(vlcPlayer, libvlc_marquee_X, camera->runningTextSetting->x);
+        libvlc_video_set_marquee_int(vlcPlayer, libvlc_marquee_Y, camera->runningTextSetting->y);
 
-        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Enable,1);
+        libvlc_video_set_marquee_int(vlcPlayer, libvlc_marquee_Enable, 1);
         //libvlc_video_set_marquee_string(vlcPlayer,libvlc_marquee_Text,runningText->AddStringGetLine(&string).toAscii());
-        libvlc_video_set_marquee_string(vlcPlayer,libvlc_marquee_Text, camera->runningText->getLimitLine().toAscii());
+        libvlc_video_set_marquee_string(vlcPlayer, libvlc_marquee_Text, camera->runningText->getLimitLine().toAscii());
     }
     else
     {
-        libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Enable,0);
+        libvlc_video_set_marquee_int(vlcPlayer, libvlc_marquee_Enable, 0);
     }
 }
 
 void VideoWidget::disableTextString()
 {
-    libvlc_video_set_marquee_int(vlcPlayer,libvlc_marquee_Enable,0);
+    libvlc_video_set_marquee_int(vlcPlayer, libvlc_marquee_Enable, 0);
 }
 
 libvlc_media_player_t * VideoWidget::getvlcPlayer()

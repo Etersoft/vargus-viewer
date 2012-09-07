@@ -5,7 +5,6 @@ extern Logger &vargusLog;
 
 const int VideoWidgetLowLevelPainting::repaintTime = 50;
 
-
 static void display(void *core, void *picture)
 {
     Q_UNUSED(picture);
@@ -55,7 +54,6 @@ VideoWidgetLowLevelPainting::VideoWidgetLowLevelPainting() :
     aspectComply(false),
     type(NOTHING), isActiveLowLevelPainting(false), printedTitle("")
 {
-
     repaintTimer = new QTimer(this);
     connect(repaintTimer, SIGNAL(timeout()), this, SLOT(animate()));
 }
@@ -74,7 +72,6 @@ void VideoWidgetLowLevelPainting::restartPaintVideo()
 
     if(libvlc_video_get_height(getvlcPlayer()) > 0)
     {
-
         videosourceheight = libvlc_video_get_height(getvlcPlayer());
     }
     if(libvlc_video_get_width(getvlcPlayer()) > 0)
@@ -198,20 +195,20 @@ void VideoWidgetLowLevelPainting::checkChangeVideoSize()
 void VideoWidgetLowLevelPainting::printVideoFrame()
 {
     painter.begin(this);
-    painter.drawImage(QPoint(0, xdisplacement),*frame);
+    painter.drawImage(QPoint(0, xdisplacement), *frame);
     painter.setFont(QFont("Arial", 10));
     painter.setPen(Qt::white);
-    painter.drawText(rect(),Qt::AlignBottom,printedTitle);
+    painter.drawText(rect(), Qt::AlignBottom, printedTitle);
     painter.end();
 }
 
 void VideoWidgetLowLevelPainting::printNoSignal()
 {
     painter.begin(this);
-    painter.fillRect(0,0,this->width(), this->height(),Qt::black);
+    painter.fillRect(0, 0, this->width(), this->height(), Qt::black);
     painter.setFont(QFont("Arial", 10));
     painter.setPen(Qt::white);
-    painter.drawText(rect(),Qt::AlignCenter,tr("NO SIGNAL"));
+    painter.drawText(rect(), Qt::AlignCenter, tr("NO SIGNAL"));
     painter.end();
 }
 

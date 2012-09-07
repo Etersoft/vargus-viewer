@@ -1,12 +1,13 @@
 #include "set.h"
-#include"logger.h"
+#include "logger.h"
 #include <QStringList>
-#include<QGridLayout>
-#include<QListIterator>
+#include <QGridLayout>
+#include <QListIterator>
 #include <QDesktopServices>
+#include "mainwindow.h"
 
-#include"mainwindow.h"
 extern Logger &vargusLog;
+
 Set::Set(MainWindow *_mainwindow)
 {
     tp = 0;
@@ -33,38 +34,19 @@ Set::Set(const QString &desc, MainWindow *_mainwindow, QString _serverAddress)
 Set::~Set()
 {
     vargusLog.writeToFile(QString("Destructor of set %1 started").arg(description()));
-   /* QList<VideoWidget *>::iterator it = videoList.begin();
-    QList<VideoWidget *>::iterator end = videoList.end();
-    while(it != end)
-    {
-        (*it)->hide();
-        it++;
-    }*/
-    //stopPlay();
-    QList<Camera *>::iterator itc = cameraList.begin();
-    QList<Camera *>::iterator endc = cameraList.end();
-    while(itc != endc)
-    {
-        delete(*itc);
-        itc++;
-    }
-    QList<View *>::iterator itv = viewList.begin();
-    QList<View *>::iterator endv = viewList.end();
-    while(itv != endv)
-    {
-        delete (*itv);
-        itv++;
-    }
+    Camera *c;
+    foreach(c, cameraList)
+        delete c;
+    View *v;
+    foreach(v, viewList)
+        delete v;
     for(int i = 0; i < stc.size(); i++)
     {
         delete stc[i];
     }
-    if(lastCamNum != NULL)
-        delete[] lastCamNum;
-    if(wasChanged != NULL)
-        delete[] wasChanged;
-    if(offset != NULL)
-        delete[] offset;
+    delete[] lastCamNum;
+    delete[] wasChanged;
+    delete[] offset;
     vargusLog.writeToFile(QString("Destructor of set %1 ended").arg(description()));
 }
 
@@ -76,13 +58,9 @@ void Set::addCamera(Camera* cam)
 QStringList Set::camerasNames()
 {
     QStringList list;
-    QList<Camera *>::iterator it = cameraList.begin();
-    QList<Camera *>::iterator end = cameraList.end();
-    while(it != end)
-    {
-        list << (*it) -> name();
-        it++;
-    }
+    Camera *c;
+    foreach(c, cameraList)
+        list << c->name();
     return list;
 }
 
@@ -95,13 +73,11 @@ void Set::addView(View *view)
 
 void Set::setActiveView(int index)
 {
-    QList<View *>::iterator it = viewList.begin();
-    QList<View *>::iterator end = viewList.end();
     int n = 0;
-    while(it != end)
+    View *v;
+    foreach(v, viewList)
     {
-        (*it) -> setActive( n == index);
-        it++;
+        v->setActive(n == index);
         n++;
     }
     tp = index;
@@ -110,18 +86,16 @@ void Set::setActiveView(int index)
 void Set::updateActiveView()
 {
     int type = 0;
-    QList<View *>::iterator it = viewList.begin();
-    QList<View *>::iterator end = viewList.end();
     int n = 0;
-    while( it != end )
+    View *v;
+    foreach(v, viewList)
     {
-        if((*it) -> updateActivity())
+        if(v->updateActivity())
             type = n;
-        it++;
         n++;
     }
-     setLayouts(type);
-     enableButtons();
+    setLayouts(type);
+    enableButtons();
 }
 
 void Set::setLayouts(int type)
@@ -131,16 +105,15 @@ void Set::setLayouts(int type)
     stopPlay();
     tp = type;
 
-
     QGridLayout *grid = new QGridLayout(this);
-    grid -> setMargin(0);
+    grid->setMargin(0);
 
     QList<int> doubleCells = viewList.at(tp)->doubleCells();
     QList<int> tripleCells = viewList.at(tp)->tripleCells();
     QList<int> quadrupleCells = viewList.at(tp)->quadrupleCells();
     int viewWidth = viewList.at(tp)->width();
     int viewHeight = viewList.at(tp)->height();
-    bool **net = new bool*[viewHeight];//не забыть удалить
+    bool **net = new bool*[viewHeight];
     for(int i = 0; i < viewHeight; i++)
     {
         bool *tmp = new bool[viewWidth];
@@ -162,7 +135,7 @@ void Set::setLayouts(int type)
             int cellNum = (j+1) + viewWidth*i;
             if(doubleCells.contains(cellNum))
             {
-                grid -> addWidget(v,i,j,2,2);
+                grid->addWidget(v,i,j,2,2);
                 net[i][j] = false;
                 net[i][j+1] = false;
                 net[i+1][j] = false;
@@ -171,7 +144,7 @@ void Set::setLayouts(int type)
             }
             else if(tripleCells.contains(cellNum))
             {
-                grid -> addWidget(v,i,j,3,3);
+                grid->addWidget(v,i,j,3,3);
                 net[i][j] = false;
                 net[i][j+1] = false;
                 net[i][j+2] = false;
@@ -185,7 +158,7 @@ void Set::setLayouts(int type)
             }
             else if(quadrupleCells.contains(cellNum))
             {
-                grid -> addWidget(v,i,j,4,4);
+                grid->addWidget(v,i,j,4,4);
                 for(int k = i; k <= i+4; k++)
                     for(int m = j; m <= j+4; m++)
                         net[k][m] =false;
@@ -254,15 +227,11 @@ void Set::stopPlay(VideoWidget *excluding)
 QList<Camera*> Set::getActiveCameras()
 {
     QList<Camera *> res;
-    QList<VideoWidget *>::iterator it = videoList.begin();
-    QList<VideoWidget *>::iterator end = videoList.end();
-    while(it != end)
+    VideoWidget *v;
+    foreach(v, videoList)
     {
-        if( (*it) -> playing() )
-        {
-            res << (*it) -> getCamera();
-        }
-        it++;
+        if(v->playing())
+            res << v->getCamera();
     }
     return res;
 }
@@ -270,8 +239,8 @@ QList<Camera*> Set::getActiveCameras()
 void Set::next()
 {
     QList<Camera *> *currentList = stc.at(tp);
-    currentList -> clear();
-    int newFirstCam = offset[tp]*amountOfCells(tp)+lastCamNum[tp] + 1;
+    currentList->clear();
+    int newFirstCam = offset[tp] * amountOfCells(tp) + lastCamNum[tp] + 1;
     lastCamNum[tp] = cameraList.length() - (newFirstCam + 1);
     if(lastCamNum[tp] >= amountOfCells(tp))
     {
@@ -279,16 +248,16 @@ void Set::next()
     }
     else if(amountOfCells(tp) > lastCamNum[tp]+1)
     {
-        newFirstCam = newFirstCam - amountOfCells(tp) + lastCamNum[tp] +1 ;
-        lastCamNum[tp] = amountOfCells(tp)-1;
+        newFirstCam = newFirstCam - amountOfCells(tp) + lastCamNum[tp] + 1;
+        lastCamNum[tp] = amountOfCells(tp) - 1;
     }
     for(int i = newFirstCam; i < cameraList.length(); i++)
     {
-        currentList -> push_back(cameraList.at(i));
+        currentList->push_back(cameraList.at(i));
     }
     for(int i = 0; i < newFirstCam; i++)
     {
-        currentList -> push_back(cameraList.at(i));
+        currentList->push_back(cameraList.at(i));
     }
     if(lastCamNum[tp] >= amountOfCells(tp))
         lastCamNum[tp] = amountOfCells(tp) - 1;
@@ -304,14 +273,14 @@ void Set::prev()
     currentList -> clear();
     offset[tp]--;
     lastCamNum[tp] = amountOfCells(tp) - 1;
-    int newFirstCam = offset[tp]*amountOfCells(tp);
+    int newFirstCam = offset[tp] * amountOfCells(tp);
     for(int i = newFirstCam; i < cameraList.length(); i++)
     {
-        currentList -> push_back(cameraList.at(i));
+        currentList->push_back(cameraList.at(i));
     }
     for(int i = 0; i < newFirstCam; i++)
     {
-        currentList -> push_back(cameraList.at(i));
+        currentList->push_back(cameraList.at(i));
     }
     wasChanged[tp] = true;
     setLayouts(tp);
@@ -323,12 +292,12 @@ void Set::reset()
     if(!wasChanged[tp])
         return;
     QList<Camera *> *currentList = stc.at(tp);
-    currentList -> clear();
+    currentList->clear();
     QList<Camera *>::iterator itc = cameraList.begin();
     QList<Camera *>::iterator endc = cameraList.end();
     while(itc != endc)
     {
-       currentList -> push_back(*itc);
+       currentList->push_back(*itc);
        itc++;
     }
     offset[tp] = 0;
@@ -351,16 +320,16 @@ void Set::bigVideo(VideoWidget *v)
         return;
     }
     QList<Camera *> res;
-    res << v -> getCamera();
-    v -> stopPlay();
+    res << v->getCamera();
+    v->stopPlay();
     stopPlay(v);
     delete layout();
     QGridLayout *grid  = new QGridLayout(this);
     setLayout(grid);
-    grid -> setMargin(0);
-    grid -> addWidget(v,0,0);
-    v -> startPlay(VideoWidget::BIGVIDEO);
-    v -> show();
+    grid->setMargin(0);
+    grid->addWidget(v,0,0);
+    v->startPlay(VideoWidget::BIGVIDEO);
+    v->show();
     bigPlaying = v;
     emit updateActiveCameras(res);
 }
@@ -373,11 +342,11 @@ void Set::bigVideo(Camera *c)
     QGridLayout *grid  = new QGridLayout(this);
     setLayout(grid);
     VideoWidget *v = new VideoWidget();
-    v -> setCamera(c);
-    connect(v,SIGNAL(bigSizeCall(VideoWidget*)),this,SLOT(bigVideo(VideoWidget*)));
+    v->setCamera(c);
+    connect(v, SIGNAL(bigSizeCall(VideoWidget*)), this, SLOT(bigVideo(VideoWidget*)));
     connect(v, SIGNAL(disconnectedSignal(VideoWidget*)), this, SLOT(restoreVideoWidget(VideoWidget*)));
-    grid -> addWidget(v,0,0);
-    v -> startPlay(VideoWidget::BIGVIDEO);
+    grid->addWidget(v, 0, 0);
+    v->startPlay(VideoWidget::BIGVIDEO);
     videoList << v;
     bigPlaying = v;
     QList<Camera *> res;
@@ -396,8 +365,8 @@ void Set::countActiveAndPlay()
     QList<VideoWidget *>::iterator it = videoList.begin();
     for(int i =  0; i <= lastCamNum[tp]; i++, it++)
     {
-        (*it) -> setCamera(currentList -> at(i));
-        (*it) -> startPlay(VideoWidget::SMALLVIDEO);
+        (*it)->setCamera(currentList ->at(i));
+        (*it)->startPlay(VideoWidget::SMALLVIDEO);
     }
     it = videoList.begin();
     QList<VideoWidget *>::iterator end = videoList.end();
@@ -417,11 +386,11 @@ void Set::OpenArhive(QString cam)
     QUrl url;
     if(serverAddress.left(4).compare("http"))
     {
-        url.setUrl("http://" + serverAddress + "/vargus/archive.php?camera="+cam);
+        url.setUrl("http://" + serverAddress + "/vargus/archive.php?camera=" + cam);
     }
     else
     {
-        url.setUrl("" + serverAddress + "/vargus/archive.php?camera="+cam);
+        url.setUrl("" + serverAddress + "/vargus/archive.php?camera=" + cam);
     }
     if(url.isValid())
     {
@@ -439,58 +408,56 @@ void Set::changeCameras(VideoWidget *first, Camera *second, bool fromAnotherWidg
     if(!fromAnotherWidget)
     {
         int f = videoList.indexOf(first);
-        currentList -> removeAt(f);
-        currentList -> insert(f,second);
+        currentList->removeAt(f);
+        currentList->insert(f, second);
         vargusLog.writeToFile("Change camera in widget "
-                              + QString::number(f) + " to " + second -> description());
+                              + QString::number(f) + " to " + second->description());
         emit updateActiveCameras(getActiveCameras());
         wasChanged[tp] = true;
         return;
     }
-    QList<Camera *>::iterator it = currentList -> begin();
-    QList<Camera *>::iterator end = currentList -> end();
     int f = videoList.indexOf(first);
     int s = 0;
     int i = 0;
-    while(it != end)
+    Camera *c;
+    foreach(c, *currentList)
     {
-        if(*it == second)
+        if(c == second)
         {
             s = i;
             break;
         }
-        it++;
         i++;
     }
+
     vargusLog.writeToFile("Swap widgets " + QString::number(f) + " " + QString::number(s));
-    if(f >= currentList -> length())
+    if(f >= currentList->length())
     {
-        int k = f - currentList -> length() + 1;
+        int k = f - currentList->length() + 1;
         for(int i = 0; i < k; i++)
-            currentList -> push_back(NULL);
+            currentList->push_back(NULL);
         lastCamNum[tp] += k;
     }
-    else if(it == end)
+    else if(s == currentList->length())
     {
-        currentList -> push_back(NULL);
+        currentList->push_back(NULL);
         lastCamNum[tp]++;
-        s = currentList -> length() - 1;
+        s = currentList->length() - 1;
     }
-    currentList -> swap(f, s);
+    currentList->swap(f, s);
     wasChanged[tp] = true;
     emit updateActiveCameras(getActiveCameras());
 }
 
 int Set::amountOfCells(int tp)
 {
-
     QList<int> doubleCells = viewList.at(tp)->doubleCells();
     QList<int> tripleCells = viewList.at(tp)->tripleCells();
     QList<int> quadrupleCells = viewList.at(tp)->quadrupleCells();
     int viewWidth = viewList.at(tp)->width();
     int viewHeight = viewList.at(tp)->height();
     int k = viewWidth * viewHeight;
-    k = k - doubleCells.length()*3;
+    k = k - doubleCells.length() * 3;
     k = k - tripleCells.length() * 8;
     k = k - quadrupleCells.length() * 15;
     return k;
@@ -498,21 +465,19 @@ int Set::amountOfCells(int tp)
 
 int Set::amountOfPlayingWidgets()
 {
-    QList<VideoWidget *>::iterator it = videoList.begin();
-    QList<VideoWidget *>::iterator end = videoList.end();
     int k = 0;
-    while( it != end )
+    VideoWidget *vw;
+    foreach(vw, videoList)
     {
-        if( (*it) -> playing() )
+        if(vw->playing())
             k++;
-        it++;
     }
     return k;
 }
 
 void Set::enableButtons()
 {
-    int newFirstNextCam = offset[tp]*amountOfCells(tp)+lastCamNum[tp] + 1;
+    int newFirstNextCam = offset[tp] * amountOfCells(tp) + lastCamNum[tp] + 1;
     bool nextButton = true;
     if(newFirstNextCam >= cameraList.length())
         nextButton = false;
@@ -522,24 +487,21 @@ void Set::enableButtons()
     emit buttonsEnabled(prevButton, nextButton);
 }
 
-bool Set::setPlayingType(VPlayingType t)
+void Set::setPlayingType(VPlayingType t)
 {
-    QList<VideoWidget *>::iterator it = videoList.begin();
-    QList<VideoWidget *>::iterator end = videoList.end();
-    while(it != end)
-    {
-        if(((*it) -> playing()))
-        {
-            (*it) -> stopPlay();
-            if(bigPlaying)
-                (*it) -> startPlay(VideoWidget::BIGVIDEO);
-            else
-                (*it) -> startPlay(VideoWidget::SMALLVIDEO);
-        }
-        it++;
-    }
     VideoWidget::setVPlayingType(t);
-    return true;
+    VideoWidget *vw;
+    foreach(vw, videoList)
+    {
+        if(vw->playing())
+        {
+            vw->stopPlay();
+            if(bigPlaying)
+                vw->startPlay(VideoWidget::BIGVIDEO);
+            else
+                vw->startPlay(VideoWidget::SMALLVIDEO);
+        }
+    }
 }
 
 void Set::restoreVideoWidget(VideoWidget *v)
@@ -552,6 +514,5 @@ void Set::restoreVideoWidget(VideoWidget *v)
         v->startPlay(VideoWidget::BIGVIDEO);
     else
         v->startPlay(VideoWidget::SMALLVIDEO);
-
 }
 

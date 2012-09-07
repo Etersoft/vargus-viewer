@@ -23,6 +23,7 @@ class RunningString: public worksock
 private:
     QMap<QString, QList<PrintRunningString*> > printmethodlist;
     QMap<QString, QList<AppendRunningString*> > appendmethodlist;
+
 protected:
     virtual void receiveDataProcessing(QString inputData);
 
@@ -34,10 +35,6 @@ public:
     void dropAppendMethod(QString cam);
     void print2Cam(QString cam, QString rString);
     void changeConnection(const QString &_server, int _port);
-
-
-
-
 };
 
 #endif // RUNNINGSTRING_H

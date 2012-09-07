@@ -21,7 +21,7 @@ Camera::Camera()
 {
     isRunningStringActive = true;
     setStaticParam();
-    runningText = new LimitLine(runningTextSetting->limitLine) ;
+    runningText = new LimitLine(runningTextSetting->limitLine);
 }
 
 Camera::~Camera()
@@ -42,7 +42,7 @@ Camera* Camera::copy()
     Camera *res = new Camera();
     res->setName(cam_name);
     res->cam_description = cam_description;
-    res->cam_source=cam_source;
+    res->cam_source = cam_source;
     res->cam_preview = cam_preview;
     res->cam_agent = cam_agent;
     return res;
@@ -58,7 +58,7 @@ void Camera::setName(const QString &new_value)
 void Camera::changeTextServerSettings(const QString &_adress, int _port)
 {
     if(runningString)
-        runningString -> changeConnection(_adress, _port);
+        runningString->changeConnection(_adress, _port);
     else
         runningString = new RunningString(_adress, _port);
 }

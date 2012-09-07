@@ -12,7 +12,6 @@ CameraList::CameraList(QWidget *parent) :
     setSelectionMode(QAbstractItemView::SingleSelection);
     setDropIndicatorShown(true);
     setDragEnabled(true);
-
 }
 
 void CameraList::print()
@@ -56,25 +55,25 @@ void CameraList::startDrag()
     if( r < 0 || r >= currentCameras.length())
         return;
     Camera * c = currentCameras.at(r);
-    data -> setUserData(0, (QObjectUserData*) c);
+    data->setUserData(0, (QObjectUserData*) c);
     //Assign ownership of the QMimeData object to the QDrag object.
-    drag -> setMimeData(data);
+    drag->setMimeData(data);
     // Start the drag and drop operation
-    drag -> start();
+    drag->start();
 }
 
 void CameraList::mousePressEvent(QMouseEvent *event)
 {
-    if(event -> button() == Qt::LeftButton)
-        startPos = event -> pos();
+    if(event->button() == Qt::LeftButton)
+        startPos = event->pos();
     QListWidget::mousePressEvent(event);
 }
 
 void CameraList::mouseMoveEvent(QMouseEvent *event)
 {
-    if(event -> buttons() & Qt::LeftButton)
+    if(event->buttons() & Qt::LeftButton)
     {
-        int distance = (event -> pos() - startPos).manhattanLength();
+        int distance = (event->pos() - startPos).manhattanLength();
         if(distance >= QApplication::startDragDistance())
             startDrag();
     }
@@ -83,15 +82,13 @@ void CameraList::mouseMoveEvent(QMouseEvent *event)
 
 void CameraList::updateCameraData(Camera *c)
 {
-    QList<Camera *>::iterator it = currentCameras.begin();
-    QList<Camera *>::iterator end = currentCameras.end();
-    while(it != end)
+    Camera *cam;
+    foreach(cam, currentCameras)
     {
-        if((*it)->name() == c->name())
+        if(cam->name() == c->name())
         {
-            (*it)->setSource(c->source());
-            (*it)->setPreview(c->preview());
+            cam->setSource(c->source());
+            cam->setPreview(c->preview());
         }
-        it++;
     }
 }
