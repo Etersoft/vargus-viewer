@@ -104,7 +104,7 @@ QStringList MainWindow::readAnswer(int amountOfLines)
             continue;
         }
         answer = trUtf8(socket->readLine().data());
-        if( answer.at(0) != '>' && answer.at(0) != ':' )
+        if(!answer.isEmpty() && answer.at(0) != '>' && answer.at(0) != ':' )
         {
             ans.push_back(answer);
             amountOfLines--;
@@ -112,7 +112,9 @@ QStringList MainWindow::readAnswer(int amountOfLines)
     }
     if (tries == 5)
     {
-        QMessageBox::critical(this, tr("Error"), tr("Server is not response."));
+        QMessageBox b(QMessageBox::Critical,tr("Error"),tr("Server is not response."));
+        b.exec();
+        exit(2);
     }
     return ans;
 }
@@ -377,8 +379,6 @@ void MainWindow::makeSets()
 
 void MainWindow::initCameras()
 {
-    try{
-
     vargusLog.writeToFile("Cameras initialization started");
     socket->write("query camera;quantity\n");
     int cameras = readAnswer().at(0).trimmed().toInt();
@@ -407,11 +407,6 @@ void MainWindow::initCameras()
         camerasList << c;
     }
     vargusLog.writeToFile("Cameras initialization ended");
-    } catch(int a)
-    {
-        printf("a = %d", a);
-        QCoreApplication::exit(1);
-    }
 }
 
 void MainWindow::initSets()
