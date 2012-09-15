@@ -16,33 +16,22 @@ CameraList::CameraList(QWidget *parent) :
 
 void CameraList::print()
 {
-    QList<Camera *>::iterator it = currentCameras.begin();
-    QList<Camera *>::iterator end = currentCameras.end();
     clear();
     int camNum = 1;
-    while(it != end)
+    foreach(Camera *c, currentCameras)
+        addItem(QString::number(camNum++) + ". " + c->description());
+    foreach(Camera *c, activeCameras)
     {
-        addItem(QString::number(camNum++) + ". " + (*it)->description());
-        it++;
-    }
-    QList<Camera *>::iterator itac = activeCameras.begin();
-    QList<Camera *>::iterator endac = activeCameras.end();
-    while(itac != endac)
-    {
-        int cameraNum = 0;
-        it = currentCameras.begin();
-        while(it != end)
+        camNum = 0;
+        foreach(Camera *cam, currentCameras)
         {
-            if((*itac) == (*it))
+            if(c == cam)
             {
-                QColor color(0,255,255);
-                item(cameraNum)->setBackgroundColor(color);
+                item(camNum)->setBackgroundColor(QColor(0, 255, 255));
                 break;
             }
-            it++;
-            cameraNum++;
+            camNum++;
         }
-        itac++;
     }
 }
 
@@ -82,8 +71,8 @@ void CameraList::mouseMoveEvent(QMouseEvent *event)
 
 void CameraList::updateCameraData(Camera *c)
 {
-    Camera *cam;
-    foreach(cam, currentCameras)
+
+    foreach(Camera *cam, currentCameras)
     {
         if(cam->name() == c->name())
         {

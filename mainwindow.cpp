@@ -10,6 +10,7 @@
 #include <logger.h>
 #include <videosettingsdialog.h>
 #include <videowidget.h>
+
 extern Logger &vargusLog;
 bool test = true;
 
@@ -69,7 +70,7 @@ bool MainWindow::initData()
     socket -> connectToHost(server, port);
     if(!socket->waitForConnected(5000))
     {
-        QMessageBox::critical(NULL, tr("Error"), tr("Can not connect to server.\nPlease, change the connection settings."));
+        QMessageBox::critical(this, tr("Error"), tr("Can not connect to server.\nPlease, change the connection settings."));
         delete socket;
         return false;
     }
@@ -110,19 +111,19 @@ QStringList MainWindow::readAnswer(int amountOfLines)
         }
     }
     if (tries == 5)
+    {
         QMessageBox::critical(this, tr("Error"), tr("Server is not response."));
+    }
     return ans;
 }
 
 MainWindow::~MainWindow()
 {
     disconnect(setTab, SIGNAL(currentChanged(int)), this, SLOT(onSetChanged(int)));
-    View *v;
-    foreach(v, viewsList)
+    foreach(View *v, viewsList)
         delete v;
     vargusLog.writeToFile("Destroy of views success");
-    Set *s;
-    foreach(s, setsList)
+    foreach(Set *s, setsList)
         s->stopPlay();
     vargusLog.writeToFile("Stop play of each set success");
 
@@ -138,11 +139,10 @@ MainWindow::~MainWindow()
     VideoWidget::staticDestructor();
     vargusLog.writeToFile("staticDestructor of VideoWidget success");
 
-    Camera *c;
-    foreach(c, camerasList)
+    foreach(Camera *c, camerasList)
         delete c;
     vargusLog.writeToFile("Destroy of cameras success");
-    foreach(s, setsList)
+    foreach(Set *s, setsList)
         delete s;
     vargusLog.writeToFile("Destroy of sets success");
 
@@ -169,8 +169,7 @@ MainWindow::~MainWindow()
 void MainWindow::onSetChanged(int num)
 {
     vargusLog.writeToFile("New active set " + setsList.at(num)->description());
-    Set *s;
-    foreach(s, setsList)
+    foreach(Set *s, setsList)
     {
         if(s->isActive())
         {
@@ -267,8 +266,7 @@ bool MainWindow::okToContinue()
 
 void MainWindow::changeActiveCameras(QList<Camera *> activeCameras)
 {
-    Set *s;
-    foreach(s, setsList)
+    foreach(Set *s, setsList)
     {
         if(s->isActive())
             camList->setCurrentCameras(s->cameras());
@@ -306,8 +304,7 @@ void MainWindow::makeButtons()
 void MainWindow::nextGroup()
 {
     vargusLog.writeToFile("Clicked next button");
-    Set *s;
-    foreach(s, setsList)
+    foreach(Set *s, setsList)
     {
         if(s->isActive())
         {
@@ -321,8 +318,7 @@ void MainWindow::nextGroup()
 void MainWindow::prevGroup()
 {
     vargusLog.writeToFile("Clicked previous button");
-    Set *s;
-    foreach(s, setsList)
+    foreach(Set *s, setsList)
     {
         if(s->isActive())
         {
@@ -335,8 +331,7 @@ void MainWindow::prevGroup()
 void MainWindow::resetGroup()
 {
     vargusLog.writeToFile("Clicked reset button");
-    Set *s;
-    foreach(s, setsList)
+    foreach(Set *s, setsList)
     {
         if(s->isActive())
         {
@@ -348,7 +343,7 @@ void MainWindow::resetGroup()
 
 void MainWindow::makeBigVideo(QListWidgetItem * item)
 {
-    Set *activeSet;
+    Set *activeSet = NULL;
     foreach(activeSet, setsList)//find active set
     {
         if(activeSet->isActive())
@@ -368,11 +363,9 @@ void MainWindow::makeBigVideo(QListWidgetItem * item)
 
 void MainWindow::makeSets()
 {
-    Set *set;
-    foreach(set, setsList)
+    foreach(Set *set, setsList)
     {
-        View *v;
-        foreach(v, viewsList)
+        foreach(View *v, viewsList)
             set->addView(v);
         set->init(pltp, videoContainer);
         set->setActiveView(0);
@@ -384,6 +377,8 @@ void MainWindow::makeSets()
 
 void MainWindow::initCameras()
 {
+    try{
+
     vargusLog.writeToFile("Cameras initialization started");
     socket->write("query camera;quantity\n");
     int cameras = readAnswer().at(0).trimmed().toInt();
@@ -408,9 +403,15 @@ void MainWindow::initCameras()
         c->setPreview(cam.at(3));
         vargusLog.writeToFile("Agent " + cam.at(4).trimmed());
         c->setAgent(cam.at(4).trimmed());
+        c->setNumber(i+1);
         camerasList << c;
     }
     vargusLog.writeToFile("Cameras initialization ended");
+    } catch(int a)
+    {
+        printf("a = %d", a);
+        QCoreApplication::exit(1);
+    }
 }
 
 void MainWindow::initSets()
@@ -435,8 +436,7 @@ void MainWindow::initSets()
         QStringList camlist = setinfo.at(1).trimmed().split(',');
         for(int j = 0; j < camlist.count(); j++)
         {
-            Camera *c;
-            foreach(c, camerasList)
+            foreach(Camera *c, camerasList)
             {
                 if(camlist.at(j) == c->name())
                 {
@@ -653,18 +653,15 @@ void MainWindow::saveSettings()
 void MainWindow::startConnection()
 {
     disconnect(setTab, SIGNAL(currentChanged(int)), this, SLOT(onSetChanged(int)));
-    Camera *c;
-    foreach(c, camerasList)
+    foreach(Camera *c, camerasList)
         delete c;
     camList -> clear();
     camerasList.clear();
-    View *v;
-    foreach(v, viewsList)
+    foreach(View *v, viewsList)
         delete v;
     viewsList.clear();
     setTab->clear();
-    Set *s;
-    foreach(s, setsList)
+    foreach(Set *s, setsList)
         delete s;
     setsList.clear();
     // Обработка входных данных
@@ -744,8 +741,7 @@ void MainWindow::changePlayingType(VPlayingType t)
 {
     if(t == pltp)
         return;
-    Set *s;
-    foreach(s, setsList)
+    foreach(Set *s, setsList)
         s->setPlayingType(t);
     pltp = t;
     saveSettings();
@@ -777,16 +773,7 @@ void MainWindow::updateCamera(Camera *c)
         delete socket;
         return;
     }
-    int num = 1;
-    Camera *cam;
-    foreach(cam, camerasList)
-    {
-        if(c->name() == cam->name())
-            break;
-        num++;
-    }
-
-    socket->write(QString("query camera;%1;view:source,view:preview\n").arg(num).toAscii());
+    socket->write(QString("query camera;%1;view:source,view:preview\n").arg(c->number()).toAscii());
     QStringList inf = readAnswer(1);
     QStringList adresses = inf.at(0).split(';');
     vargusLog.writeToFile(QString("New source %1").arg(adresses.at(0)));

@@ -9,9 +9,6 @@
 
 Logger &vargusLog = Logger::instance();
 
-
-
-
 void signal_handler(int sig)
 {
     switch(sig)
@@ -38,7 +35,6 @@ void signal_handler(int sig)
 
 int main(int argc, char *argv[])
 {
-    //logging = true;
     vargusLog.makeLogFile();
     vargusLog.writeToFile("Start vargusLog");
     signal(SIGKILL, signal_handler);

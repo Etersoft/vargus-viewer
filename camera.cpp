@@ -17,13 +17,6 @@ void Camera::setStaticParam()
     }
 }
 
-Camera::Camera()
-{
-    isRunningStringActive = true;
-    setStaticParam();
-    runningText = new LimitLine(runningTextSetting->limitLine);
-}
-
 Camera::~Camera()
 {
     runningString->dropAppendMethod(cam_name);
@@ -35,16 +28,17 @@ Camera::Camera(const QString &cam)
     setStaticParam();
     setName(cam);
     runningText = new LimitLine(runningTextSetting->limitLine) ;
+    cameraNum = 0;
 }
 
 Camera* Camera::copy()
 {
-    Camera *res = new Camera();
-    res->setName(cam_name);
+    Camera *res = new Camera(cam_name);
     res->cam_description = cam_description;
     res->cam_source = cam_source;
     res->cam_preview = cam_preview;
     res->cam_agent = cam_agent;
+    res->cameraNum = cameraNum;
     return res;
 }
 

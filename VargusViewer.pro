@@ -6,6 +6,8 @@
 
 QT       += core gui network
 
+QMAKE_CXXFLAGS += -O2 -Wall -Wextra -Winit-self
+
 TARGET = VargusViewer
 TEMPLATE = app
 

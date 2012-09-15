@@ -29,9 +29,8 @@ class View : public QPushButton
     bool waitActive;
 
 public:
-    View();
-    View(QString new_value);
-    View(View* view);
+    explicit View(QString new_value);
+    explicit View(View* view);
     ~View();
 
     void setDescription(const QString &new_value){view_description = new_value;}

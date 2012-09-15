@@ -36,8 +36,7 @@ class Set : public QWidget
     MainWindow *mainwindow;
 
 public:
-    explicit Set(MainWindow *_mainwindow);
-    Set(const QString &desc, MainWindow *_mainwindow, QString serverAddress);
+    explicit Set(const QString &desc, MainWindow *_mainwindow, QString serverAddress);
     ~Set();
 
     QString description(){return set_description;}

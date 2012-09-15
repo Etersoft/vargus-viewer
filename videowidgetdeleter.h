@@ -22,7 +22,6 @@ class VideoWidgetDeleter : public QThread
 
     QMutex mutex;
     volatile bool stop;
-    volatile bool finished;
     Container *videoContainer;
 
 public:

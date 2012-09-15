@@ -47,8 +47,7 @@ void VideoWidgetDeleter::run()
         else
         {
             mutex.unlock();
-            VideoWidget *vw;
-            foreach(vw, deleterBuffer)
+            foreach(VideoWidget *vw, deleterBuffer)
                 delete vw;
             deleterBuffer.clear();
         }
@@ -56,8 +55,7 @@ void VideoWidgetDeleter::run()
     deleterBuffer.append(videoContainer->getVideoWidgets());
     if(deleterBuffer.isEmpty() == false)
     {
-        VideoWidget *vw;
-        foreach(vw, deleterBuffer)
+        foreach(VideoWidget *vw, deleterBuffer)
             delete vw;
     }
 }

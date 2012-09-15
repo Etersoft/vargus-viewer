@@ -8,16 +8,6 @@
 
 extern Logger &vargusLog;
 
-Set::Set(MainWindow *_mainwindow)
-{
-    tp = 0;
-    active = false;
-    bigPlaying = NULL;
-    lastCamNum = NULL;
-    mainwindow = _mainwindow;
-
-}
-
 Set::Set(const QString &desc, MainWindow *_mainwindow, QString _serverAddress)
 {
     tp = 0;
@@ -29,16 +19,15 @@ Set::Set(const QString &desc, MainWindow *_mainwindow, QString _serverAddress)
     wasChanged = NULL;
     mainwindow = _mainwindow;
     serverAddress = _serverAddress;
+    videoContainer = NULL;
 }
 
 Set::~Set()
 {
     vargusLog.writeToFile(QString("Destructor of set %1 started").arg(description()));
-    Camera *c;
-    foreach(c, cameraList)
+    foreach(Camera *c, cameraList)
         delete c;
-    View *v;
-    foreach(v, viewList)
+    foreach(View *v, viewList)
         delete v;
     for(int i = 0; i < stc.size(); i++)
     {
@@ -58,8 +47,7 @@ void Set::addCamera(Camera* cam)
 QStringList Set::camerasNames()
 {
     QStringList list;
-    Camera *c;
-    foreach(c, cameraList)
+    foreach(Camera *c, cameraList)
         list << c->name();
     return list;
 }
@@ -74,8 +62,7 @@ void Set::addView(View *view)
 void Set::setActiveView(int index)
 {
     int n = 0;
-    View *v;
-    foreach(v, viewList)
+    foreach(View *v, viewList)
     {
         v->setActive(n == index);
         n++;
@@ -87,8 +74,7 @@ void Set::updateActiveView()
 {
     int type = 0;
     int n = 0;
-    View *v;
-    foreach(v, viewList)
+    foreach(View *v, viewList)
     {
         if(v->updateActivity())
             type = n;
@@ -213,7 +199,7 @@ void Set::stopPlay(VideoWidget *excluding)
             (*it)->hide();
             widgetsToDelete.push_back(*it);
         }
-        it++;
+        ++it;
     }
     if(widgetsToDelete.isEmpty() == false)
         videoContainer->addVideoWidgets(widgetsToDelete);
@@ -227,8 +213,7 @@ void Set::stopPlay(VideoWidget *excluding)
 QList<Camera*> Set::getActiveCameras()
 {
     QList<Camera *> res;
-    VideoWidget *v;
-    foreach(v, videoList)
+    foreach(VideoWidget *v, videoList)
     {
         if(v->playing())
             res << v->getCamera();
@@ -298,7 +283,7 @@ void Set::reset()
     while(itc != endc)
     {
        currentList->push_back(*itc);
-       itc++;
+       ++itc;
     }
     offset[tp] = 0;
     int lastCam = amountOfCells(tp) - 1;
@@ -377,7 +362,7 @@ void Set::countActiveAndPlay()
                 this, SLOT(changeCameras(VideoWidget*, Camera*, bool)));
         connect(*it, SIGNAL(disconnectedSignal(VideoWidget*)), this, SLOT(restoreVideoWidget(VideoWidget*)));
         connect(*it, SIGNAL(arhiveCall(QString)), this, SLOT(OpenArhive(QString)));
-        it++;
+        ++it;
     }
 }
 
@@ -419,8 +404,7 @@ void Set::changeCameras(VideoWidget *first, Camera *second, bool fromAnotherWidg
     int f = videoList.indexOf(first);
     int s = 0;
     int i = 0;
-    Camera *c;
-    foreach(c, *currentList)
+    foreach(Camera *c, *currentList)
     {
         if(c == second)
         {
@@ -466,8 +450,7 @@ int Set::amountOfCells(int tp)
 int Set::amountOfPlayingWidgets()
 {
     int k = 0;
-    VideoWidget *vw;
-    foreach(vw, videoList)
+    foreach(VideoWidget *vw, videoList)
     {
         if(vw->playing())
             k++;
@@ -490,8 +473,7 @@ void Set::enableButtons()
 void Set::setPlayingType(VPlayingType t)
 {
     VideoWidget::setVPlayingType(t);
-    VideoWidget *vw;
-    foreach(vw, videoList)
+    foreach(VideoWidget *vw, videoList)
     {
         if(vw->playing())
         {

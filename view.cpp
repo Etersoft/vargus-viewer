@@ -4,15 +4,14 @@
 
 extern Logger &vargusLog;
 
-View::View()
-{
-    View("");
-}
-
 View::View(QString new_value)
 {
     view_description = new_value;
     view_active_icon = view_icon = NULL;
+    view_width = 0;
+    view_height = 0;
+    active = false;
+    waitActive = false;
 }
 View::~View()
 {

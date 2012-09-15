@@ -274,7 +274,7 @@ void VideoWidget::mousePressEvent ( QMouseEvent * e )
     waitingDoubleClickTimer->start(QApplication::doubleClickInterval());
 }
 
-void VideoWidget::mouseReleaseEvent (QMouseEvent * e)
+void VideoWidget::mouseReleaseEvent (QMouseEvent *)
 {
     StatusClick =  NO_CLICK;
 }
@@ -296,7 +296,7 @@ void VideoWidget::startDrag()
     drag->start();
 }
 
-void VideoWidget::mouseDoubleClickEvent ( QMouseEvent * event )
+void VideoWidget::mouseDoubleClickEvent ( QMouseEvent * )
 {
     StatusClick = DOUBLE_CLICK;
     emit bigSizeCall(this);
@@ -349,7 +349,7 @@ void VideoWidget::dragEnterEvent(QDragEnterEvent *event)
     event->acceptProposedAction();
 }
 
-void VideoWidget::dragLeaveEvent ( QDragLeaveEvent * event )
+void VideoWidget::dragLeaveEvent ( QDragLeaveEvent * )
 {
     //empty event
 }
@@ -459,7 +459,7 @@ void VideoWidget::setVPlayingType(VPlayingType pt)
     pltp = pt;
 }
 
-void eventCallback(const libvlc_event_t *p_event, void *p_user_data)
+void eventCallback(const libvlc_event_t *, void *p_user_data)
 {
     VideoWidget* vw = (VideoWidget*)p_user_data;
     vw->setStillPlay();
