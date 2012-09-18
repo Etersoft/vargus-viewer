@@ -65,7 +65,7 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
     vlcPlayer = libvlc_media_player_new (vlcInstance);
     vlcSetEvent();
 
-    connect(poller, SIGNAL(timeout()), this, SLOT(updateInterface()));
+
     setAcceptDrops(true);
     poller->start(5000);
 
@@ -170,12 +170,14 @@ void VideoWidget::startPlay(sizeVideo size)
     int isp = libvlc_media_player_is_playing (vlcPlayer);
     vargusLog.writeToFile("startPlay isp " + QString::number(isp));
     afterStart = 0;
+    connect(poller, SIGNAL(timeout()), this, SLOT(updateInterface()));
 }
 
 void VideoWidget::stopPlay()
 {
     if(isPlaying)
     {
+        disconnect(poller, SIGNAL(timeout()), 0, 0);
         isPlaying = false;
         isRunningStringActive = false;
         camera->runningString->dropPrintMethod(camera->name());
@@ -190,10 +192,12 @@ void VideoWidget::startvlcPlayer()
     isPlaying = true;
     isRunningStringActive = true;
     libvlc_media_player_play(vlcPlayer);
+    connect(poller, SIGNAL(timeout()), this, SLOT(updateInterface()));
 }
 
 void VideoWidget::stoptvlcPlayer()
 {
+    disconnect(poller, SIGNAL(timeout()), 0, 0);
     isPlaying = false;
     isRunningStringActive = false;
     libvlc_media_player_stop(vlcPlayer);
