@@ -4,8 +4,9 @@
 #include <QString>
 #include <QLibraryInfo>
 #include "mainwindow.h"
-#include<signal.h>
-#include<logger.h>
+#include <signal.h>
+#include <logger.h>
+#include <execinfo.h>
 
 Logger &vargusLog = Logger::instance();
 
@@ -28,10 +29,14 @@ void signal_handler(int sig)
         default:
             vargusLog.writeToFile("Signal id" + QString::number(sig));
     }
+    fprintf(stderr,"Error");
+    fflush(stderr);
+    const int max_deep = 100;
+    void  *traces[max_deep];
+    int ntprs = backtrace(traces, max_deep);
+    backtrace_symbols_fd(traces, ntprs, STDERR_FILENO);
     exit(sig);
 }
-
-
 
 int main(int argc, char *argv[])
 {
