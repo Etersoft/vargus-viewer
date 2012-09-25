@@ -44,7 +44,10 @@ bool Logger::writeToFile(const QString &text)
 {
     locker.lock();
     if(!enabled)
+    {
+        locker.unlock();
         return true;
+    }
     if(!file)
     {
         locker.unlock();

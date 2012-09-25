@@ -9,9 +9,9 @@
 #include <QFileDialog>
 #include <logger.h>
 #include <videowidget.h>
+#include "logsettings.h"
 
 extern Logger &vargusLog;
-bool test = true;
 
 MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
 {
@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
         port = portNum;
         loggingEnabled = logging;
         vargusLog.setActive(logging);
+        saveSettings();
         settingsRead = true;
     }
 
@@ -132,11 +133,8 @@ MainWindow::~MainWindow()
         delete s;
     vargusLog.writeToFile("Destroy of sets success");
 
-    delete delLogFilesAction;
     delete exitAction;
     delete aboutAction;
-    delete defaultPathForLogs;
-    delete enableLog;
     delete fileMenu;
     delete helpMenu;
     delete settingsMenu;
@@ -181,11 +179,6 @@ void MainWindow::onSetChanged(int num)
 
 void MainWindow::createActions()
 {
-    delLogFilesAction = new QAction(tr("&Delete log files"), this);
-    fileMenu->addAction(delLogFilesAction);
-    connect(delLogFilesAction, SIGNAL(triggered()), this, SLOT(deleteLogFiles()));
-
-    fileMenu->addSeparator();
     exitAction = new QAction(tr("&Exit"), this);
     fileMenu->addAction(exitAction);
     connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
@@ -193,12 +186,6 @@ void MainWindow::createActions()
     aboutAction = new QAction(tr("&About"), this);
     helpMenu->addAction(aboutAction);
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));
-
-    enableLog = new QAction(tr("&Logging enabled"),this);
-    enableLog->setCheckable(true);
-    enableLog->setChecked(loggingEnabled);
-    settingsMenu->addAction(enableLog);
-    connect(enableLog, SIGNAL(toggled(bool)), this, SLOT(enableLogging(bool)));
 
     connectionSettings = new QAction(tr("&Connection settings"), this);
     settingsMenu->addAction(connectionSettings);
@@ -211,13 +198,9 @@ void MainWindow::createActions()
     contextMenu->addAction(connectionSettings);
     contextMenu->addAction(exitAction);
 
-    loggingPathAction = new QAction(tr("&Folder for log files"),this);
-    settingsMenu->addAction(loggingPathAction);
-    connect(loggingPathAction, SIGNAL(triggered()), this, SLOT(changeLoggingFolder()));
-
-    defaultPathForLogs = new QAction(tr("&Default folder for logs"),this);
-    settingsMenu->addAction(defaultPathForLogs);
-    connect(defaultPathForLogs, SIGNAL(triggered()), this, SLOT(defaultLoggingFolder()));
+    logAction = new QAction(tr("&Log settings"), this);
+    settingsMenu->addAction(logAction);
+    connect(logAction, SIGNAL(triggered()), this, SLOT(logSettings()));
 }
 
 void MainWindow::about()
@@ -456,17 +439,6 @@ void MainWindow::initViews()
     vargusLog.writeToFile("Views initialization ended");
 }
 
-void MainWindow::deleteLogFiles()
-{
-    vargusLog.writeToFile("Action delete other log files clicked");
-    if( vargusLog.deleteLogFiles() )
-    {
-        QMessageBox::information(this, tr("Complete"), tr("Log files are deleted."));
-    }
-    else
-        QMessageBox::information(this ,tr("Unable to process"), tr("Log files are not deleted."));
-}
-
 void MainWindow::createMenus()
 {
 
@@ -507,22 +479,6 @@ void MainWindow::createLayouts()
     w->setLayout(centralLayout);
     setCentralWidget(w);
     setMinimumSize(800,600);
-}
-
-void MainWindow::enableLogging(bool enable)
-{
-    if(enable)
-    {
-        vargusLog.setActive(enable);
-        settings->setValue("logging", 1);
-        vargusLog.writeToFile("Logging is enabled");
-    }
-    else {
-        settings->setValue("logging", 0);
-        vargusLog.writeToFile("Logging is disbled");
-        vargusLog.setActive(enable);
-    }
-    loggingEnabled = enable;
 }
 
 bool MainWindow::readSettings()
@@ -672,27 +628,6 @@ void MainWindow::showHide(QSystemTrayIcon::ActivationReason r) {
     }
 }
 
-void MainWindow::changeLoggingFolder()
-{
-    vargusLog.writeToFile("Change log file directory");
-    QString newPath = QFileDialog::getExistingDirectory(this, tr("Chose directory for saving log files."));
-    vargusLog.writeToFile("Change log file directory to " + newPath);
-    if(vargusLog.changeDirectory(newPath))
-    {
-        settings->setValue("Directory for logs", newPath);
-        pathForLogs = newPath;
-    }
-}
-
-void MainWindow::defaultLoggingFolder()
-{
-    QString newPath = WORKDIR;
-    newPath += "logs/";
-    vargusLog.changeDirectory(newPath);
-    settings->setValue("Directory for logs", newPath);
-}
-
-
 void MainWindow::vlcsettingsDialog()
 {
     VLCSetingsDialog dialog(vlcSettings, this);
@@ -730,4 +665,10 @@ void MainWindow::updateCamera(Camera *c)
     socket->write("exit\n");
     socket->disconnect();
     delete socket;
+}
+
+void MainWindow::logSettings()
+{
+    LogSettings ls;
+    ls.exec();
 }

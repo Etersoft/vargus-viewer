@@ -30,12 +30,9 @@ class MainWindow : public QMainWindow
 
     QAction *exitAction;
     QAction *aboutAction;
-    QAction *delLogFilesAction;
-    QAction *enableLog;
     QAction *connectionSettings;
-    QAction *loggingPathAction;
-    QAction *defaultPathForLogs;
     QAction *vlcsettingsAction;
+    QAction *logAction;
 
     QMenu *fileMenu;
     QMenu *helpMenu;
@@ -98,16 +95,13 @@ private slots:
     void prevGroup();
     void resetGroup();
     void makeBigVideo(QListWidgetItem*);
-    void deleteLogFiles();
-    void enableLogging(bool enable);
     void changeConnectionSettings();
     void newSettings(QString newServer, int newPort, QString new_t_server, int new_t_port);
     void enableButtons(bool prev, bool next);
     void showHide(QSystemTrayIcon::ActivationReason);
-    void changeLoggingFolder();
-    void defaultLoggingFolder();
     void vlcsettingsDialog();
     void newSettingsForVLC(QString &_vlcsettings);
+    void logSettings();
 
 protected:
     void closeEvent(QCloseEvent *);
