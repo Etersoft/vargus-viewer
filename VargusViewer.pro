@@ -36,7 +36,6 @@ HEADERS  += mainwindow.h \
     settingsdialog.h \
     runningstring.h \
     worksock.h \
-    enums.h \
     videowidgetlowlevelpainting.h \
     limitline.h \
     vlcsettingsdialog.h
