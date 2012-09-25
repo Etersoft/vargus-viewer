@@ -1,5 +1,5 @@
 Name: vargus-viewer
-Version: 0.9.1
+Version: 0.9.2
 Release: alt1
 
 Summary: Qt4 client for vargus server
@@ -41,6 +41,9 @@ cp lang/lang_ru.qm %buildroot%_datadir/%name/lang/
 %_datadir/%name/
 
 %changelog
+* Tue Sep 25 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.2-alt1
+- new build
+
 * Tue Sep 25 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.1-alt1
 - crashes fixed
 - only lowlewel painting
