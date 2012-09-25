@@ -180,7 +180,6 @@ void Set::init()
         lastCamNum[i] = (amountOfCells(i) < cameraList.length()) ? (amountOfCells(i) - 1) : (cameraList.length() - 1);
         offset[i] = 0;
     }
-    VideoWidget::setVPlayingType(LOWLEVEL);
 }
 
 void Set::stopPlay(VideoWidget *excluding)
@@ -459,22 +458,6 @@ void Set::enableButtons()
     if(offset[tp] == 0)
         prevButton = false;
     emit buttonsEnabled(prevButton, nextButton);
-}
-
-void Set::setPlayingType(VPlayingType t)
-{
-    VideoWidget::setVPlayingType(t);
-    foreach(VideoWidget *vw, videoList)
-    {
-        if(vw->playing())
-        {
-            vw->stopPlay();
-            if(bigPlaying)
-                vw->startPlay(VideoWidget::BIGVIDEO);
-            else
-                vw->startPlay(VideoWidget::SMALLVIDEO);
-        }
-    }
 }
 
 void Set::restoreVideoWidget(VideoWidget *v)

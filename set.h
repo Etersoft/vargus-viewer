@@ -55,8 +55,6 @@ public:
     void prev();
     void reset();
 
-    void setPlayingType(VPlayingType t);
-
 public slots:
     void restoreState() { setLayouts(tp); enableButtons(); }
     void showBig(int num);
