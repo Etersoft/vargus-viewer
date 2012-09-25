@@ -15,7 +15,6 @@
 extern Logger &vargusLog;
 
 libvlc_instance_t *VideoWidget::vlcInstance = 0;
-VPlayingType VideoWidget::pltp = LOWLEVEL;
 const char **VideoWidget::VlcArgs = 0;
 int VideoWidget::numVlcArgs = 0;
 
@@ -46,14 +45,11 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
 
     if(!vlcInstance)
     {
-        if(pltp == LOWLEVEL)
+        for(int i = 0; i < numVlcArgs; i++ )
         {
-            for(int i = 0; i < numVlcArgs; i++ )
+            if(strcmp(VlcArgs[i], "--video-title-show") == 0)
             {
-                if(strcmp(VlcArgs[i], "--video-title-show") == 0)
-                {
-                    VlcArgs[i] = "--no-video-title-show";
-                }
+                VlcArgs[i] = "--no-video-title-show";
             }
         }
         vlcInstance = libvlc_new(numVlcArgs, VlcArgs);
@@ -65,10 +61,8 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
     vlcPlayer = libvlc_media_player_new (vlcInstance);
     vlcSetEvent();
 
-
     setAcceptDrops(true);
     poller->start(5000);
-
     waitingDoubleClickTimer = new QTimer();
 
     setupContextMenu();
@@ -127,41 +121,18 @@ void VideoWidget::startPlay(sizeVideo size)
     }
     vargusLog.writeToFile("disconnectAction");
 
-    if(pltp == XWINDOW)
-    {
-       libvlc_media_set_meta (vlcMedia,  libvlc_meta_Title, (camera->name() + ":" + camera->description()).toUtf8() );
-    }
+    printedTitle = camera->name() + ":" + camera->description();
 
-    if(pltp == LOWLEVEL)
-    {
-        libvlc_media_set_meta (vlcMedia,  libvlc_meta_Title, "1" );
-        printedTitle = camera->name() + ":" + camera->description();
-    }
     libvlc_media_player_set_media (vlcPlayer, vlcMedia);
 
     //Set this class for write camera events
 
 
     //#FIXME For linux only
-    int ret = 0;
-    if(pltp == XWINDOW)
-    {
-        vargusLog.writeToFile("stas XWINDOW");
-        int windid = frame->winId();
-        vargusLog.writeToFile("stas windid " + QString::number(windid));
-        if(windid)
-        {
-            libvlc_media_player_set_xwindow (vlcPlayer, windid );
-            ret = libvlc_media_player_play (vlcPlayer);
-        }
-    }
+    vargusLog.writeToFile("stas LOWLEVEL");
+    activateLowLevelPainting();
+    int ret = libvlc_media_player_play (vlcPlayer);
 
-    if(pltp == LOWLEVEL)
-    {
-        vargusLog.writeToFile("stas LOWLEVEL");
-        activateLowLevelPainting();
-        ret = libvlc_media_player_play (vlcPlayer);
-    }
     camera->runningString->addPrintMethod(camera->name(),this);
     vargusLog.writeToFile("Start play ret " + QString::number(ret));
     isPlaying=true;
@@ -182,8 +153,7 @@ void VideoWidget::stopPlay()
         isRunningStringActive = false;
         camera->runningString->dropPrintMethod(camera->name());
         libvlc_media_player_stop(vlcPlayer);
-        if(pltp == LOWLEVEL)
-            deactivateLowLevelPainting();
+        deactivateLowLevelPainting();
     }
 }
 
@@ -255,8 +225,8 @@ void VideoWidget::setOffNosignalMessage()
 {
     if(isStatusNoSignal)
     {
-        delete statusLabel;
         paintNothing();
+        delete statusLabel;
     }
     isStatusNoSignal = false;
 }
@@ -454,11 +424,6 @@ void VideoWidget::disableTextString()
 libvlc_media_player_t * VideoWidget::getvlcPlayer()
 {
     return vlcPlayer;
-}
-
-void VideoWidget::setVPlayingType(VPlayingType pt)
-{
-    pltp = pt;
 }
 
 void eventCallback(const libvlc_event_t *, void *p_user_data)

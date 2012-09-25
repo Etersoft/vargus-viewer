@@ -46,8 +46,6 @@ public:
     ~VideoWidget();
     static void staticDestructor();
 
-    static void setVPlayingType(VPlayingType pt);
-
     void setCamera(Camera *_camera);
 
     enum sizeVideo {BIGVIDEO, SMALLVIDEO};
@@ -63,7 +61,6 @@ public:
 private:
     static void clearVlc(libvlc_media_player_t *vlcPlayer,libvlc_media_t *vlcMedia);
     void printString();
-    static VPlayingType pltp;
 
     virtual void drawImage();
     virtual libvlc_media_player_t * getvlcPlayer();
