@@ -1,5 +1,5 @@
 Name: vargus-viewer
-Version: 0.9.0
+Version: 0.9.1
 Release: alt1
 
 Summary: Qt4 client for vargus server
@@ -41,6 +41,11 @@ cp lang/lang_ru.qm %buildroot%_datadir/%name/lang/
 %_datadir/%name/
 
 %changelog
+* Tue Sep 25 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.1-alt1
+- crashes fixed
+- only lowlewel painting
+- update translations, add backtrace function
+
 * Thu Aug 16 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.0-alt1
 - implement arhive call in browser
 - changes for text on video
