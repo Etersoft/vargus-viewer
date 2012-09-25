@@ -8,7 +8,6 @@
 #include <QtCore>
 #include <QFileDialog>
 #include <logger.h>
-#include <videosettingsdialog.h>
 #include <videowidget.h>
 
 extern Logger &vargusLog;
@@ -16,8 +15,6 @@ bool test = true;
 
 MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
 {
-    videoContainer = new Container();
-    vdeleter = new VideoWidgetDeleter(videoContainer);
     createIcons();
     settings = new QSettings("Etersoft","VargusViewer");
     bool settingsRead;
@@ -57,9 +54,6 @@ MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
     }
     else
         changeConnectionSettings();
-    vargusLog.writeToFile("Start deleterThread");
-    vdeleter->start();
-    vargusLog.writeToFile("DeleterThreadStarted");
 }
 
 bool MainWindow::initData()
@@ -128,16 +122,6 @@ MainWindow::~MainWindow()
     foreach(Set *s, setsList)
         s->stopPlay();
     vargusLog.writeToFile("Stop play of each set success");
-
-    vargusLog.writeToFile("Send stop to deleter thread");
-    vdeleter->sendstop();
-    while(vdeleter->isRunning() != false)
-    {
-        vargusLog.writeToFile("Deleter thread not finished yet, wait");
-        vdeleter->wait(10000);
-    }
-    vargusLog.writeToFile("Try to delete deleter");
-    delete vdeleter;
     VideoWidget::staticDestructor();
     vargusLog.writeToFile("staticDestructor of VideoWidget success");
 
@@ -151,7 +135,6 @@ MainWindow::~MainWindow()
     delete delLogFilesAction;
     delete exitAction;
     delete aboutAction;
-    delete videoSettingsAction;
     delete defaultPathForLogs;
     delete enableLog;
     delete fileMenu;
@@ -164,7 +147,6 @@ MainWindow::~MainWindow()
     delete resetButton;
     delete nextButton;
     delete trIcon;
-    delete videoContainer;
     vargusLog.writeToFile("PROGRAM ENDED");
 }
 
@@ -236,10 +218,6 @@ void MainWindow::createActions()
     defaultPathForLogs = new QAction(tr("&Default folder for logs"),this);
     settingsMenu->addAction(defaultPathForLogs);
     connect(defaultPathForLogs, SIGNAL(triggered()), this, SLOT(defaultLoggingFolder()));
-
-    videoSettingsAction = new QAction(tr("&Video settings"),this);
-    settingsMenu->addAction(videoSettingsAction);
-    connect(videoSettingsAction, SIGNAL(triggered()), this, SLOT(changeVideoSettings()));
 }
 
 void MainWindow::about()
@@ -369,7 +347,7 @@ void MainWindow::makeSets()
     {
         foreach(View *v, viewsList)
             set->addView(v);
-        set->init(pltp, videoContainer);
+        set->init();
         set->setActiveView(0);
         setTab->addTab(set, set->description());
         connect(set, SIGNAL(updateActiveCameras(QList<Camera*>)), this, SLOT(changeActiveCameras(QList<Camera*>)));
@@ -564,11 +542,6 @@ bool MainWindow::readSettings()
         pathForLogs = WORKDIR;
         pathForLogs += "logs/";
     }
-    QString playingTp = settings->value("playingType", "").toString();
-    if(playingTp == "" || playingTp == "LOWLEVEL")
-        pltp = LOWLEVEL;
-    else
-        pltp = XWINDOW;
     vlcSettings = settings->value("vlcsettings", "").toString();
     if(vlcSettings == "")
     {
@@ -639,10 +612,6 @@ void MainWindow::saveSettings()
     else
         settings->setValue("logging", 0);
     settings->setValue("Directory for logs", pathForLogs);
-    if(pltp == XWINDOW)
-        settings->setValue("playingType", "XWINDOW");
-    else if(pltp == LOWLEVEL)
-        settings->setValue("playingType", "LOWLEVEL");
 }
 
 void MainWindow::startConnection()
@@ -723,24 +692,6 @@ void MainWindow::defaultLoggingFolder()
     settings->setValue("Directory for logs", newPath);
 }
 
-void MainWindow::changeVideoSettings()
-{
-    VideoSettingsDialog vd(pltp);
-    connect(&vd, SIGNAL(settingsChanged(VPlayingType)),
-            this, SLOT(changePlayingType(VPlayingType)));
-    vd.show();
-    vd.exec();
-}
-
-void MainWindow::changePlayingType(VPlayingType t)
-{
-    if(t == pltp)
-        return;
-    foreach(Set *s, setsList)
-        s->setPlayingType(t);
-    pltp = t;
-    saveSettings();
-}
 
 void MainWindow::vlcsettingsDialog()
 {

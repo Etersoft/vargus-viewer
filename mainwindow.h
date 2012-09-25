@@ -16,8 +16,6 @@
 #include <QSettings>
 #include "cameralist.h"
 #include <QSystemTrayIcon>
-#include <videosettingsdialog.h>
-#include <videowidgetdeleter.h>
 #include <vlcsettingsdialog.h>
 
 class MainWindow : public QMainWindow
@@ -37,7 +35,6 @@ class MainWindow : public QMainWindow
     QAction *connectionSettings;
     QAction *loggingPathAction;
     QAction *defaultPathForLogs;
-    QAction *videoSettingsAction;
     QAction *vlcsettingsAction;
 
     QMenu *fileMenu;
@@ -68,10 +65,7 @@ class MainWindow : public QMainWindow
     int t_port;
     QString pathForLogs;
     bool loggingEnabled;
-    VPlayingType pltp;
     QSystemTrayIcon *trIcon;
-    VideoWidgetDeleter *vdeleter;
-    Container *videoContainer;
 
 public:
     explicit MainWindow(QWidget *parent = 0, QString server = 0, int portNum = 0, bool logging = false);
@@ -112,8 +106,6 @@ private slots:
     void showHide(QSystemTrayIcon::ActivationReason);
     void changeLoggingFolder();
     void defaultLoggingFolder();
-    void changeVideoSettings();
-    void changePlayingType(VPlayingType t);
     void vlcsettingsDialog();
     void newSettingsForVLC(QString &_vlcsettings);
 

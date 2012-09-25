@@ -19,7 +19,6 @@ Set::Set(const QString &desc, MainWindow *_mainwindow, QString _serverAddress)
     wasChanged = NULL;
     mainwindow = _mainwindow;
     serverAddress = _serverAddress;
-    videoContainer = NULL;
 }
 
 Set::~Set()
@@ -168,10 +167,9 @@ void Set::setLayouts(int type)
 
 }
 
-void Set::init(VPlayingType t, Container *_videoContainer)
+void Set::init()
 {
     vargusLog.writeToFile("Init set started");
-    videoContainer = _videoContainer;
     lastCamNum = new int[viewList.length()];
     wasChanged = new bool[viewList.length()];
     offset = new int[viewList.length()];
@@ -182,27 +180,20 @@ void Set::init(VPlayingType t, Container *_videoContainer)
         lastCamNum[i] = (amountOfCells(i) < cameraList.length()) ? (amountOfCells(i) - 1) : (cameraList.length() - 1);
         offset[i] = 0;
     }
-    VideoWidget::setVPlayingType(t);
+    VideoWidget::setVPlayingType(LOWLEVEL);
 }
 
 void Set::stopPlay(VideoWidget *excluding)
 {
     vargusLog.writeToFile(QString("Stop play %1").arg(description()));
-    QList<VideoWidget *>::iterator it = videoList.begin();
-    QList<VideoWidget *>::iterator end = videoList.end();
-    QList<VideoWidget *> widgetsToDelete;
-    while(it != end)
+    foreach(VideoWidget *vw, videoList)
     {
-        if(*it != excluding)
+        if(vw != excluding)
         {
-            disconnect((*it), SIGNAL(disconnectedSignal(VideoWidget*)), this, SLOT(restoreVideoWidget(VideoWidget*)));
-            (*it)->hide();
-            widgetsToDelete.push_back(*it);
+            disconnect(vw, SIGNAL(disconnectedSignal(VideoWidget*)), this, SLOT(restoreVideoWidget(VideoWidget*)));
+            delete vw;
         }
-        ++it;
     }
-    if(widgetsToDelete.isEmpty() == false)
-        videoContainer->addVideoWidgets(widgetsToDelete);
     bigPlaying = NULL;
     videoList.clear();
     if(excluding)

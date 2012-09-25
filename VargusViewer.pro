@@ -22,10 +22,8 @@ SOURCES += main.cpp\
     settingsdialog.cpp \
     runningstring.cpp \
     worksock.cpp \
-    videosettingsdialog.cpp \
     videowidgetlowlevelpainting.cpp \
     limitline.cpp \
-    videowidgetdeleter.cpp \
     vlcsettingsdialog.cpp
 
 HEADERS  += mainwindow.h \
@@ -38,11 +36,9 @@ HEADERS  += mainwindow.h \
     settingsdialog.h \
     runningstring.h \
     worksock.h \
-    videosettingsdialog.h \
     enums.h \
     videowidgetlowlevelpainting.h \
     limitline.h \
-    videowidgetdeleter.h \
     vlcsettingsdialog.h
 
 TRANSLATIONS += lang/lang_ru.ts

@@ -7,7 +7,6 @@
 #include "videowidget.h"
 #include <QVector>
 #include <enums.h>
-#include <videowidgetdeleter.h>
 
 class MainWindow;
 
@@ -31,8 +30,6 @@ class Set : public QWidget
 
     VideoWidget *bigPlaying;
 
-    Container *videoContainer;
-
     MainWindow *mainwindow;
 
 public:
@@ -48,7 +45,7 @@ public:
     QList<VideoWidget *> video() {return videoList; }
 
     void setActiveView(int index);
-    void init(VPlayingType t, Container *_videoContainer);
+    void init();
     void stopPlay(VideoWidget *excluding = NULL);
     bool isActive() {return active;}
     void setActive(bool act) {active = act; enableButtons();}
