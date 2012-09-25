@@ -10,7 +10,6 @@
 #include "camera.h"
 #include "runningstring.h"
 #include "videowidgetlowlevelpainting.h"
-#include <enums.h>
 #include <QVBoxLayout>
 #include <QLabel>
 

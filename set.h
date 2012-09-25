@@ -6,7 +6,6 @@
 #include "view.h"
 #include "videowidget.h"
 #include <QVector>
-#include <enums.h>
 
 class MainWindow;
 

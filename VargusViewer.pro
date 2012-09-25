@@ -19,6 +19,7 @@ SOURCES += main.cpp\
     videowidget.cpp \
     cameralist.cpp \
     logger.cpp \
+    logsettings.cpp \
     settingsdialog.cpp \
     runningstring.cpp \
     worksock.cpp \
@@ -33,6 +34,7 @@ HEADERS  += mainwindow.h \
     camera.h \
     cameralist.h \
     logger.h \
+    logsettings.h \
     settingsdialog.h \
     runningstring.h \
     worksock.h \
