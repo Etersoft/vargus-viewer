@@ -259,6 +259,7 @@ void VideoWidget::startDrag()
     // The data to be transferred by the drag and drop operation is contained in a QMimeData object
 
     QMimeData *data = new QMimeData;
+    data->setText("varguscamera");
     data->setUserData(0, (QObjectUserData*)camera);
     data->setUserData(1, (QObjectUserData*)this);
 
@@ -288,6 +289,13 @@ void VideoWidget::dropEvent(QDropEvent *de)
 {
    VideoWidget* dragVideoWindet;
    bool fromAnotherWidget = false;
+
+   if(!de->mimeData()->hasText())
+       return;
+   QString checktext = de->mimeData()->text();
+   if(checktext.compare("varguscamera"))
+       return;
+
    dragVideoWindet = (VideoWidget*)de->mimeData()->userData(1);
    Camera *dragCamera;
    dragCamera = (Camera*)de->mimeData()->userData(0);
