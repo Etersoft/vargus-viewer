@@ -66,7 +66,7 @@ VideoWidgetLowLevelPainting::~VideoWidgetLowLevelPainting()
 
 void VideoWidgetLowLevelPainting::restartPaintVideo()
 {
-    if(type == NOTHING)
+    if(type == NOTHING || type == BLANK)
         return;
     vargusLog.writeToFile("Restart paint video height:"+  QString::number(this->height())  + " width:"+  QString::number(this->width()) );
 
