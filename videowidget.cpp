@@ -164,12 +164,10 @@ void VideoWidget::startvlcPlayer()
     isPlaying = true;
     isRunningStringActive = true;
     libvlc_media_player_play(vlcPlayer);
-    connect(poller, SIGNAL(timeout()), this, SLOT(updateInterface()));
 }
 
 void VideoWidget::stoptvlcPlayer()
 {
-    disconnect(poller, SIGNAL(timeout()), 0, 0);
     isPlaying = false;
     isRunningStringActive = false;
     libvlc_media_player_stop(vlcPlayer);
@@ -402,7 +400,7 @@ void VideoWidget::printString()
 void VideoWidget::writeTextString()
 {
     vargusLog.writeToFile("write text string ");
-    if (isRunningStringActive && camera->isRunningStringActive)
+    if (isRunningStringActive && camera->isRunningStringActive && libvlc_media_player_is_playing (vlcPlayer))
     {
         libvlc_video_set_marquee_int(vlcPlayer, libvlc_marquee_Color, camera->runningTextSetting->color);
         libvlc_video_set_marquee_int(vlcPlayer, libvlc_marquee_Opacity, camera->runningTextSetting->opacity);
