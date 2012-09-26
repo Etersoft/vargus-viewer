@@ -74,6 +74,7 @@ private:
     static const char **VlcArgs;
 
     void vlcSetEvent();
+    void vlcSetOffEvent();
 
     bool isStillPlay;
     QVBoxLayout* layout;

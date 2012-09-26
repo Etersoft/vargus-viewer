@@ -59,7 +59,7 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
     camera = NULL;
 
     vlcPlayer = libvlc_media_player_new (vlcInstance);
-    vlcSetEvent();
+
 
     setAcceptDrops(true);
     poller->start(5000);
@@ -132,7 +132,7 @@ void VideoWidget::startPlay(sizeVideo size)
     vargusLog.writeToFile("stas LOWLEVEL");
     activateLowLevelPainting();
     int ret = libvlc_media_player_play (vlcPlayer);
-
+    vlcSetEvent();
     camera->runningString->addPrintMethod(camera->name(),this);
     vargusLog.writeToFile("Start play ret " + QString::number(ret));
     isPlaying=true;
@@ -150,6 +150,7 @@ void VideoWidget::stopPlay()
     {
         paintblank();
         disconnect(poller, SIGNAL(timeout()), 0, 0);
+        vlcSetOffEvent();
         isPlaying = false;
         isRunningStringActive = false;
         camera->runningString->dropPrintMethod(camera->name());
@@ -447,6 +448,12 @@ void VideoWidget::vlcSetEvent()
 {
     libvlc_event_manager_t* vlcEventManager = libvlc_media_player_event_manager(vlcPlayer);
     libvlc_event_attach(vlcEventManager, libvlc_MediaPlayerPositionChanged, eventCallback, this);
+}
+
+void VideoWidget::vlcSetOffEvent()
+{
+    libvlc_event_manager_t* vlcEventManager = libvlc_media_player_event_manager(vlcPlayer);
+    libvlc_event_detach(vlcEventManager, libvlc_MediaPlayerPositionChanged, eventCallback, this);
 }
 
 
