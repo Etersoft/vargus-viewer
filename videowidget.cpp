@@ -148,6 +148,7 @@ void VideoWidget::stopPlay()
 {
     if(isPlaying)
     {
+        paintblank();
         disconnect(poller, SIGNAL(timeout()), 0, 0);
         isPlaying = false;
         isRunningStringActive = false;
@@ -213,9 +214,6 @@ void VideoWidget::setNosignalMessage()
     if(!isStatusNoSignal)
     {
         statusLabel = new QLabel();
-        statusLabel->setText("NO SIGNAL");
-        statusLabel->setFixedHeight(15);
-        layout->addWidget(statusLabel);
         paintNoSignal();
     }
     isStatusNoSignal = true;

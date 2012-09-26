@@ -29,6 +29,7 @@ public:
 
     void paintNoSignal();
     void paintNothing();
+    void paintblank();
 
 private:
     QMutex mutex;
@@ -54,7 +55,7 @@ private:
     float getAspectRatio();
     bool aspectComply;
 
-    enum PaintType{NOTHING, VIDEO, NOSIGNAL};
+    enum PaintType{NOTHING, VIDEO, NOSIGNAL, BLANK};
     PaintType type;
 
     bool isActiveLowLevelPainting;
@@ -62,6 +63,7 @@ private:
     void checkChangeVideoSize();
     void printVideoFrame();
     void printNoSignal();
+    void printblank();
 
     virtual libvlc_media_player_t *getvlcPlayer() = 0;
     virtual void startvlcPlayer() = 0;

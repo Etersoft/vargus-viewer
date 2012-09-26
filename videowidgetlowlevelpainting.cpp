@@ -169,6 +169,11 @@ void VideoWidgetLowLevelPainting::paintEvent(QPaintEvent*)
         checkChangeVideoSize();
         printVideoFrame();
     }
+
+    if (type == BLANK)
+    {
+        printblank();
+    }
 }
 
 void VideoWidgetLowLevelPainting::checkChangeVideoSize()
@@ -212,11 +217,22 @@ void VideoWidgetLowLevelPainting::printNoSignal()
     painter.end();
 }
 
+void VideoWidgetLowLevelPainting::printblank()
+{
+    painter.begin(this);
+    painter.end();
+}
 
 
 void VideoWidgetLowLevelPainting::paintNoSignal()
 {
     type = NOSIGNAL;
+    repaint();
+}
+
+void VideoWidgetLowLevelPainting::paintblank()
+{
+    type = BLANK;
     repaint();
 }
 
