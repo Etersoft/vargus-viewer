@@ -47,9 +47,9 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
     {
         for(int i = 0; i < numVlcArgs; i++ )
         {
-            if(strcmp(VlcArgs[i], "--video-title-show") == 0)
+            if(strncmp(VlcArgs[i], "--video-title-timeout",strlen("--video-title-timeout")) == 0)
             {
-                VlcArgs[i] = "--no-video-title-show";
+                VlcArgs[i] = "--video-title-timeout=1";
             }
         }
         vlcInstance = libvlc_new(numVlcArgs, VlcArgs);
