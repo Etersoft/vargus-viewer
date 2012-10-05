@@ -7,6 +7,7 @@
 #include <signal.h>
 #include <logger.h>
 #include <execinfo.h>
+#include <unistd.h>
 
 Logger &vargusLog = Logger::instance();
 
