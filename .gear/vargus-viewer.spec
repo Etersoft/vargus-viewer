@@ -1,5 +1,5 @@
 Name: vargus-viewer
-Version: 0.9.3
+Version: 0.9.4
 Release: alt1
 
 Summary: Qt4 client for vargus server
@@ -43,6 +43,14 @@ cp lang/lang_ru.qm %buildroot%_datadir/%name/lang/
 %_datadir/%name/
 
 %changelog
+* Fri Oct 05 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.4-alt1
+- fix requires
+- add frames to views screen
+- add command line options
+- fix drag&drop from cameraList to widget
+- cancelled bigSize call on widget which is not playing
+- bug fixes
+
 * Wed Sep 26 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.3-alt1
 - bug fixes
 
