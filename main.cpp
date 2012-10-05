@@ -38,6 +38,23 @@ void signal_handler(int sig)
     exit(sig);
 }
 
+void usage()
+{
+    printf("VargusViewer -server xxx.xxx.xxx.xxx -port xxxx -disablelogging -set x -view x\n");
+    printf("-server - server adress\n");
+    printf("-port - port number\n");
+    printf("-disablelogging - disable writing logs. By default logging is enabled.\n");
+    printf("-set - number of set to show after program started. \"Set\" must be >=0 and < amount os sets. If it is wrong, \"set\" will be 0.\n");
+    printf("-view - number of view to show after program started. \"View\" must be >=0 and < amount os views. If it is wrong, \"view\" will be 0.\n");
+}
+
+void argsError()
+{
+    printf("Args error\n");
+    usage();
+    exit(10);
+}
+
 int main(int argc, char *argv[])
 {
     vargusLog.makeLogFile();
@@ -65,22 +82,67 @@ int main(int argc, char *argv[])
     QString serv;
     int port = 0;
     bool logging = true;
-    if(argc >= 2)
-        serv = argv[1];
-    if(argc >= 3)
+    int set = -1;
+    int view = -1;
+    QStringList args;
+    for(int i = 1; i < argc; i++)
     {
-        QString p(argv[2]);
-        port = p.toInt();
+        args.append(QString(argv[i]));
     }
-    if(argc >= 4)
+    int size = argc-1;
+    for(int i = 0; i < args.size();)
     {
-        QString p(argv[3]);
-        int l = p.toInt();
-        if(l == 0)
-            logging = false;
+        if(args.at(i) == QString("-help"))
+        {
+            usage();
+            exit(0);
+        }
+        else if(args.at(i) == QString("-server"))
+        {
+            if((size - i) <= 1)
+            {
+                argsError();
+            }
+            serv = args.at(i+1);
+            i=i+2;
+        }
+        else if(args.at(i) == QString("-port"))
+        {
+            if((size - i) <= 1)
+            {
+                argsError();
+            }
+            port = args.at(i+1).toInt();
+            i=i+2;
+        }
+        else if(args.at(i) == QString("-disablelogging"))
+        {
+                logging = true;
+                i++;
+        }
+        else if(args.at(i) == QString("-set"))
+        {
+            if((size - i) <= 1)
+            {
+                argsError();
+            }
+            set = args.at(i+1).toInt();
+            i=i+2;
+        }
+        else if(args.at(i) == QString("-view"))
+        {
+            if((size - i) <= 1)
+            {
+                argsError();
+            }
+            view = args.at(i+1).toInt();
+            i=i+2;
+        }
+        else
+            argsError();
     }
 
-    MainWindow w(0,serv,port,logging);
+    MainWindow w(0,serv,port,logging,set,view);
     w.show();
 
     return app.exec();

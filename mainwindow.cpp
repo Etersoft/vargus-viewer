@@ -13,22 +13,26 @@
 
 extern Logger &vargusLog;
 
-MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging)
+MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging,int setNum, int viewNum)
 {
     createIcons();
     settings = new QSettings("Etersoft","VargusViewer");
     bool settingsRead;
-    if(serverAdr == "" || portNum == 0)
-        settingsRead = readSettings();
-    else
-    {
+    readSettings();
+    if(!serverAdr.isEmpty())
         server = serverAdr;
+    if(portNum != 0)
         port = portNum;
-        loggingEnabled = logging;
-        vargusLog.setActive(logging);
-        saveSettings();
-        settingsRead = true;
-    }
+    if(logging == false)
+        loggingEnabled = false;
+    if(setNum != -1)
+        set = setNum;
+    else set = 0;
+    if(viewNum != -1)
+        view = viewNum;
+    else view = 0;
+    saveSettings();
+    settingsRead = readSettings();
 
     Camera::setRunningTextAddress(t_server, t_port);
     vargusLog.changeDirectory(pathForLogs);
@@ -326,15 +330,20 @@ void MainWindow::makeBigVideo(QListWidgetItem * item)
 
 void MainWindow::makeSets()
 {
+    int i = 0;
     foreach(Set *set, setsList)
     {
         foreach(View *v, viewsList)
             set->addView(v);
         set->init();
-        set->setActiveView(0);
+        if((i == this->set) && (view < viewsList.size()))
+            set->setActiveView(view);
+        else
+            set->setActiveView(0);
         setTab->addTab(set, set->description());
         connect(set, SIGNAL(updateActiveCameras(QList<Camera*>)), this, SLOT(changeActiveCameras(QList<Camera*>)));
         connect(set, SIGNAL(buttonsEnabled(bool, bool)), this, SLOT(enableButtons(bool, bool)));
+        i++;
     }
 }
 
@@ -589,10 +598,12 @@ void MainWindow::startConnection()
         return;
     // Заполнение вкладок-сетов
     makeSets();
-    setTab->setCurrentIndex(0);
-    onSetChanged(0);
+    if(set >= setsList.size())
+        set = 0;
+    setTab->setCurrentIndex(set);
+    onSetChanged(set);
     connect(setTab, SIGNAL(currentChanged(int)), this, SLOT(onSetChanged(int)));
-    changeActiveCameras(setsList.at(0)->getActiveCameras());
+    changeActiveCameras(setsList.at(set)->getActiveCameras());
 }
 
 void MainWindow::enableButtons(bool prev, bool next)

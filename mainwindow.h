@@ -62,10 +62,13 @@ class MainWindow : public QMainWindow
     int t_port;
     QString pathForLogs;
     bool loggingEnabled;
+    int set;
+    int view;
     QSystemTrayIcon *trIcon;
 
 public:
-    explicit MainWindow(QWidget *parent = 0, QString server = 0, int portNum = 0, bool logging = false);
+    explicit MainWindow(QWidget *parent = 0, QString server = 0, int portNum = 0, bool logging = true,
+                        int setNum = -1, int viewNum = -1);
     ~MainWindow();
     void updateCamera(Camera *c);
 
