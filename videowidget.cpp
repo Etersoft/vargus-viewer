@@ -34,7 +34,7 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
     isStatusNoSignal = false;
     statusLabel = 0;
     frame = new QFrame(this);
-
+    frame->setFrameStyle(QFrame::Panel | QFrame::Sunken);
     //layout = new QVBoxLayout(this);
     layout = new QVBoxLayout();
     layout->setContentsMargins(0,0,0,0);
