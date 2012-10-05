@@ -17,6 +17,8 @@ Source: %name-%version.tar
 # optimized out: fontconfig libqt4-core libqt4-devel libqt4-gui libqt4-network libstdc++-devel
 BuildRequires: gcc-c++ libvlc-devel libqt4-devel
 
+Requires: vlc-mini vlc-plugin-ffmpeg
+
 %description
 Qt4 client for vargus server
 
