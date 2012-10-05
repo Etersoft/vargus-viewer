@@ -1,6 +1,6 @@
 Name: vargus-viewer
 Version: 0.9.4
-Release: alt1
+Release: alt2
 
 Summary: Qt4 client for vargus server
 
@@ -43,6 +43,9 @@ cp lang/lang_ru.qm %buildroot%_datadir/%name/lang/
 %_datadir/%name/
 
 %changelog
+* Fri Oct 05 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.4-alt2
+- fix compilation on new gcc
+
 * Fri Oct 05 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.4-alt1
 - fix requires
 - add frames to views screen
