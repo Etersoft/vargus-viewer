@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
     }
 
     MainWindow w(0,serv,port,logging,set,view);
-    w.show();
+    w.showMaximized();
 
     return app.exec();
 }
