@@ -1,6 +1,6 @@
 Name: vargus-viewer
-Version: 0.9.4
-Release: alt2
+Version: 0.9.5
+Release: alt1
 
 Summary: Qt4 client for vargus server
 
@@ -43,6 +43,9 @@ cp lang/lang_ru.qm %buildroot%_datadir/%name/lang/
 %_datadir/%name/
 
 %changelog
+* Mon Oct 08 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.5-alt1
+- maximize main window at default
+
 * Fri Oct 05 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.4-alt2
 - fix compilation on new gcc
 
