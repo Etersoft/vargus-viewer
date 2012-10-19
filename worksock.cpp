@@ -67,7 +67,7 @@ void worksock::receiveData()
     while(str.length() < neededlen)
     {
         wsocket->waitForReadyRead();
-        str = str + wsocket->readAll().data();
+        str = str.append(wsocket->readAll().data());
     }
     QTextCodec *codec = QTextCodec::codecForName("UTF-8");
     QString string = codec->toUnicode(str);
