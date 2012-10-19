@@ -50,7 +50,6 @@ public:
     enum sizeVideo {BIGVIDEO, SMALLVIDEO};
     void startPlay(sizeVideo size);
     void stopPlay();
-    void writeTextString();
     void disableTextString();
     Camera * getCamera() { return camera; }
     bool playing() { return isPlaying; }
@@ -95,6 +94,9 @@ protected:
     void dragEnterEvent(QDragEnterEvent *event);
     void dragLeaveEvent ( QDragLeaveEvent * event );
     void startDrag();
+
+    virtual bool isneedPrintTextEvents();
+    virtual QString getTextEvent();
 
 public slots:
     void updateInterface();

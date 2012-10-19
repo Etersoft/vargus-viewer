@@ -35,6 +35,7 @@ public:
     void dropAppendMethod(QString cam);
     void print2Cam(QString cam, QString rString);
     void changeConnection(const QString &_server, int _port);
+    static int getNumberLine(QString line, int numberMaxSymbol);
 };
 
 #endif // RUNNINGSTRING_H

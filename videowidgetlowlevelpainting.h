@@ -73,6 +73,8 @@ protected:
     QString printedTitle;
     void restartPaintVideo();
     void updateGeometry();
+    virtual bool isneedPrintTextEvents() = 0;
+    virtual QString getTextEvent() = 0;
 
 public slots:
     void animate();

@@ -61,6 +61,21 @@ void RunningString::receiveDataProcessing(QString inputData)
     //print2Cam("cam1",inputData);
 }
 
+int RunningString::getNumberLine(QString inputstring, int numberMaxSymbol)
+{
+    if(!numberMaxSymbol)
+        return 1;
+    QStringList list;
+    list = inputstring.split("\n");
+    int numberLine = 0;
+
+    foreach (QString str, list)
+    {
+        numberLine += (str.length()/numberMaxSymbol)+1;
+    }
+    return numberLine;
+}
+
 void RunningString::changeConnection(const QString &_server, int _port)
 {
     disconnect();

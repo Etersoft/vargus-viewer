@@ -1,6 +1,7 @@
 #include "videowidgetlowlevelpainting.h"
 #include"logger.h"
 #include "vlc/vlc.h"
+#include "runningstring.h"
 extern Logger &vargusLog;
 
 const int VideoWidgetLowLevelPainting::repaintTime = 50;
@@ -204,6 +205,34 @@ void VideoWidgetLowLevelPainting::printVideoFrame()
     painter.setFont(QFont("Arial", 10));
     painter.setPen(Qt::white);
     painter.drawText(rect(), Qt::AlignBottom, printedTitle);
+    if(isneedPrintTextEvents() && getTextEvent().length()>0)
+    {
+        int delimeter = 20;
+        qreal kx = 1.6;
+        qreal ky = 0.85;
+        //int numberLine = RunningString::getNumberLine(getTextEvent(), int(delimeter*kx) + 1);
+        //int test = ((int)(delimeter * ky) + 1);
+        int numberLine;
+        int maxineration = 10;
+        while((numberLine = RunningString::getNumberLine(getTextEvent(), int(delimeter*kx) + 1)) > ((int)(delimeter * ky) + 1))
+        {
+              delimeter = (int)(numberLine / ky) + 1;
+              maxineration --;
+              if(!maxineration)
+                  break;
+        }
+
+        QFont* font = new QFont("Courier New");
+        font->setStyleHint(QFont::Monospace);
+        font->setWeight(QFont::Black);
+        font->setPixelSize(frame->width()/delimeter);
+
+
+        painter.setFont(*font);
+        painter.drawText(rect(), Qt::AlignTop | Qt::TextWrapAnywhere | Qt::TextExpandTabs, getTextEvent());
+
+    }
+
     painter.end();
 }
 
