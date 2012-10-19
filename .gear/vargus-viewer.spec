@@ -1,5 +1,5 @@
 Name: vargus-viewer
-Version: 0.9.5
+Version: 0.9.6
 Release: alt1
 
 Summary: Qt4 client for vargus server
@@ -43,6 +43,9 @@ cp lang/lang_ru.qm %buildroot%_datadir/%name/lang/
 %_datadir/%name/
 
 %changelog
+* Fri Oct 19 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.6-alt1
+- change text output
+
 * Mon Oct 08 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.5-alt1
 - maximize main window at default
 
