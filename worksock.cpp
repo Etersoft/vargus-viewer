@@ -60,7 +60,7 @@ void worksock::connectProcessing()
 
 void worksock::receiveData()
 {
-    QString str;
+    QByteArray str;
     const int sendedlenlenght = 8;
     str = wsocket->readAll().data();
     int neededlen = str.left(sendedlenlenght).toInt();
@@ -69,7 +69,10 @@ void worksock::receiveData()
         wsocket->waitForReadyRead();
         str = str + wsocket->readAll().data();
     }
-    receiveDataProcessing(str.right(str.length()-(sendedlenlenght+1)));
+    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+    QString string = codec->toUnicode(str);
+
+    receiveDataProcessing(string.right(string.length()-(sendedlenlenght+1)));
 }
 
 void worksock::errorProcessing (QAbstractSocket::SocketError error)

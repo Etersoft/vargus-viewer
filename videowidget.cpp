@@ -398,7 +398,7 @@ bool VideoWidget::isneedPrintTextEvents()
 
 QString VideoWidget::getTextEvent()
 {
-    return camera->runningText->getLimitLine().toAscii();
+    return camera->runningText->getLimitLine();
 }
 
 void VideoWidget::disableTextString()
