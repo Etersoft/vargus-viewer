@@ -150,6 +150,10 @@ MainWindow::~MainWindow()
     delete resetButton;
     delete nextButton;
     delete trIcon;
+    delete logAction;
+    delete fontsettingsAction;
+    delete connectionSettings;
+    delete vlcsettingsAction;
     vargusLog.writeToFile("PROGRAM ENDED");
 }
 
