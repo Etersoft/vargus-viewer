@@ -24,6 +24,7 @@ Set::Set(const QString &desc, MainWindow *_mainwindow, QString _serverAddress)
 Set::~Set()
 {
     vargusLog.writeToFile(QString("Destructor of set %1 started").arg(description()));
+    stopPlay();
     foreach(Camera *c, cameraList)
         delete c;
     foreach(View *v, viewList)
