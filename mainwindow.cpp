@@ -10,6 +10,7 @@
 #include <logger.h>
 #include <videowidget.h>
 #include "logsettings.h"
+#include "fontsettings.h"
 
 extern Logger &vargusLog;
 
@@ -205,6 +206,10 @@ void MainWindow::createActions()
     logAction = new QAction(tr("&Log settings"), this);
     settingsMenu->addAction(logAction);
     connect(logAction, SIGNAL(triggered()), this, SLOT(logSettings()));
+
+    fontsettingsAction = new QAction(tr("&Font settings"), this);
+    settingsMenu->addAction(fontsettingsAction);
+    connect(fontsettingsAction, SIGNAL(triggered()), this, SLOT(fontSettings()));
 }
 
 void MainWindow::about()
@@ -521,6 +526,10 @@ bool MainWindow::readSettings()
         #endif
         settings->setValue("vlcsettings", vlcSettings);
     }
+    fontsize = settings->value("fontsize",1).toInt();
+    magnification = settings->value("magnification",1.5).toDouble();
+//     toStas применить считанные параметры шрифтов, установить значения по умолчанию
+
     QStringList args = vlcSettings.split(" ");
     int num = args.length();
     char **argsForVLC = new char*[num];
@@ -682,4 +691,23 @@ void MainWindow::logSettings()
 {
     LogSettings ls;
     ls.exec();
+}
+
+void MainWindow::fontSettings()
+{
+    FontSettings fs(fontsize, magnification);
+    connect(&fs, SIGNAL(fontchanged(int, double)), this, SLOT(fontChanged(int, double)));
+    fs.exec();
+}
+
+void MainWindow::fontChanged(int newfsize, double newmagnification)
+{
+    fontsize = newfsize;
+    magnification = newmagnification;
+    // toStas применить изменения
+    if(!settings)
+        return;
+    settings->setValue("fontsize", fontsize);
+    settings->setValue("magnification", magnification);
+
 }

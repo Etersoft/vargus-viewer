@@ -25,7 +25,8 @@ SOURCES += main.cpp\
     worksock.cpp \
     videowidgetlowlevelpainting.cpp \
     limitline.cpp \
-    vlcsettingsdialog.cpp
+    vlcsettingsdialog.cpp \
+    fontsettings.cpp
 
 HEADERS  += mainwindow.h \
     set.h \
@@ -40,7 +41,8 @@ HEADERS  += mainwindow.h \
     worksock.h \
     videowidgetlowlevelpainting.h \
     limitline.h \
-    vlcsettingsdialog.h
+    vlcsettingsdialog.h \
+    fontsettings.h
 
 TRANSLATIONS += lang/lang_ru.ts
 

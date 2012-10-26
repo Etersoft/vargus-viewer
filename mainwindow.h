@@ -33,6 +33,7 @@ class MainWindow : public QMainWindow
     QAction *connectionSettings;
     QAction *vlcsettingsAction;
     QAction *logAction;
+    QAction *fontsettingsAction;
 
     QMenu *fileMenu;
     QMenu *helpMenu;
@@ -64,6 +65,8 @@ class MainWindow : public QMainWindow
     bool loggingEnabled;
     int set;
     int view;
+    int fontsize;
+    double magnification;
     QSystemTrayIcon *trIcon;
 
 public:
@@ -105,6 +108,8 @@ private slots:
     void vlcsettingsDialog();
     void newSettingsForVLC(QString &_vlcsettings);
     void logSettings();
+    void fontSettings();
+    void fontChanged(int newfsize, double newmagnification);
 
 protected:
     void closeEvent(QCloseEvent *);
