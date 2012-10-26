@@ -52,7 +52,7 @@ SettingsDialog::SettingsDialog(QWidget *parent, const QString &server,
 void SettingsDialog::createLayouts()
 {
     QVBoxLayout *vl = new QVBoxLayout(this);
-    QGridLayout *group1 = new QGridLayout(this);
+    QGridLayout *group1 = new QGridLayout();
 
     group1->addWidget(serverLabel, 0, 0);
     group1->addWidget(serverLineEdit, 0, 1);
@@ -61,7 +61,7 @@ void SettingsDialog::createLayouts()
     g1->setLayout(group1);
     vl->addWidget(g1);
 
-    QGridLayout *group2 = new QGridLayout(this);
+    QGridLayout *group2 = new QGridLayout();
     group2->addWidget(t_serverLabel, 0, 0);
     group2->addWidget(t_serverLineEdit, 0, 1);
     group2->addWidget(t_portLabel, 1, 0);
@@ -69,7 +69,7 @@ void SettingsDialog::createLayouts()
     g2->setLayout(group2);
     vl->addWidget(g2);
 
-    QHBoxLayout *buttonLayout = new QHBoxLayout;
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
     buttonLayout->addWidget(cloneButton);
     buttonLayout->addStretch(100);
     buttonLayout->addWidget(okButton);
