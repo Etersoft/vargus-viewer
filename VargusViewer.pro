@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     videowidgetlowlevelpainting.cpp \
     limitline.cpp \
     vlcsettingsdialog.cpp \
-    fontsettings.cpp
+    fontsettings.cpp \
+    painttextproperties.cpp
 
 HEADERS  += mainwindow.h \
     set.h \
@@ -42,7 +43,8 @@ HEADERS  += mainwindow.h \
     videowidgetlowlevelpainting.h \
     limitline.h \
     vlcsettingsdialog.h \
-    fontsettings.h
+    fontsettings.h \
+    painttextproperties.h
 
 TRANSLATIONS += lang/lang_ru.ts
 
