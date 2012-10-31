@@ -6,6 +6,7 @@
 #include <QPainter>
 #include <QTimer>
 #include <vlc/vlc.h>
+#include "painttextproperties.h"
 
 class VideoWidgetLowLevelPainting: public QWidget
 {
@@ -30,6 +31,7 @@ public:
     void paintNoSignal();
     void paintNothing();
     void paintblank();
+    static void setTextProperties(PaintTextProperties* _textProperties);
 
 private:
     QMutex mutex;
@@ -68,6 +70,8 @@ private:
     virtual libvlc_media_player_t *getvlcPlayer() = 0;
     virtual void startvlcPlayer() = 0;
     virtual void stoptvlcPlayer() = 0;
+
+    static PaintTextProperties* textProperties;
 
 protected:
     QString printedTitle;

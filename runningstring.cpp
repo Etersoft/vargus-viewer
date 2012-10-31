@@ -76,6 +76,29 @@ int RunningString::getNumberLine(QString inputstring, int numberMaxSymbol)
     return numberLine;
 }
 
+QString RunningString::cutFirstString(QString inputstring, int numberMaxSymbol, int numSimbol)
+{
+    if(!numSimbol)
+        return inputstring;
+    QStringList list;
+    QStringList retString;
+    list = inputstring.split("\n");
+    int numberLine = - numSimbol;
+
+    foreach (QString str, list)
+    {
+        if(numberLine < 0)
+        {
+            numberLine += (str.length()/numberMaxSymbol)+1;
+        }
+        if(numberLine >= 0)
+        {
+            retString.append(str);
+        }
+    }
+    return retString.join("\n");
+}
+
 void RunningString::changeConnection(const QString &_server, int _port)
 {
     disconnect();

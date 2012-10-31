@@ -11,6 +11,7 @@
 #include <videowidget.h>
 #include "logsettings.h"
 #include "fontsettings.h"
+#include "painttextproperties.h"
 
 extern Logger &vargusLog;
 
@@ -530,9 +531,9 @@ bool MainWindow::readSettings()
         #endif
         settings->setValue("vlcsettings", vlcSettings);
     }
-    fontsize = settings->value("fontsize",1).toInt();
-    magnification = settings->value("magnification",1.5).toDouble();
-//     toStas применить считанные параметры шрифтов, установить значения по умолчанию
+    fontsize = settings->value("fontsize",32).toInt();
+    magnification = settings->value("magnification",1.6).toDouble();
+    VideoWidget::setTextProperties(new PaintTextProperties("Courier New",fontsize,magnification));
 
     QStringList args = vlcSettings.split(" ");
     int num = args.length();
@@ -708,7 +709,7 @@ void MainWindow::fontChanged(int newfsize, double newmagnification)
 {
     fontsize = newfsize;
     magnification = newmagnification;
-    // toStas применить изменения
+    VideoWidget::setTextProperties(new PaintTextProperties("Courier New",fontsize,magnification));
     if(!settings)
         return;
     settings->setValue("fontsize", fontsize);

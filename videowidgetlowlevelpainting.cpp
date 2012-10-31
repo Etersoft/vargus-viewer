@@ -5,6 +5,7 @@
 extern Logger &vargusLog;
 
 const int VideoWidgetLowLevelPainting::repaintTime = 50;
+PaintTextProperties* VideoWidgetLowLevelPainting::textProperties = 0;
 
 static void display(void *core, void *picture)
 {
@@ -55,6 +56,7 @@ VideoWidgetLowLevelPainting::VideoWidgetLowLevelPainting() :
     aspectComply(false),
     type(NOTHING), isActiveLowLevelPainting(false), printedTitle("")
 {
+    textProperties = new PaintTextProperties();
     repaintTimer = new QTimer(this);
     connect(repaintTimer, SIGNAL(timeout()), this, SLOT(animate()));
 }
@@ -198,6 +200,14 @@ void VideoWidgetLowLevelPainting::checkChangeVideoSize()
     }
 }
 
+void VideoWidgetLowLevelPainting::setTextProperties(PaintTextProperties* _textProperties)
+{
+    textProperties = _textProperties;
+}
+
+
+
+
 void VideoWidgetLowLevelPainting::printVideoFrame()
 {
     painter.begin(this);
@@ -207,29 +217,44 @@ void VideoWidgetLowLevelPainting::printVideoFrame()
     painter.drawText(rect(), Qt::AlignBottom, printedTitle);
     if(isneedPrintTextEvents() && getTextEvent().length()>0)
     {
-        int delimeter = 20;
-        qreal kx = 1.6;
-        qreal ky = 0.85;
-        //int numberLine = RunningString::getNumberLine(getTextEvent(), int(delimeter*kx) + 1);
-        //int test = ((int)(delimeter * ky) + 1);
+        painter.fillRect(0, 0, this->width(), this->height(),QColor(0,0,0,100));
+        int delimeter = textProperties->delimeter;
+
         int numberLine;
         int maxineration = 10;
-        while((numberLine = RunningString::getNumberLine(getTextEvent(), int(delimeter*kx) + 1)) > ((int)(delimeter * ky) + 1))
+        while((numberLine = RunningString::getNumberLine(getTextEvent(), int(delimeter*textProperties->coefficientx) + 1)) > ((int)(delimeter * textProperties->coefficienty) + 1))
         {
-              delimeter = (int)(numberLine / ky) + 1;
+              delimeter = (int)(numberLine / textProperties->coefficienty) + 1;
               maxineration --;
               if(!maxineration)
                   break;
         }
 
-        QFont* font = new QFont("Courier New");
+
+        QFont* font = new QFont(textProperties->font);
         font->setStyleHint(QFont::Monospace);
         font->setWeight(QFont::Black);
-        font->setPixelSize(frame->width()/delimeter);
+        int pixelsize = frame->width()/delimeter;
+        QString printString = getTextEvent();
+        vargusLog.writeToFile("pixelsize = " + QString::number(pixelsize) + " frame->width() = " + QString::number(frame->width()) + " delimeter = "  + QString::number(delimeter) + " numberLine = " + QString::number(numberLine) );
+        if(pixelsize < textProperties->minsize )
+        {
 
+            pixelsize = textProperties->minsize;
+            delimeter = frame->width()/textProperties->minsize;
+
+            int factline = RunningString::getNumberLine(getTextEvent(), int(delimeter*textProperties->coefficientx) + 1);
+            int lineOnScreen = (int)(delimeter * textProperties->coefficienty) + 1;
+            int simbolOnScreen = (int)(delimeter * textProperties->coefficientx) + 1;
+            vargusLog.writeToFile("change pixelsize = " + QString::number(pixelsize) + " frame->width() = " + QString::number(frame->width()) + " delimeter = "  + QString::number(delimeter)  + " fact line = " + QString::number(factline) + " lineOnScreen = " + QString::number(lineOnScreen) + " simbolOnScreen " + QString::number(simbolOnScreen));
+            printString = RunningString::cutFirstString(getTextEvent(),int(delimeter*textProperties->coefficientx) + 1,factline - lineOnScreen);
+        }
+        font->setPixelSize(pixelsize);
+
+        vargusLog.writeToFile("Frame with" + QString::number(frame->width()) + " pixel size " +  QString::number(frame->width()/delimeter));
 
         painter.setFont(*font);
-        painter.drawText(rect(), Qt::AlignTop | Qt::TextWrapAnywhere | Qt::TextExpandTabs, getTextEvent());
+        painter.drawText(rect(), Qt::AlignTop | Qt::TextWrapAnywhere | Qt::TextExpandTabs | Qt::TextDontClip, printString);
 
     }
 

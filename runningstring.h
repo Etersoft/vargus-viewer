@@ -36,6 +36,7 @@ public:
     void print2Cam(QString cam, QString rString);
     void changeConnection(const QString &_server, int _port);
     static int getNumberLine(QString line, int numberMaxSymbol);
+    static QString cutFirstString(QString inputstring, int numberMaxSymbol, int numSimbol);
 };
 
 #endif // RUNNINGSTRING_H
