@@ -66,6 +66,7 @@ class MainWindow : public QMainWindow
     int set;
     int view;
     int fontsize;
+    int minfontsize;
     double magnification;
     QSystemTrayIcon *trIcon;
 
@@ -109,7 +110,7 @@ private slots:
     void newSettingsForVLC(QString &_vlcsettings);
     void logSettings();
     void fontSettings();
-    void fontChanged(int newfsize, double newmagnification);
+    void fontChanged(int newfsize, int newmfsize, double newmagnification);
 
 protected:
     void closeEvent(QCloseEvent *);

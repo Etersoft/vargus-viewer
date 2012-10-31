@@ -11,7 +11,7 @@ PaintTextProperties::PaintTextProperties()
     minsize = 10;
 }
 
-PaintTextProperties::PaintTextProperties(QString _font, int _size, qreal _coefficient)
+PaintTextProperties::PaintTextProperties(QString _font, int _size, int _minsize, qreal _coefficient)
 {
     /*font = _font;
     delimeter = (int)(640/_size);
