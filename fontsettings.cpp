@@ -22,7 +22,7 @@ FontSettings::FontSettings(int _fsize, int _mfsize, double _magnification, QWidg
 
     mlabel = new QLabel(tr("Magnification:"));
     magnification = new QDoubleSpinBox();
-    magnification->setRange(1,100); // toStas пределы
+    magnification->setRange(0,10); // toStas пределы
     magnification->setValue(_magnification);
     magnification->setSingleStep(0.1); // toStas какой шаг изменения
     mlabel->setBuddy(magnification);
