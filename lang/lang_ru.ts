@@ -4,24 +4,33 @@
 <context>
     <name>FontSettings</name>
     <message>
-        <location filename="../fontsettings.cpp" line="10"/>
         <source>Font size:</source>
-        <translation type="unfinished">Размер:</translation>
+        <translation type="obsolete">Размер:</translation>
     </message>
     <message>
-        <location filename="../fontsettings.cpp" line="16"/>
-        <source>Magnification:</source>
-        <translation type="unfinished">Увеличене:</translation>
+        <location filename="../fontsettings.cpp" line="11"/>
+        <source>Prefered font size:</source>
+        <translation>Предпочитаемый размер шрифта</translation>
+    </message>
+    <message>
+        <location filename="../fontsettings.cpp" line="17"/>
+        <source>Minimal font size:</source>
+        <translation>Минимальный размер шрифта</translation>
     </message>
     <message>
         <location filename="../fontsettings.cpp" line="23"/>
-        <source>OK</source>
-        <translation type="unfinished">ОК</translation>
+        <source>Magnification:</source>
+        <translation>Корректировка:</translation>
     </message>
     <message>
-        <location filename="../fontsettings.cpp" line="24"/>
+        <location filename="../fontsettings.cpp" line="30"/>
+        <source>OK</source>
+        <translation>ОК</translation>
+    </message>
+    <message>
+        <location filename="../fontsettings.cpp" line="31"/>
         <source>Cancel</source>
-        <translation type="unfinished">Отмена</translation>
+        <translation>Отмена</translation>
     </message>
 </context>
 <context>
@@ -29,116 +38,116 @@
     <message>
         <location filename="../logsettings.cpp" line="14"/>
         <source>Path for logs</source>
-        <translation type="unfinished">Папка для log-файлов</translation>
+        <translation>Папка для log-файлов</translation>
     </message>
     <message>
         <location filename="../logsettings.cpp" line="16"/>
         <source>Default path for logs</source>
-        <translation type="unfinished">Папка по-умолчанию</translation>
+        <translation>Папка по-умолчанию</translation>
     </message>
     <message>
         <location filename="../logsettings.cpp" line="18"/>
         <source>Remove log files</source>
-        <translation type="unfinished">Удалить логи</translation>
+        <translation>Удалить логи</translation>
     </message>
     <message>
         <location filename="../logsettings.cpp" line="20"/>
         <source>Enable logs</source>
-        <translation type="unfinished">Запись логов</translation>
+        <translation>Запись логов</translation>
     </message>
     <message>
         <location filename="../logsettings.cpp" line="23"/>
         <source>Apply</source>
-        <translation type="unfinished">Применить</translation>
+        <translation>Применить</translation>
     </message>
     <message>
         <location filename="../logsettings.cpp" line="25"/>
         <source>Cancel</source>
-        <translation type="unfinished">Отмена</translation>
+        <translation>Отмена</translation>
     </message>
     <message>
         <location filename="../logsettings.cpp" line="60"/>
         <source>Complete</source>
-        <translation type="unfinished">Завершено</translation>
+        <translation>Завершено</translation>
     </message>
     <message>
         <location filename="../logsettings.cpp" line="60"/>
         <source>Log files are deleted.</source>
-        <translation type="unfinished">Log файлы удалены.</translation>
+        <translation>Log файлы удалены.</translation>
     </message>
     <message>
         <location filename="../logsettings.cpp" line="63"/>
         <source>Unable to process</source>
-        <translation type="unfinished">Невозможно выполнить</translation>
+        <translation>Невозможно выполнить</translation>
     </message>
     <message>
         <location filename="../logsettings.cpp" line="63"/>
         <source>Log files are not deleted.</source>
-        <translation type="unfinished">Log файлы не удалены.</translation>
+        <translation>Log файлы не удалены.</translation>
     </message>
     <message>
         <location filename="../logsettings.cpp" line="76"/>
         <source>Chose directory for saving log files.</source>
-        <translation type="unfinished">Выберите папку для сохранения log-файлов.</translation>
+        <translation>Выберите папку для сохранения log-файлов.</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../mainwindow.cpp" line="43"/>
+        <location filename="../mainwindow.cpp" line="44"/>
         <source>Can not open file for logging. 
  Continue to work?</source>
         <translation>Невозможно открыть файл для записи логов. Продолжить работу?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="43"/>
+        <location filename="../mainwindow.cpp" line="44"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="43"/>
+        <location filename="../mainwindow.cpp" line="44"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="43"/>
+        <location filename="../mainwindow.cpp" line="44"/>
         <source>Warning</source>
         <translation>Предупреждение</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="55"/>
+        <location filename="../mainwindow.cpp" line="56"/>
         <source>Vargus Viewer</source>
         <oldsource>VargusViewer</oldsource>
         <translation>Vargus Viewer</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="73"/>
-        <location filename="../mainwindow.cpp" line="115"/>
-        <location filename="../mainwindow.cpp" line="677"/>
+        <location filename="../mainwindow.cpp" line="74"/>
+        <location filename="../mainwindow.cpp" line="116"/>
+        <location filename="../mainwindow.cpp" line="679"/>
         <source>Error</source>
         <translation>Ошибка</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="73"/>
-        <location filename="../mainwindow.cpp" line="677"/>
+        <location filename="../mainwindow.cpp" line="74"/>
+        <location filename="../mainwindow.cpp" line="679"/>
         <source>Can not connect to server.
 Please, change the connection settings.</source>
         <translation>Невозможно подключиться к серверу. Пожалуйста, измените настройки соединения.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="115"/>
+        <location filename="../mainwindow.cpp" line="116"/>
         <source>Server is not response.</source>
         <translation>Сервер не отвечает.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="210"/>
+        <location filename="../mainwindow.cpp" line="211"/>
         <source>&amp;Log settings</source>
-        <translation type="unfinished">&amp;Настройки логов</translation>
+        <translation>Настройки &amp;логов</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="214"/>
+        <location filename="../mainwindow.cpp" line="215"/>
         <source>&amp;Font settings</source>
-        <translation type="unfinished">&amp;Настройки шрифтов</translation>
+        <translation>Настройки &amp;шрифтов</translation>
     </message>
     <message>
         <source>&amp;Delete log files</source>
@@ -149,12 +158,12 @@ Please, change the connection settings.</source>
         <translation type="obsolete">&amp;Кадры в секунду</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="191"/>
+        <location filename="../mainwindow.cpp" line="192"/>
         <source>&amp;Exit</source>
         <translation>&amp;Выход</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="195"/>
+        <location filename="../mainwindow.cpp" line="196"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
@@ -163,14 +172,14 @@ Please, change the connection settings.</source>
         <translation type="obsolete">&amp;Вести лог</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="199"/>
+        <location filename="../mainwindow.cpp" line="200"/>
         <source>&amp;Connection settings</source>
-        <translation>&amp;Настройки соединения</translation>
+        <translation>Настройки &amp;соединения</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="203"/>
+        <location filename="../mainwindow.cpp" line="204"/>
         <source>&amp;VLC settings</source>
-        <translation type="unfinished">&amp;Настройки VLC</translation>
+        <translation>Настройки &amp;VLC</translation>
     </message>
     <message>
         <source>&amp;Folder for log files</source>
@@ -189,38 +198,38 @@ Please, change the connection settings.</source>
         <translation type="obsolete">&amp;Папка для log-файлов по-умолчанию</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="222"/>
+        <location filename="../mainwindow.cpp" line="223"/>
         <source>About</source>
         <translation>О программе</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="223"/>
+        <location filename="../mainwindow.cpp" line="224"/>
         <source>&lt;h2&gt;Vargus Viewer&lt;/h2&gt;&lt;p&gt;Etersoft 2012&lt;/p&gt;</source>
         <oldsource>&lt;h2&gt;VargusViewer&lt;/h2&gt;&lt;p&gt;Etersoft 2012&lt;/p&gt;</oldsource>
         <translation>&lt;h2&gt;Vargus Viewer&lt;/h2&gt;&lt;p&gt;Etersoft 2012&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="236"/>
+        <location filename="../mainwindow.cpp" line="237"/>
         <source>Are you sure you want to quit?</source>
         <translation>Вы уверены, что хотите выйти?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="236"/>
+        <location filename="../mainwindow.cpp" line="237"/>
         <source>Exit program</source>
         <translation>Выход из программы</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="260"/>
+        <location filename="../mainwindow.cpp" line="261"/>
         <source>Previous cameras</source>
         <translation>Предыдущие камеры</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="263"/>
+        <location filename="../mainwindow.cpp" line="264"/>
         <source>Reset</source>
         <translation>Сброс</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="266"/>
+        <location filename="../mainwindow.cpp" line="267"/>
         <source>Next cameras</source>
         <translation>Следующие камеры</translation>
     </message>
@@ -253,17 +262,17 @@ Please, change the connection settings.</source>
         <translation type="obsolete">Log файлы не удалены.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="463"/>
+        <location filename="../mainwindow.cpp" line="464"/>
         <source>&amp;File</source>
         <translation>&amp;Файл</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="465"/>
+        <location filename="../mainwindow.cpp" line="466"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="467"/>
+        <location filename="../mainwindow.cpp" line="468"/>
         <source>&amp;Help</source>
         <translation>&amp;Помощь</translation>
     </message>
@@ -290,12 +299,12 @@ Please, change the connection settings.</source>
     <message>
         <location filename="../settingsdialog.cpp" line="31"/>
         <source>Video connection setings</source>
-        <translation type="unfinished">Настройки видео</translation>
+        <translation>Настройки видео</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="32"/>
         <source>Text connection settings</source>
-        <translation type="unfinished">Настройки текста</translation>
+        <translation>Настройки текста</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="82"/>
@@ -311,7 +320,7 @@ Please, change the connection settings.</source>
     <message>
         <location filename="../settingsdialog.cpp" line="85"/>
         <source>&amp;Clone</source>
-        <translation type="unfinished">&amp;Копировать</translation>
+        <translation>&amp;Копировать</translation>
     </message>
 </context>
 <context>
@@ -319,27 +328,27 @@ Please, change the connection settings.</source>
     <message>
         <location filename="../vlcsettingsdialog.cpp" line="9"/>
         <source>OK</source>
-        <translation type="unfinished">ОК</translation>
+        <translation>ОК</translation>
     </message>
     <message>
         <location filename="../vlcsettingsdialog.cpp" line="11"/>
         <source>Cancel</source>
-        <translation type="unfinished">Отмена</translation>
+        <translation>Отмена</translation>
     </message>
     <message>
         <location filename="../vlcsettingsdialog.cpp" line="13"/>
         <source>Default</source>
-        <translation type="unfinished">По-умолчанию</translation>
+        <translation>По-умолчанию</translation>
     </message>
     <message>
         <location filename="../vlcsettingsdialog.cpp" line="16"/>
         <source>Input new vlc settings here.</source>
-        <translation type="unfinished">Введите новые настройки vlc здесь.</translation>
+        <translation>Введите новые настройки vlc здесь.</translation>
     </message>
     <message>
         <location filename="../vlcsettingsdialog.cpp" line="18"/>
         <source>New settings will be used after restart.</source>
-        <translation type="unfinished">Настройки будут применены после перезапуска.</translation>
+        <translation>Настройки будут применены после перезапуска.</translation>
     </message>
     <message>
         <source>Input new vlc settings here.
@@ -377,37 +386,37 @@ New settings will be used after restart.</source>
 <context>
     <name>VideoWidget</name>
     <message>
-        <location filename="../videowidget.cpp" line="340"/>
+        <location filename="../videowidget.cpp" line="342"/>
         <source>Archive</source>
         <translation>Архив</translation>
     </message>
     <message>
-        <location filename="../videowidget.cpp" line="351"/>
+        <location filename="../videowidget.cpp" line="353"/>
         <source>Disable message on widget</source>
-        <translation type="unfinished">Отключить сообщения на виджете</translation>
+        <translation>Отключить сообщения на виджете</translation>
     </message>
     <message>
-        <location filename="../videowidget.cpp" line="353"/>
+        <location filename="../videowidget.cpp" line="355"/>
         <source>Enable message on widget</source>
-        <translation type="unfinished">Включить сообщения на виджете</translation>
+        <translation>Включить сообщения на виджете</translation>
+    </message>
+    <message>
+        <location filename="../videowidget.cpp" line="360"/>
+        <source>Enable message on camera</source>
+        <translation>Включить сообщения камеры</translation>
     </message>
     <message>
         <location filename="../videowidget.cpp" line="358"/>
-        <source>Enable message on camera</source>
-        <translation type="unfinished">Включить сообщения камеры</translation>
-    </message>
-    <message>
-        <location filename="../videowidget.cpp" line="356"/>
         <source>Disable message on camera</source>
-        <translation type="unfinished">Отключить сообщения камеры</translation>
+        <translation>Отключить сообщения камеры</translation>
     </message>
 </context>
 <context>
     <name>VideoWidgetLowLevelPainting</name>
     <message>
-        <location filename="../videowidgetlowlevelpainting.cpp" line="245"/>
+        <location filename="../videowidgetlowlevelpainting.cpp" line="270"/>
         <source>NO SIGNAL</source>
-        <translation type="unfinished">НЕТ СИГНАЛА</translation>
+        <translation>НЕТ СИГНАЛА</translation>
     </message>
 </context>
 </TS>
