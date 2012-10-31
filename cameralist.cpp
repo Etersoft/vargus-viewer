@@ -40,7 +40,7 @@ void CameraList::startDrag()
     QDrag* drag = new QDrag(this);
     // The data to be transferred by the drag and drop operation is contained in a QMimeData object
     QMimeData *data = new QMimeData;
-    data->setText("varguscamera");
+    data->setText(QString("varguscamera") + QString::number(QCoreApplication::applicationPid()));
     int r = currentRow();
     if( r < 0 || r >= currentCameras.length())
         return;

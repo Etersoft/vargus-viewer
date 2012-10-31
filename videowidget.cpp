@@ -254,9 +254,10 @@ void VideoWidget::startDrag()
         return;
     QDrag* drag = new QDrag(this);
     // The data to be transferred by the drag and drop operation is contained in a QMimeData object
+    vargusLog.writeToFile("Drag proc " + QString::number(QCoreApplication::applicationPid()));
 
     QMimeData *data = new QMimeData;
-    data->setText("varguscamera");
+    data->setText(QString("varguscamera") + QString::number(QCoreApplication::applicationPid()));
     data->setUserData(0, (QObjectUserData*)camera);
     data->setUserData(1, (QObjectUserData*)this);
 
@@ -291,8 +292,9 @@ void VideoWidget::dropEvent(QDropEvent *de)
    if(!de->mimeData()->hasText())
        return;
    QString checktext = de->mimeData()->text();
-   if(checktext.compare("varguscamera"))
+   if(checktext.compare(QString("varguscamera") + QString::number(QCoreApplication::applicationPid())))
        return;
+vargusLog.writeToFile("Drop proc " +  QString::number(QCoreApplication::applicationPid()));
 
    dragVideoWindet = (VideoWidget*)de->mimeData()->userData(1);
    Camera *dragCamera;
