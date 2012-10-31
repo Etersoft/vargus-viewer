@@ -1,5 +1,5 @@
 Name: vargus-viewer
-Version: 0.9.6
+Version: 0.9.7
 Release: alt1
 
 Summary: Qt4 client for vargus server
@@ -43,6 +43,12 @@ cp lang/lang_ru.qm %buildroot%_datadir/%name/lang/
 %_datadir/%name/
 
 %changelog
+* Wed Oct 31 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.7-alt1
+- add shadow background for text out
+- add font settings
+- update translation
+- bug fixes
+
 * Fri Oct 19 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.6-alt1
 - change text output
 
