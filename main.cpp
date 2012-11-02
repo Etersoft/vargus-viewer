@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
         }
         else if(args.at(i) == QString("-disablelogging"))
         {
-                logging = true;
+                logging = false;
                 i++;
         }
         else if(args.at(i) == QString("-set"))

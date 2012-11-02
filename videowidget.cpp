@@ -294,7 +294,7 @@ void VideoWidget::dropEvent(QDropEvent *de)
    QString checktext = de->mimeData()->text();
    if(checktext.compare(QString("varguscamera") + QString::number(QCoreApplication::applicationPid())))
        return;
-vargusLog.writeToFile("Drop proc " +  QString::number(QCoreApplication::applicationPid()));
+   vargusLog.writeToFile("Drop proc " +  QString::number(QCoreApplication::applicationPid()));
 
    dragVideoWindet = (VideoWidget*)de->mimeData()->userData(1);
    Camera *dragCamera;
