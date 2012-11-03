@@ -39,11 +39,13 @@ Set::~Set()
     vargusLog.writeToFile(QString("Destructor of set %1 ended").arg(description()));
 }
 
+//add copy(!) of camera to set
 void Set::addCamera(Camera* cam)
 {
     cameraList << cam->copy();
 }
 
+//get names of cameras in set
 QStringList Set::camerasNames()
 {
     QStringList list;
@@ -84,6 +86,7 @@ void Set::updateActiveView()
     enableButtons();
 }
 
+//primary function. Videowidgets are made here
 void Set::setLayouts(int type)
 {
     if(layout()!= NULL)
@@ -378,10 +381,11 @@ void Set::OpenArhive(QString cam)
     }
 }
 
+//change cameras from drag and drop
 void Set::changeCameras(VideoWidget *first, Camera *second, bool fromAnotherWidget)
 {
     QList<Camera *> *currentList = stc.at(tp);
-    if(!fromAnotherWidget)
+    if(!fromAnotherWidget)//camera from cameralist
     {
         int f = videoList.indexOf(first);
         currentList->removeAt(f);

@@ -11,7 +11,7 @@
 
 Logger &vargusLog = Logger::instance();
 
-void signal_handler(int sig)
+void signal_handler(int sig)// signal handler
 {
     switch(sig)
     {
@@ -39,6 +39,7 @@ void signal_handler(int sig)
     exit(sig);
 }
 
+//print information about command line options
 void usage()
 {
     printf("VargusViewer -server xxx.xxx.xxx.xxx -port xxxx -disablelogging -set x -view x\n");
@@ -49,6 +50,7 @@ void usage()
     printf("-view - number of view to show after program started. \"View\" must be >=0 and < amount os views. If it is wrong, \"view\" will be 0.\n");
 }
 
+//print "error" line
 void argsError()
 {
     printf("Args error\n");
@@ -56,40 +58,9 @@ void argsError()
     exit(10);
 }
 
-int main(int argc, char *argv[])
+
+void processCommandLine(int argc, QStringList args, QString &serv, int &port, bool &logging, int &set, int &view)
 {
-    vargusLog.makeLogFile();
-    vargusLog.writeToFile("Start vargusLog");
-    signal(SIGKILL, signal_handler);
-    signal(SIGHUP, signal_handler);
-    signal(SIGABRT, signal_handler);
-    signal(SIGTERM, signal_handler);
-    QApplication app(argc, argv);
-    QString imagePath = "/usr/share/vargus-viewer/images/";
-    QIcon icon(imagePath + "vargus_big.png");
-    QApplication::setWindowIcon(icon);
-    QTextCodec::setCodecForTr( QTextCodec::codecForName("utf8") );
-
-    QTranslator qtTranslator;
-    qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-    app.installTranslator(&qtTranslator);
-
-    QTranslator *translator = new QTranslator(&app);
-    if (translator->load("lang_" + QLocale::system().name(), QString(DATADIR) + "lang/"))
-    {
-        app.installTranslator(translator);
-    }
-
-    QString serv;
-    int port = 0;
-    bool logging = true;
-    int set = -1;
-    int view = -1;
-    QStringList args;
-    for(int i = 1; i < argc; i++)
-    {
-        args.append(QString(argv[i]));
-    }
     int size = argc-1;
     for(int i = 0; i < args.size();)
     {
@@ -142,7 +113,52 @@ int main(int argc, char *argv[])
         else
             argsError();
     }
+}
 
+int main(int argc, char *argv[])
+{
+    vargusLog.makeLogFile();
+    vargusLog.writeToFile("Start vargusLog");
+
+    //set signal's hanler
+    signal(SIGKILL, signal_handler);
+    signal(SIGHUP, signal_handler);
+    signal(SIGABRT, signal_handler);
+    signal(SIGTERM, signal_handler);
+
+    QApplication app(argc, argv);
+    QString imagePath = "/usr/share/vargus-viewer/images/";
+    QIcon icon(imagePath + "vargus_big.png");
+    QApplication::setWindowIcon(icon);
+    QTextCodec::setCodecForTr( QTextCodec::codecForName("utf8") );
+
+    //set translator
+    QTranslator qtTranslator;
+    qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    app.installTranslator(&qtTranslator);
+
+    QTranslator *translator = new QTranslator(&app);
+    if (translator->load("lang_" + QLocale::system().name(), QString(DATADIR) + "lang/"))
+    {
+        app.installTranslator(translator);
+    }
+
+    //processing of command line
+    QString serv;
+    int port = 0;
+    bool logging = true;
+    int set = -1;
+    int view = -1;
+    QStringList args;
+    for(int i = 1; i < argc; i++)
+    {
+        args.append(QString(argv[i]));
+    }
+
+    //process command line
+    processCommandLine(argc, args, serv, port, logging, set, view);
+
+    //start application
     MainWindow w(0,serv,port,logging,set,view);
     w.showMaximized();
 

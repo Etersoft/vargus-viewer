@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging,i
     createIcons();
     settings = new QSettings("Etersoft","VargusViewer");
     bool settingsRead;
+    //read settings for first initialisation of parametrs
     readSettings();
     if(!serverAdr.isEmpty())
         server = serverAdr;
@@ -33,6 +34,7 @@ MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging,i
     if(viewNum != -1)
         view = viewNum;
     else view = 0;
+    //save settings, because commandline options may be here
     saveSettings();
     settingsRead = readSettings();
 
@@ -45,27 +47,31 @@ MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging,i
         if(n) exit(1);
     }
     vargusLog.writeToFile("PROGRAM STARTED");
+    //make main tab widget
     setTab = new QTabWidget(this);
     connect(setTab, SIGNAL(currentChanged(int)), this, SLOT(onSetChanged(int)));
     createMenus();
     makeButtons();
     createActions();
+    //make cameralist. If cam is double clicked, video must be fullsize
     camList = new CameraList(this);
     camList -> setMaximumWidth(nextButton->width() * 4);
     connect(camList, SIGNAL(itemDoubleClicked(QListWidgetItem*)) ,this, SLOT(makeBigVideo(QListWidgetItem*)));
     setWindowTitle(tr("Vargus Viewer"));
     createLayouts();
+    //connect ro server if ettings were read good
     if(settingsRead)
     {
         startConnection();
     }
     else
+        //settings are bad
         changeConnectionSettings();
 }
 
 bool MainWindow::initData()
 {
-    // Сеанс связи с сервером
+    // Connect to server
     vargusLog.writeToFile("Server conection started");
     socket = new QAbstractSocket(QAbstractSocket::TcpSocket, this);
     socket -> connectToHost(server, port);
@@ -76,11 +82,9 @@ bool MainWindow::initData()
         return false;
     }
 
-    // Инициализация камер
+    // initialisations
     initCameras();
-    // Инициализация сетов
     initSets();
-    // Инициализация раскладок
     initViews();
 
     socket->write("exit\n");
@@ -90,6 +94,7 @@ bool MainWindow::initData()
     return true;
 }
 
+//read answer from sever
 QStringList MainWindow::readAnswer(int amountOfLines)
 {
     QStringList ans;
@@ -158,6 +163,7 @@ MainWindow::~MainWindow()
     vargusLog.writeToFile("PROGRAM ENDED");
 }
 
+//if new tab selected
 void MainWindow::onSetChanged(int num)
 {
     vargusLog.writeToFile("New active set " + setsList.at(num)->description());
@@ -171,7 +177,7 @@ void MainWindow::onSetChanged(int num)
         }
     }
 
-    // Заполнение панели раскладок
+    // show new view's from selected set
     while(!viewLayout->isEmpty())
     {
         QWidget *s = viewLayout->takeAt(0)->widget();
@@ -224,7 +230,7 @@ void MainWindow::about()
              tr("<h2>Vargus Viewer</h2><p>Etersoft 2012</p>"));
 }
 
-
+//will asks if user really want to exit
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     if(okToContinue())
@@ -232,6 +238,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     else event->ignore();
 }
 
+//ask user about exit
 bool MainWindow::okToContinue()
 {
     int r = QMessageBox::warning(this, tr("Exit program"), tr("Are you sure you want to quit?"),
@@ -241,6 +248,7 @@ bool MainWindow::okToContinue()
     else return false;
 }
 
+//if there are new cameras in active set's layout, need to update camera list
 void MainWindow::changeActiveCameras(QList<Camera *> activeCameras)
 {
     foreach(Set *s, setsList)
@@ -278,6 +286,7 @@ void MainWindow::makeButtons()
     vargusLog.writeToFile("Buttons made");
 }
 
+//clicked next button
 void MainWindow::nextGroup()
 {
     vargusLog.writeToFile("Clicked next button");
@@ -292,6 +301,7 @@ void MainWindow::nextGroup()
 
 }
 
+//previous button clicked
 void MainWindow::prevGroup()
 {
     vargusLog.writeToFile("Clicked previous button");
@@ -305,6 +315,7 @@ void MainWindow::prevGroup()
     }
 }
 
+//reset button clicked
 void MainWindow::resetGroup()
 {
     vargusLog.writeToFile("Clicked reset button");
@@ -318,6 +329,7 @@ void MainWindow::resetGroup()
     }
 }
 
+//if camera at camera list was double clicked, we need to show fullsize video
 void MainWindow::makeBigVideo(QListWidgetItem * item)
 {
     Set *activeSet = NULL;
@@ -357,6 +369,7 @@ void MainWindow::makeSets()
     }
 }
 
+//sending requests to the server about cameras
 void MainWindow::initCameras()
 {
     vargusLog.writeToFile("Cameras initialization started");
@@ -389,6 +402,7 @@ void MainWindow::initCameras()
     vargusLog.writeToFile("Cameras initialization ended");
 }
 
+//sending requests to the server about sets
 void MainWindow::initSets()
 {
     vargusLog.writeToFile("Sets initialization started");
@@ -424,6 +438,7 @@ void MainWindow::initSets()
     vargusLog.writeToFile("Sets initialization ended");
 }
 
+//sending requests to the server about views
 void MainWindow::initViews()
 {
     vargusLog.writeToFile("Views initialization started");
@@ -518,6 +533,7 @@ bool MainWindow::readSettings()
         pathForLogs += "logs/";
     }
     vlcSettings = settings->value("vlcsettings", "").toString();
+    //vlc settings defaults if there are no settings in memory
     if(vlcSettings == "")
     {
         vlcSettings.clear();
@@ -555,6 +571,7 @@ bool MainWindow::readSettings()
     return true;
 }
 
+//change connection settings button clicked
 void MainWindow::changeConnectionSettings()
 {
     SettingsDialog d(this, server, port, t_server, t_port);
@@ -627,24 +644,25 @@ void MainWindow::enableButtons(bool prev, bool next)
     nextButton->setEnabled(next);
 }
 
+//make tray icon. If tray icon is clicked, apllication have to bicame invisible
 void MainWindow::createIcons()
 {
     QString imagePath = "/usr/share/vargus-viewer/images/";
-    trIcon = new QSystemTrayIcon();  //инициализируем объект
-    trIcon->setIcon(QIcon(imagePath + "vargus32.png"));  //устанавливаем иконку
-    trIcon->show();  //отображаем объект
+    trIcon = new QSystemTrayIcon();
+    trIcon->setIcon(QIcon(imagePath + "vargus32.png"));
+    trIcon->show();
     connect(trIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(showHide(QSystemTrayIcon::ActivationReason)));
 }
 
 void MainWindow::showHide(QSystemTrayIcon::ActivationReason r) {
-    if (r == QSystemTrayIcon::Trigger)  //если нажато левой кнопкой продолжаем
+    if (r == QSystemTrayIcon::Trigger)  //left mouse button
     {
         vargusLog.writeToFile("Tray icon clicked (LMB)");
-        if (!isVisible()) {  //если окно было не видимо - отображаем его
+        if (!isVisible()) {
             show();
         } else {
-            hide();  //иначе скрываем
+            hide();
         }
     }
     else if(r == QSystemTrayIcon::Context)
@@ -654,6 +672,7 @@ void MainWindow::showHide(QSystemTrayIcon::ActivationReason r) {
     }
 }
 
+//show dilog to change vlc settings
 void MainWindow::vlcsettingsDialog()
 {
     VLCSetingsDialog dialog(vlcSettings, this);
@@ -667,6 +686,7 @@ void MainWindow::newSettingsForVLC(QString &_vlcsettings)
     settings->setValue("vlcsettings", vlcSettings);
 }
 
+//need to update camera. Will send requests to server.
 void MainWindow::updateCamera(Camera *c)
 {
     if(c == NULL)
@@ -717,5 +737,4 @@ void MainWindow::fontChanged(int newfsize, int newmfsize, double newmagnificatio
     settings->setValue("fontsize", fontsize);
     settings->setValue("minfontsize", minfontsize);
     settings->setValue("magnification", magnification);
-
 }
