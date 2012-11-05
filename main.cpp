@@ -58,7 +58,6 @@ void argsError()
     exit(10);
 }
 
-
 void processCommandLine(int argc, QStringList args, QString &serv, int &port, bool &logging, int &set, int &view)
 {
     int size = argc-1;
@@ -159,7 +158,7 @@ int main(int argc, char *argv[])
     processCommandLine(argc, args, serv, port, logging, set, view);
 
     //start application
-    MainWindow w(0,serv,port,logging,set,view);
+    MainWindow w(0, serv, port, logging, set, view);
     w.showMaximized();
 
     return app.exec();

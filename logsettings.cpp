@@ -26,13 +26,13 @@ LogSettings::LogSettings(QWidget *parent) :
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
 
     QGridLayout *grid = new QGridLayout(this);
-    grid->addWidget(enableCheckBox,0,0);
-    grid->addWidget(deleteButton,0,2);
-    grid->addWidget(pathLine,1,0,1,3);
-    grid->addWidget(pathButton,2,1);
-    grid->addWidget(defaultButton,2,2);
-    grid->addWidget(cancelButton,3,1);
-    grid->addWidget(applyButton,3,2);
+    grid->addWidget(enableCheckBox, 0, 0);
+    grid->addWidget(deleteButton, 0, 2);
+    grid->addWidget(pathLine, 1, 0, 1, 3);
+    grid->addWidget(pathButton, 2, 1);
+    grid->addWidget(defaultButton, 2, 2);
+    grid->addWidget(cancelButton, 3, 1);
+    grid->addWidget(applyButton, 3, 2);
     readSettings();
 }
 
@@ -60,7 +60,7 @@ void LogSettings::removeLogs()
         QMessageBox::information(this, tr("Complete"), tr("Log files are deleted."));
     }
     else
-        QMessageBox::information(this ,tr("Unable to process"), tr("Log files are not deleted."));
+        QMessageBox::information(this, tr("Unable to process"), tr("Log files are not deleted."));
 }
 
 void LogSettings::setDefaultPath()

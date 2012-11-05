@@ -57,7 +57,7 @@ public:
     static void setVlcArgs( const char *const *_vlcArgs, int _numberVlcArgs);
 
 private:
-    static void clearVlc(libvlc_media_player_t *vlcPlayer,libvlc_media_t *vlcMedia);
+    static void clearVlc(libvlc_media_player_t *vlcPlayer, libvlc_media_t *vlcMedia);
     void printString();
 
     virtual void drawImage();

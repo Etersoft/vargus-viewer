@@ -35,7 +35,7 @@ public:
 
 public slots:
 
-    void receiveData ();
+    void receiveData();
     void errorProcessing (QAbstractSocket::SocketError error);
     void connectProcessing ();
     void tryConnect();

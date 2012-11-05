@@ -29,10 +29,10 @@ VLCSetingsDialog::VLCSetingsDialog(const QString &currentSettings, QWidget *pare
     vlc_args.append(" --ignore-config"); /* Don't use VLC's config */
     vlc_args.append(" --no-audio"); /* Audio off */
     vlc_args.append(" --http-reconnect --http-continuous --video-title-show --video-title-position=9 --video-title-timeout=2147483647");
-    #ifdef QT_DEBUG
+#ifdef QT_DEBUG
     vlc_args.append(" --extraintf=logger"); /* log anything */
     vlc_args.append(" --verbose=2"); /* be much more verbose then normal for debugging purpose */
-    #endif
+#endif
     textEdit->setText(currentSettings);
 }
 

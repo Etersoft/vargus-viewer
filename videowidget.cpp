@@ -35,9 +35,8 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
     statusLabel = 0;
     frame = new QFrame(this);
     frame->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    //layout = new QVBoxLayout(this);
     layout = new QVBoxLayout();
-    layout->setContentsMargins(0,0,0,0);
+    layout->setContentsMargins(0, 0, 0, 0);
     layout->addWidget(frame);
     setLayout(layout);
 
@@ -47,7 +46,7 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
     {
         for(int i = 0; i < numVlcArgs; i++ )
         {
-            if(strncmp(VlcArgs[i], "--video-title-timeout",strlen("--video-title-timeout")) == 0)
+            if(strncmp(VlcArgs[i], "--video-title-timeout", strlen("--video-title-timeout")) == 0)
             {
                 VlcArgs[i] = "--video-title-timeout=1";
             }
@@ -58,7 +57,7 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
     vlcMedia = NULL;
     camera = NULL;
 
-    vlcPlayer = libvlc_media_player_new (vlcInstance);
+    vlcPlayer = libvlc_media_player_new(vlcInstance);
 
 
     setAcceptDrops(true);
@@ -75,15 +74,11 @@ VideoWidget::~VideoWidget()
                     QString("destroy VideoWidget() %1").arg(camera->description()));
     else
         vargusLog.writeToFile("destroy VideoWidget()");
-    /*if(isVisible())
-        this->hide(); это нельзя использовать,
-    так как поток удаления может ещё удалять старые виджеты,
-    хотя родитель и менеджер компоновки уже удалены*/
     stopPlay();
     clearVlc(vlcPlayer, vlcMedia);
 }
 
-void VideoWidget::clearVlc(libvlc_media_player_t *vlcPlayer,libvlc_media_t *vlcMedia)
+void VideoWidget::clearVlc(libvlc_media_player_t *vlcPlayer, libvlc_media_t *vlcMedia)
 {
     libvlc_media_player_stop(vlcPlayer);
     libvlc_media_player_release (vlcPlayer);
@@ -130,9 +125,9 @@ void VideoWidget::startPlay(sizeVideo size)
     //#FIXME For linux only
     vargusLog.writeToFile("stas LOWLEVEL");
     activateLowLevelPainting();
-    int ret = libvlc_media_player_play (vlcPlayer);
+    int ret = libvlc_media_player_play(vlcPlayer);
     vlcSetEvent();
-    camera->runningString->addPrintMethod(camera->name(),this);
+    camera->runningString->addPrintMethod(camera->name(), this);
     vargusLog.writeToFile("Start play ret " + QString::number(ret));
     isPlaying=true;
     isRunningStringActive = true;
@@ -182,11 +177,11 @@ void VideoWidget::updateInterface()
         afterStart++;
     }
 
-    libvlc_media_t *curMedia = libvlc_media_player_get_media (vlcPlayer);
+    libvlc_media_t *curMedia = libvlc_media_player_get_media(vlcPlayer);
     if (curMedia == NULL)
         return;
 
-    int isp = libvlc_media_player_is_playing (vlcPlayer);
+    int isp = libvlc_media_player_is_playing(vlcPlayer);
     if(!isp)
     {
         emit disconnectedSignal(this);
@@ -337,12 +332,12 @@ void VideoWidget::dragLeaveEvent ( QDragLeaveEvent * )
 void VideoWidget::setupContextMenu()
 {
     frame->setContextMenuPolicy(Qt::CustomContextMenu);
-    contextMenu=new QMenu(this);
-    arhiveCallAction=new QAction(this);
+    contextMenu = new QMenu(this);
+    arhiveCallAction = new QAction(this);
     arhiveCallAction->setText(tr("Archive"));
-    changeStateMessageWidgetAction=new QAction(this);
+    changeStateMessageWidgetAction = new QAction(this);
 
-    changeStateMessageCameraAction=new QAction(this);
+    changeStateMessageCameraAction = new QAction(this);
 
     connect(frame, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(ContextMenuAction(const QPoint& z)));
 }
@@ -395,7 +390,7 @@ void VideoWidget::printString()
 
 bool VideoWidget::isneedPrintTextEvents()
 {
-    return (isRunningStringActive && camera->isRunningStringActive && libvlc_media_player_is_playing (vlcPlayer));
+    return (isRunningStringActive && camera->isRunningStringActive && libvlc_media_player_is_playing(vlcPlayer));
 }
 
 QString VideoWidget::getTextEvent()

@@ -43,7 +43,10 @@ MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging,i
     vargusLog.setActive(loggingEnabled);
     if(!vargusLog.makeLogFile())
     {
-        int n = QMessageBox::warning(this,tr("Warning"),tr("Can not open file for logging. \n Continue to work?"),tr("Yes"),tr("No"),QString(),0,1);
+        int n = QMessageBox::warning(
+                    this, tr("Warning"),
+                    tr("Can not open file for logging. \n Continue to work?"),
+                    tr("Yes"), tr("No"), QString(), 0, 1);
         if(n) exit(1);
     }
     vargusLog.writeToFile("PROGRAM STARTED");
@@ -55,8 +58,8 @@ MainWindow::MainWindow(QWidget *, QString serverAdr, int portNum, bool logging,i
     createActions();
     //make cameralist. If cam is double clicked, video must be fullsize
     camList = new CameraList(this);
-    camList -> setMaximumWidth(nextButton->width() * 4);
-    connect(camList, SIGNAL(itemDoubleClicked(QListWidgetItem*)) ,this, SLOT(makeBigVideo(QListWidgetItem*)));
+    camList->setMaximumWidth(nextButton->width() * 4);
+    connect(camList, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(makeBigVideo(QListWidgetItem*)));
     setWindowTitle(tr("Vargus Viewer"));
     createLayouts();
     //connect ro server if ettings were read good
@@ -74,10 +77,11 @@ bool MainWindow::initData()
     // Connect to server
     vargusLog.writeToFile("Server conection started");
     socket = new QAbstractSocket(QAbstractSocket::TcpSocket, this);
-    socket -> connectToHost(server, port);
+    socket->connectToHost(server, port);
     if(!socket->waitForConnected(5000))
     {
-        QMessageBox::critical(this, tr("Error"), tr("Can not connect to server.\nPlease, change the connection settings."));
+        QMessageBox::critical(this,
+                              tr("Error"), tr("Can not connect to server.\nPlease, change the connection settings."));
         delete socket;
         return false;
     }
@@ -118,7 +122,7 @@ QStringList MainWindow::readAnswer(int amountOfLines)
     }
     if (tries == 5)
     {
-        QMessageBox b(QMessageBox::Critical,tr("Error"),tr("Server is not response."));
+        QMessageBox b(QMessageBox::Critical, tr("Error"), tr("Server is not response."));
         b.exec();
         exit(2);
     }
@@ -186,8 +190,8 @@ void MainWindow::onSetChanged(int num)
     for(int i = 0; i < viewsList.count(); i++)
     {
         View *view = setsList.at(setTab->currentIndex())->views().at(i);
-        view -> show();
-        viewLayout -> addWidget(view, i / 2, i % 2);
+        view->show();
+        viewLayout->addWidget(view, i / 2, i % 2);
     }
     setsList.at(num)->setActive(true);
     setsList.at(num)->restoreState();
@@ -205,7 +209,7 @@ void MainWindow::createActions()
 
     connectionSettings = new QAction(tr("&Connection settings"), this);
     settingsMenu->addAction(connectionSettings);
-    connect(connectionSettings, SIGNAL(triggered()), this ,SLOT(changeConnectionSettings()));
+    connect(connectionSettings, SIGNAL(triggered()), this, SLOT(changeConnectionSettings()));
 
     vlcsettingsAction = new QAction(tr("&VLC settings"), this);
     settingsMenu->addAction(vlcsettingsAction);
