@@ -7,13 +7,11 @@ class PaintTextProperties
 {
 public:
     PaintTextProperties();
-    PaintTextProperties(QString _font, int _size, int _minsize, qreal _coefficient);
+    PaintTextProperties(QString _font, int _size, qreal _coefficient);
 
 public:
-    qreal coefficientx;
-    qreal coefficienty;
-    int minsize;
-    int delimeter;
+    int size;
+    qreal coefficient;
     QString font;
 };
 

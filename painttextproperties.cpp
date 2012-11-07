@@ -5,17 +5,12 @@
 PaintTextProperties::PaintTextProperties()
 {
     font = "Courier New";
-    delimeter = 20;
-    coefficientx = 1.6;
-    coefficienty = 0.73;
-    minsize = 10;
+    size = 20;
+    coefficient = 0;
 }
 
-PaintTextProperties::PaintTextProperties(QString _font, int _size, int _minsize, qreal _coefficient)
+PaintTextProperties::PaintTextProperties(QString _font, int _size, qreal _coefficient):
+    font(_font), size(_size), coefficient(_coefficient)
 {
-    font = _font;
-    delimeter = 400/_size;
-    coefficientx = _coefficient * 1.6;
-    coefficienty = _coefficient * 0.73;
-    minsize = _minsize;
+
 }
