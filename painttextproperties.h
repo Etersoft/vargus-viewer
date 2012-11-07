@@ -13,6 +13,7 @@ public:
     int size;
     qreal coefficient;
     QString font;
+    static const int heightForNoCoef;
 };
 
 #endif // PAINTTEXTPROPERTIES_H

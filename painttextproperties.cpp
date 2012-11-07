@@ -1,7 +1,7 @@
 #include <QString>
 #include "painttextproperties.h"
 
-
+const int PaintTextProperties::heightForNoCoef = 480;
 PaintTextProperties::PaintTextProperties()
 {
     font = "Courier New";

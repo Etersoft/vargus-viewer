@@ -217,7 +217,7 @@ void VideoWidgetLowLevelPainting::printVideoFrame()
     painter.drawText(rect(), Qt::AlignBottom, printedTitle);
     if(isneedPrintTextEvents() && getTextEvent().length()>0)
     {
-        int size = textProperties->size - this->height()*textProperties->coefficient;
+        int size = textProperties->size + (this->height()-textProperties->heightForNoCoef)*textProperties->coefficient;
         QFont* font = new QFont(textProperties->font);
         QString printString = getTextEvent();
 
