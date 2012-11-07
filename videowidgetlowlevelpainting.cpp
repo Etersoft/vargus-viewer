@@ -85,11 +85,28 @@ void VideoWidgetLowLevelPainting::restartPaintVideo()
     widgetheight = this->height();
     widgetwidth = this->width();
 
-    videoheight = this->width()/getAspectRatio();
-    videowidth = this->width();
+    if(aspectComply)
+    {
+        if(((float)this->width()/(float)this->height()) > getAspectRatio() )
+        {
+            videowidth = videoheight * getAspectRatio();
+            videoheight = this->height();
+        }
+        else
+        {
+            videowidth = this->width();
+            videoheight = this->width()/getAspectRatio();
+        }
+    }
+    else
+    {
+        videowidth = this->width();
+        videoheight = this->height();
+    }
+
 
     xdisplacement = getXDisplacement();
-
+    ydisplacement = getYDisplacement();
     repaintTimer->stop();
     stoptvlcPlayer();
     if(frame)
@@ -104,6 +121,7 @@ void VideoWidgetLowLevelPainting::restartPaintVideo()
 void VideoWidgetLowLevelPainting::setAspectComply(bool value)
 {
     aspectComply = value;
+    restartPaintVideo();
 }
 
 float VideoWidgetLowLevelPainting::getAspectRatio()
@@ -118,14 +136,27 @@ float VideoWidgetLowLevelPainting::getAspectRatio()
     return 1.0;
 }
 
+int VideoWidgetLowLevelPainting::getYDisplacement()
+{
+    if(aspectComply)
+    {
+        if( videowidth>0 && videoheight>0 &&
+            widgetheight>0 && widgetwidth>0 && widgetheight > videoheight)
+        {
+            return ((widgetheight - videoheight)/2);
+        }
+    }
+    return 0;
+}
+
 int VideoWidgetLowLevelPainting::getXDisplacement()
 {
     if(aspectComply)
     {
         if( videowidth>0 && videoheight>0 &&
-            widgetheight>0 && widgetwidth>0)
+            widgetheight>0 && widgetwidth>0 && widgetwidth > videowidth)
         {
-            return ((widgetheight - videoheight)/2);
+            return ((widgetwidth - videowidth)/2);
         }
     }
     return 0;
@@ -211,7 +242,7 @@ void VideoWidgetLowLevelPainting::setTextProperties(PaintTextProperties* _textPr
 void VideoWidgetLowLevelPainting::printVideoFrame()
 {
     painter.begin(this);
-    painter.drawImage(QPoint(0, xdisplacement), *frame);
+    painter.drawImage(QPoint(xdisplacement, ydisplacement), *frame);
     painter.setFont(QFont("Arial", 10));
     painter.setPen(Qt::white);
     painter.drawText(rect(), Qt::AlignBottom, printedTitle);

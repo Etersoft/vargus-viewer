@@ -27,6 +27,7 @@ public:
 
     void setAspectComply(bool value);
     int getXDisplacement();
+    int getYDisplacement();
 
     void paintNoSignal();
     void paintNothing();
@@ -53,6 +54,7 @@ private:
     int videowidth;
 
     int xdisplacement;
+    int ydisplacement;
 
     float getAspectRatio();
     bool aspectComply;
