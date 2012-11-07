@@ -52,9 +52,10 @@ void RunningString::print2Cam(QString cam, QString rString)
 void RunningString::receiveDataProcessing(QString inputData)
 {
     vargusLog.writeToFile("receive data " + inputData);
-    QRegExp regexpcam("cam(\\d*)");
+    QRegExp regexpcam("^(.*):");
+    regexpcam.setMinimal(true);
     regexpcam.indexIn(inputData);
-    QString cam = "cam" + regexpcam.cap(1);
+    QString cam = regexpcam.cap(1);
     QString rString = inputData.right( inputData.length() - cam.length() - 1);
     vargusLog.writeToFile("receive data cam |" + cam + "| inputData |" + inputData + "|");
     print2Cam(cam,rString);
