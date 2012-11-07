@@ -42,18 +42,6 @@ VideoWidget::VideoWidget(): VideoWidgetLowLevelPainting()
 
     poller=new QTimer(this);
 
-    if(!vlcInstance)
-    {
-        for(int i = 0; i < numVlcArgs; i++ )
-        {
-            if(strncmp(VlcArgs[i], "--video-title-timeout", strlen("--video-title-timeout")) == 0)
-            {
-                VlcArgs[i] = "--video-title-timeout=1";
-            }
-        }
-        vlcInstance = libvlc_new(numVlcArgs, VlcArgs);
-    }
-
     vlcMedia = NULL;
     camera = NULL;
 
