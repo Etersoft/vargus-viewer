@@ -544,7 +544,7 @@ bool MainWindow::readSettings()
         vlcSettings.append("-I dummy"); /* Don't use any interface */
         vlcSettings.append(" --ignore-config"); /* Don't use VLC's config */
         vlcSettings.append(" --no-audio"); /* Audio off */
-        vlcSettings.append(" --http-reconnect --http-continuous --video-title-show --video-title-position=9 --video-title-timeout=2147483647");
+        vlcSettings.append(" --http-reconnect --http-continuous --no-video-title-show");
         #ifdef QT_DEBUG
         vlcSettings.append(" --extraintf=logger"); /* log anything */
         vlcSettings.append(" --verbose=2"); /* be much more verbose then normal for debugging purpose */
