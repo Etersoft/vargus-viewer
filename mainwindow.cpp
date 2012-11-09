@@ -551,10 +551,10 @@ bool MainWindow::readSettings()
         #endif
         settings->setValue("vlcsettings", vlcSettings);
     }
-    fontsize = settings->value("fontsize",32).toInt();
-    minfontsize = settings->value("minfontsize",10).toInt();
-    magnification = settings->value("magnification",1.0).toDouble();
-    VideoWidget::setTextProperties(new PaintTextProperties("Courier New", fontsize, magnification));
+    fontsize = settings->value("fontsize",12).toInt();
+    magnification = settings->value("magnification",0).toDouble();
+    fonttype = settings->value("fonttype", QString("Courier New")).toString();
+    VideoWidget::setTextProperties(new PaintTextProperties(fonttype, fontsize, magnification));
 
     QStringList args = vlcSettings.split(" ");
     int num = args.length();
@@ -725,20 +725,20 @@ void MainWindow::logSettings()
 
 void MainWindow::fontSettings()
 {
-    FontSettings fs(fontsize, minfontsize, magnification);
-    connect(&fs, SIGNAL(fontchanged(int, int, double)), this, SLOT(fontChanged(int, int, double)));
+    FontSettings fs(fontsize, magnification, fonttype);
+    connect(&fs, SIGNAL(fontchanged(int, double, QString)), this, SLOT(fontChanged(int, double, QString)));
     fs.exec();
 }
 
-void MainWindow::fontChanged(int newfsize, int newmfsize, double newmagnification)
+void MainWindow::fontChanged(int newfsize, double newmagnification, QString newfont)
 {
     fontsize = newfsize;
-    minfontsize = newmfsize;
     magnification = newmagnification;
-    VideoWidget::setTextProperties(new PaintTextProperties("Courier New", fontsize, magnification));
+    fonttype = newfont;
+    VideoWidget::setTextProperties(new PaintTextProperties(fonttype, fontsize, magnification));
     if(!settings)
         return;
     settings->setValue("fontsize", fontsize);
-    settings->setValue("minfontsize", minfontsize);
     settings->setValue("magnification", magnification);
+    settings->setValue("fonttype", fonttype);
 }
