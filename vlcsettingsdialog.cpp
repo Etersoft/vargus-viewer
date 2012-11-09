@@ -28,7 +28,7 @@ VLCSetingsDialog::VLCSetingsDialog(const QString &currentSettings, QWidget *pare
     vlc_args.append("-I dummy"); /* Don't use any interface */
     vlc_args.append(" --ignore-config"); /* Don't use VLC's config */
     vlc_args.append(" --no-audio"); /* Audio off */
-    vlc_args.append(" --http-reconnect --http-continuous --video-title-show --video-title-position=9 --video-title-timeout=2147483647");
+    vlc_args.append(" --http-reconnect --http-continuous --no-video-title-show");
 #ifdef QT_DEBUG
     vlc_args.append(" --extraintf=logger"); /* log anything */
     vlc_args.append(" --verbose=2"); /* be much more verbose then normal for debugging purpose */
