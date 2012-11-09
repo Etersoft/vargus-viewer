@@ -56,7 +56,10 @@ VideoWidgetLowLevelPainting::VideoWidgetLowLevelPainting() :
     aspectComply(false),
     type(NOTHING), isActiveLowLevelPainting(false), printedTitle("")
 {
-    textProperties = new PaintTextProperties();
+    if(!textProperties)
+    {
+        textProperties = new PaintTextProperties();
+    }
     repaintTimer = new QTimer(this);
     connect(repaintTimer, SIGNAL(timeout()), this, SLOT(animate()));
 }
