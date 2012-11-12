@@ -248,7 +248,7 @@ void VideoWidgetLowLevelPainting::printVideoFrame()
     painter.drawImage(QPoint(xdisplacement, ydisplacement), *frame);
     painter.setFont(QFont("Arial", 10));
     painter.setPen(Qt::white);
-    painter.drawText(rect(), Qt::AlignBottom, printedTitle);
+    painter.drawText(xdisplacement, ydisplacement, this->width() - 2*xdisplacement,this->height() - 2*ydisplacement, Qt::AlignBottom, printedTitle);
     if(isneedPrintTextEvents() && getTextEvent().length()>0)
     {
         int size = textProperties->size + (this->height()-textProperties->heightForNoCoef)*textProperties->coefficient;
