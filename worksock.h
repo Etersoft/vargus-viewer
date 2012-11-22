@@ -20,7 +20,7 @@ private:
     QTcpSocket *wsocket;
     QTimer *reconnectTimer;
     void createTimer();
-
+    QByteArray str;
 protected:
     virtual void receiveDataProcessing(QString inputData) = 0;
 

@@ -60,14 +60,22 @@ void worksock::connectProcessing()
 
 void worksock::receiveData()
 {
-    static QByteArray str;
-    str = str.append(wsocket->readAll().data());
+
+    QByteArray sendedString;
+    sendedString = wsocket->readAll().data();
+    str = str.append(sendedString);
+
+
 
     const int sendedlenlenght = 8;
     QTextCodec *codec = QTextCodec::codecForName("UTF-8");
     int i = 0;
     int partlen = 0;
-    do
+
+    vargusLog.writeToFile(QString("get data |") + codec->toUnicode(sendedString) + "|");
+    vargusLog.writeToFile(QString("all data |") + codec->toUnicode(str) + "|");
+
+    while(str.length() > 0 && (str.length() >=  str.left(sendedlenlenght).toInt()) && (i++ < 5))
     {
 
         partlen = str.left(sendedlenlenght).toInt();
@@ -77,12 +85,12 @@ void worksock::receiveData()
             vargusLog.writeToFile(QString("May error at string [") + codec->toUnicode(str) + "]");
             return;
         }
+
         QString toString = codec->toUnicode(str.left(partlen - 1).right(partlen - 2 - sendedlenlenght ) );
         receiveDataProcessing(toString);
         str = str.right(str.length() - partlen);
-
     }
-    while(str.length() && str.length() >=  str.left(sendedlenlenght).toInt() && i++ < 5);
+
 }
 
 void worksock::errorProcessing (QAbstractSocket::SocketError error)
