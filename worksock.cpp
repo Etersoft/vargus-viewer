@@ -75,11 +75,11 @@ void worksock::receiveData()
     vargusLog.writeToFile(QString("get data |") + codec->toUnicode(sendedString) + "|");
     vargusLog.writeToFile(QString("all data |") + codec->toUnicode(str) + "|");
 
-    while(str.length() > 0 && (str.length() >=  str.left(sendedlenlenght).toInt()) && (i++ < 5))
+    while(str.length() > 0 && (str.length() >=  str.left(sendedlenlenght).toInt()) )
     {
 
         partlen = str.left(sendedlenlenght).toInt();
-        if(!partlen)
+        if(!partlen && (i++ < 5))
         {
             str.clear();
             vargusLog.writeToFile(QString("May error at string [") + codec->toUnicode(str) + "]");
