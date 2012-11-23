@@ -1,5 +1,5 @@
 Name: vargus-viewer
-Version: 0.9.9
+Version: 0.9.10
 Release: alt1
 
 Summary: Qt4 client for vargus server
@@ -43,6 +43,10 @@ cp lang/lang_ru.qm %buildroot%_datadir/%name/lang/
 %_datadir/%name/
 
 %changelog
+* Fri Nov 23 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.10-alt1
+- fix posible diagn error at reseived string
+- fix bug with received string
+
 * Thu Nov 15 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.9-alt1
 - set check lenght reciived string and split it
 - move name camera to screen
