@@ -115,6 +115,7 @@ void VideoWidgetLowLevelPainting::restartPaintVideo()
     stoptvlcPlayer();
     delete frame;
     frame = new QImage(videowidth, videoheight, QImage::Format_ARGB32_Premultiplied);
+    frame->fill(Qt::black);
     libvlc_video_set_format(getvlcPlayer(), "RV32", frame->width(), frame->height(), frame->width() * 4);
     libvlc_video_set_callbacks(getvlcPlayer(), lock, unlock, display, this);
     startvlcPlayer();
