@@ -48,7 +48,7 @@ void VideoWidgetLowLevelPainting::mutexUnlock()
 }
 
 VideoWidgetLowLevelPainting::VideoWidgetLowLevelPainting() :
-    QWidget(), frame(0),
+    QWidget(), frame(NULL),
     videosourceheight(0), videosourcewidth(0),
     widgetheight(0), widgetwidth(0),
     videoheight(0), videowidth(0),
@@ -67,6 +67,7 @@ VideoWidgetLowLevelPainting::VideoWidgetLowLevelPainting() :
 VideoWidgetLowLevelPainting::~VideoWidgetLowLevelPainting()
 {  
     vargusLog.writeToFile("destroy VideoWidgetLowLevelPainting");
+    delete(repaintTimer);
     deactivateLowLevelPainting();
 }
 
@@ -112,8 +113,7 @@ void VideoWidgetLowLevelPainting::restartPaintVideo()
     ydisplacement = getYDisplacement();
     repaintTimer->stop();
     stoptvlcPlayer();
-    if(frame)
-        delete frame;
+    delete frame;
     frame = new QImage(videowidth, videoheight, QImage::Format_ARGB32_Premultiplied);
     libvlc_video_set_format(getvlcPlayer(), "RV32", frame->width(), frame->height(), frame->width() * 4);
     libvlc_video_set_callbacks(getvlcPlayer(), lock, unlock, display, this);
@@ -183,11 +183,9 @@ void VideoWidgetLowLevelPainting::deactivateLowLevelPainting()
     type = NOTHING;
     repaintTimer->stop();
     mutexLock();
-    if(frame)
-    {
-        delete frame;
-        frame = 0;
-    }
+    delete frame;
+    frame = NULL;
+
     mutexUnlock();
 }
 
@@ -252,12 +250,12 @@ void VideoWidgetLowLevelPainting::printVideoFrame()
     if(isneedPrintTextEvents() && getTextEvent().length()>0)
     {
         int size = textProperties->size + (this->height()-textProperties->heightForNoCoef)*textProperties->coefficient;
-        QFont* font = new QFont(textProperties->font);
+        QFont font(textProperties->font);
         QString printString = getTextEvent();
 
         painter.fillRect(0, 0, this->width(), this->height(),QColor(0,0,0,100));
-        font->setPixelSize(size);
-        painter.setFont(*font);
+        font.setPixelSize(size);
+        painter.setFont(font);
         painter.drawText(rect(), Qt::AlignTop | Qt::TextDontClip, printString);
     }
 
