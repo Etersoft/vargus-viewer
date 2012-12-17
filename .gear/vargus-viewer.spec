@@ -1,5 +1,5 @@
 Name: vargus-viewer
-Version: 0.9.10
+Version: 0.9.11
 Release: alt1
 
 Summary: Qt4 client for vargus server
@@ -43,6 +43,10 @@ cp lang/lang_ru.qm %buildroot%_datadir/%name/lang/
 %_datadir/%name/
 
 %changelog
+* Mon Dec 17 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.11-alt1
+- fill black before show video
+- some litle refactoring
+
 * Fri Nov 23 2012 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.10-alt1
 - fix posible diagn error at reseived string
 - fix bug with received string
