@@ -47,14 +47,20 @@ private:
     bool isRunningStringActive;
 
     void printString();
+
+    bool played;
 public:
     void setCamera(Camera *_camera);
 
     enum sizeVideo {BIGVIDEO, SMALLVIDEO};
     void startPlay(sizeVideo size);
     void stopPlay();
+
+    bool isPlaying();
+
     void disableTextString();
     Camera * getCamera() { return camera; }
+
 
 protected:
     void mousePressEvent ( QMouseEvent * e );

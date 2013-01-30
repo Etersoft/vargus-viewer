@@ -24,7 +24,7 @@ along with GCC; see the file COPYING3.  If not see
 #include <QDebug>
 #include "videowidget.h"
 
-VideoWidget::VideoWidget()
+VideoWidget::VideoWidget(): played(FALSE)
 {
     camera = NULL;
     isRunningStringActive = true;
@@ -47,6 +47,7 @@ void VideoWidget::setCamera(Camera *_camera)
 
 void VideoWidget::startPlay(sizeVideo size)
 {
+    played = TRUE;
     camera->name() + ":" + camera->description();
     switch(size)
     {
@@ -64,7 +65,8 @@ void VideoWidget::startPlay(sizeVideo size)
 
 void VideoWidget::stopPlay()
 {
-
+    played = FALSE;
+    stop();
 }
 
 QString VideoWidget::getPaintText()
@@ -253,4 +255,9 @@ void VideoWidget::dropEvent(QDropEvent *de)
 
 void VideoWidget::printString()
 {
+}
+
+bool VideoWidget::isPlaying()
+{
+    return played;
 }

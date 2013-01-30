@@ -37,7 +37,7 @@ public:
 
     static void staticDestructor();
 
-    bool isPlaying();
+    virtual bool isPlaying();
 protected:
     virtual void restart();
 private:

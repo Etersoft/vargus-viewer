@@ -31,7 +31,8 @@ VlcControl::VlcControl()
         const char * const vlc_args[] = {
                   "-I", "dummy", /* Don't use any interface */
                   "--ignore-config", /* Don't use VLC's config */
-                  "--verbose=2"//be much more verbose then normal for debugging purpose,
+                  "--verbose=2",//be much more verbose then normal for debugging purpose,
+                  "--no-video-title-show"
                     };
         vlcInstance = libvlc_new(sizeof(vlc_args) / sizeof(vlc_args[0]), vlc_args);
     }
