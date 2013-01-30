@@ -23,8 +23,8 @@ along with GCC; see the file COPYING3.  If not see
 #define CAMERA_H
 
 #include <QObject>
-#include "runningstring.h"
-#include "limitline.h"
+#include "runningstring/runningstring.h"
+#include "limitline/limitline.h"
 
 class Camera : public QObject, public AppendRunningString
 {

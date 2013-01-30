@@ -21,13 +21,13 @@ SOURCES += main.cpp\
     logger.cpp \
     logsettings.cpp \
     settingsdialog.cpp \
-    runningstring.cpp \
-    worksock.cpp \
     videowidgetlowlevelpainting.cpp \
-    limitline.cpp \
     vlcsettingsdialog.cpp \
     fontsettings.cpp \
-    painttextproperties.cpp
+    painttextproperties.cpp \
+    runningstring/runningstring.cpp \
+    runningstring/worksock.cpp \
+    runningstring/limitline.cpp 
 
 HEADERS  += mainwindow.h \
     set.h \
@@ -38,13 +38,13 @@ HEADERS  += mainwindow.h \
     logger.h \
     logsettings.h \
     settingsdialog.h \
-    runningstring.h \
-    worksock.h \
     videowidgetlowlevelpainting.h \
-    limitline.h \
     vlcsettingsdialog.h \
     fontsettings.h \
-    painttextproperties.h
+    painttextproperties.h \  
+    runningstring/runningstring.h \
+    runningstring/worksock.h \
+    runningstring/limitline.h 
 
 TRANSLATIONS += lang/lang_ru.ts
 

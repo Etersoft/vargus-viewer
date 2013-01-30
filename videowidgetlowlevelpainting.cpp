@@ -22,7 +22,7 @@ along with GCC; see the file COPYING3.  If not see
 #include "videowidgetlowlevelpainting.h"
 #include"logger.h"
 #include "vlc/vlc.h"
-#include "runningstring.h"
+#include "runningstring/runningstring.h"
 extern Logger &vargusLog;
 
 const int VideoWidgetLowLevelPainting::repaintTime = 50;

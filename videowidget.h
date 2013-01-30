@@ -29,7 +29,7 @@ along with GCC; see the file COPYING3.  If not see
 
 #include <vlc/vlc.h>
 #include "camera.h"
-#include "runningstring.h"
+#include "runningstring/runningstring.h"
 #include "videowidgetlowlevelpainting.h"
 #include <QVBoxLayout>
 #include <QLabel>

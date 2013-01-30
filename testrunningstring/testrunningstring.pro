@@ -12,11 +12,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    ../runningstring.cpp \
-    ../worksock.cpp
+    ../runningstring/runningstring.cpp \
+    ../runningstring/worksock.cpp
 
 HEADERS  += mainwindow.h \
-    ../runningstring.h \
-    ../worksock.h
+    ../runningstring/runningstring.h \
+    ../runningstring/worksock.h
 
 FORMS    += mainwindow.ui
