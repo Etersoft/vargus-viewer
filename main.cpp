@@ -36,6 +36,7 @@ void signal_handler(int sig)// signal handler
 {
     switch(sig)
     {
+#ifndef WIN32
         case SIGHUP:
             vargusLog.writeToFile("Signal SIGHUP");
             break;
@@ -48,6 +49,7 @@ void signal_handler(int sig)// signal handler
         case SIGKILL:
             vargusLog.writeToFile("Signal SIGKILL");
             break;
+#endif /*WIN32*/
         default:
             vargusLog.writeToFile("Signal id" + QString::number(sig));
     }
@@ -55,8 +57,10 @@ void signal_handler(int sig)// signal handler
     fflush(stderr);
     const int max_deep = 100;
     void  *traces[max_deep];
+#ifndef WIN32
     int ntprs = backtrace(traces, max_deep);
     backtrace_symbols_fd(traces, ntprs, STDERR_FILENO);
+#endif /*WIN32*/
     exit(sig);
 }
 
@@ -139,13 +143,13 @@ int main(int argc, char *argv[])
 {
     vargusLog.makeLogFile();
     vargusLog.writeToFile("Start vargusLog");
-
+#ifndef WIN32
     //set signal's hanler
     signal(SIGKILL, signal_handler);
     signal(SIGHUP, signal_handler);
     signal(SIGABRT, signal_handler);
     signal(SIGTERM, signal_handler);
-
+#endif /*WIN32*/
     QApplication app(argc, argv);
     QString imagePath = "/usr/share/vargus-viewer/images/";
     QIcon icon(imagePath + "vargus_big.png");

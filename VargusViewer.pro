@@ -6,7 +6,8 @@
 
 QT       += core gui network
 
-QMAKE_CXXFLAGS += -O2 -Wall -Wextra -Winit-self
+QMAKE_CXXFLAGS += -O2 -Wall 
+unix: QMAKE_CXXFLAGS +=-Wextra -Winit-self
 
 TARGET = VargusViewer
 TEMPLATE = app
@@ -56,14 +57,14 @@ HEADERS  += mainwindow.h \
 
 TRANSLATIONS += lang/lang_ru.ts
 
-DEFINES += DATADIR=\\\"/usr/share/vargus-viewer/\\\"
-unix {
-   DEFINES += WORKDIR=\\\"$(HOME)/vargus-viewer/\\\"
-}
-!unix {
-   DEFINES += WORKDIR=\\\".\\\"
-}
+unix :  DEFINES += DATADIR=\\\"/usr/share/vargus-viewer/\\\"
+win32 :    DEFINES += DATADIR=\\\".\\\"
+unix :  DEFINES += WORKDIR=\\\"$(HOME)/vargus-viewer/\\\"
+win32 :    DEFINES += WORKDIR=\\\".\\\"
 
-unix|win32: LIBS += -lvlc
 
+unix: LIBS += -lvlc
+win32:  LIBS += -LC:\Program Files (x86)\VideoLan\VLC\sdk\lib -llibvlc
+win32: INCLUDEPATH += sdk/include
+win32: DEPENDPATH += sdk
 FORMS +=
