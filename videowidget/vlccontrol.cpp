@@ -24,18 +24,22 @@ libvlc_instance_t *VlcControl::vlcInstance = 0;
 const char **VlcControl::vlcArgs = 0;
 int VlcControl::numberVlcArgs = 0;
 
-VlcControl::VlcControl()
+VlcControl::VlcControl(): vlcMedia(0)
 {
     if(!vlcInstance)
     {
-        const char * const vlc_args[] = {
-                  "-I", "dummy", /* Don't use any interface */
-                  "--ignore-config", /* Don't use VLC's config */
-                  "--verbose=2",//be much more verbose then normal for debugging purpose,
-                  "--no-video-title-show"
-                    };
-        vlcInstance = libvlc_new(sizeof(vlc_args) / sizeof(vlc_args[0]), vlc_args);
+        for(int i = 0; i < numberVlcArgs; i++ )
+        {
+            if(strcmp(vlcArgs[i], "--video-title-show") == 0)
+            {
+                vlcArgs[i] = "--no-video-title-show";
+            }
+        }
+
+        vlcInstance = libvlc_new(numberVlcArgs, vlcArgs);
     }
+    if(!vlcInstance)
+        exit(0);
     vlcPlayer = libvlc_media_player_new(vlcInstance);
 }
 
@@ -54,11 +58,18 @@ VlcControl::~VlcControl()
 {
     stop();
     libvlc_media_player_release(vlcPlayer);
-    libvlc_media_release(vlcMedia);
+    if(vlcMedia)
+    {
+        libvlc_media_release(vlcMedia);
+    }
 }
 
 void VlcControl::setVideo(QString source)
 {
+    if(vlcMedia)
+    {
+        libvlc_media_release(vlcMedia);
+    }
     vlcMedia = libvlc_media_new_path(vlcInstance, source.toAscii());
     libvlc_media_player_set_media (vlcPlayer, vlcMedia);
 }
@@ -66,10 +77,6 @@ void VlcControl::setVideo(QString source)
 void VlcControl::start()
 {
     libvlc_media_player_play(vlcPlayer);
-    while(libvlc_media_player_play(vlcPlayer))
-    {
-
-    }
 #ifndef TESTCALLBACKPAINT
     setPrintType(VIDEO);
 #endif
@@ -84,10 +91,6 @@ void VlcControl::stop()
 #endif
     stopCheckScreen();
     libvlc_media_player_stop(vlcPlayer);
-    while(libvlc_media_player_play(vlcPlayer))
-    {
-
-    }
     cleanCallbacks();
 }
 
