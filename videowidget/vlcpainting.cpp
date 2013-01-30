@@ -25,8 +25,9 @@ along with GCC; see the file COPYING3.  If not see
 
 //const int VlcPainting::checkScreenTime = 2000;
 const int VlcPainting::checkScreenTime = 50;
+const int VlcPainting::numberValidFramesLost = 20;
 
-VlcPainting::VlcPainting():countupdated(1)
+VlcPainting::VlcPainting():countupdated(0)
 {
     setAttribute(Qt::WA_WState_InPaintEvent,false);
     checkWidgetSizeTimer = new QTimer(this);
@@ -74,16 +75,16 @@ void VlcPainting::queryUpdate()
 
 void VlcPainting::fixUpdated()
 {
-  //  if(countupdated>1000)
-  //      countupdated=0;
-  //  countupdated++;
+    if(countupdated>1000)
+        countupdated=0;
+    countupdated++;
 }
 
 bool VlcPainting::isUpdated()
 {
     if(countupdated>0)
     {
-        countupdated = 1;
+        countupdated = 0;
         return true;
     }
     else
@@ -110,14 +111,24 @@ void VlcPainting::checkScreen()
 
 void VlcPainting::checkPaintingStatus()
 {
-    update();
-    if(!isUpdated())
+    static int numberFramesLost = 0;
+
+    if(!isUpdated() )
     {
+        numberFramesLost++;
 #ifndef TESTCALLBACKPAINT
-        setPrintType(NOSIGNAL);
-        //update();
+        if(numberFramesLost>numberValidFramesLost)
+        {
+            setPrintType(NOSIGNAL);
+        }
+        update();
 #endif
     }
+    else
+    {
+        numberFramesLost = 0;
+    }
+    update();
 
 }
 

@@ -50,6 +50,7 @@ private:
 
     QTimer* checkWidgetSizeTimer;
     static const int checkScreenTime;
+    static const int numberValidFramesLost;
     virtual QPainter* getPainter();
 
     void checkScreenSize();
