@@ -22,7 +22,7 @@ along with GCC; see the file COPYING3.  If not see
 #include "runningstring.h"
 #include <cstdio>
 #include <QRegExp>
-#include"logger.h"
+#include"../logger.h"
 extern Logger &vargusLog;
 
 RunningString::RunningString(const QString &_server, int _port)

@@ -28,16 +28,16 @@ along with GCC; see the file COPYING3.  If not see
 
 #include <QLayout>
 
-#include <camera.h>
-#include <set.h>
-#include <view.h>
+#include "camera.h"
+#include "set.h"
+#include "view.h"
 #include <QAbstractSocket>
 #include <QMessageBox>
 #include <QCloseEvent>
 #include <QSettings>
 #include "cameralist.h"
 #include <QSystemTrayIcon>
-#include <vlcsettingsdialog.h>
+#include "vlcsettingsdialog.h"
 
 class MainWindow : public QMainWindow
 {

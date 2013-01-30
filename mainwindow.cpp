@@ -28,11 +28,11 @@ along with GCC; see the file COPYING3.  If not see
 #include "settingsdialog.h"
 #include <QtCore>
 #include <QFileDialog>
-#include <logger.h>
-#include <videowidget.h>
+#include "logger.h"
+#include "videowidget/videowidget.h"
 #include "logsettings.h"
 #include "fontsettings.h"
-#include "painttextproperties.h"
+#include "videowidget/painttextproperties.h"
 
 extern Logger &vargusLog;
 

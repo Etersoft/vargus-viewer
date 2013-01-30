@@ -18,19 +18,37 @@ You should have received a copy of the GNU General Public License
 along with GCC; see the file COPYING3.  If not see
 <http://www.gnu.org/licenses/>.  */
 
+#ifndef VLCCONTROL_H
+#define VLCCONTROL_H
 #include <QString>
-#include "painttextproperties.h"
+#include "vlcpainting.h"
 
-const int PaintTextProperties::heightForNoCoef = 480;
-PaintTextProperties::PaintTextProperties()
+class VlcControl : public VlcPainting
 {
-    font = "Courier New";
-    size = 20;
-    coefficient = 0;
-}
+public:
+    VlcControl();
+    ~VlcControl();
 
-PaintTextProperties::PaintTextProperties(QString _font, int _size, qreal _coefficient):
-    font(_font), size(_size), coefficient(_coefficient)
-{
+    static void setVlcArgs( const char *const *_vlcArgs, int _numberVlcArgs);
 
-}
+    void setVideo (QString source);
+    void start();
+    void stop();
+
+    static void staticDestructor();
+
+    bool isPlaying();
+protected:
+    virtual void restart();
+private:
+    virtual libvlc_media_player_t* getvlcPlayer();
+
+    static const char **vlcArgs;
+    static int numberVlcArgs;
+
+    static libvlc_instance_t *vlcInstance;
+    libvlc_media_player_t *vlcPlayer;
+    libvlc_media_t *vlcMedia;
+};
+
+#endif // VLCCONTROL_H

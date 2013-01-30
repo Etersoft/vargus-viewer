@@ -16,15 +16,19 @@ SOURCES += main.cpp\
     camera.cpp \
     set.cpp \
     view.cpp \
-    videowidget.cpp \
     cameralist.cpp \
     logger.cpp \
     logsettings.cpp \
     settingsdialog.cpp \
-    videowidgetlowlevelpainting.cpp \
     vlcsettingsdialog.cpp \
     fontsettings.cpp \
-    painttextproperties.cpp \
+	videowidget/vlccallbacks.cpp \
+    videowidget/vlcpainting.cpp \
+    videowidget/vlccontrol.cpp \
+    videowidget/paintassistant.cpp \
+    videowidget/painttextproperties.cpp \
+    videowidget/videomath.cpp \
+    videowidget/videowidget.cpp \
     runningstring/runningstring.cpp \
     runningstring/worksock.cpp \
     runningstring/limitline.cpp 
@@ -32,16 +36,20 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     set.h \
     view.h \
-    videowidget.h \
     camera.h \
     cameralist.h \
     logger.h \
     logsettings.h \
     settingsdialog.h \
-    videowidgetlowlevelpainting.h \
     vlcsettingsdialog.h \
     fontsettings.h \
-    painttextproperties.h \  
+	videowidget/vlccallbacks.h \
+    videowidget/vlcpainting.h \
+    videowidget/vlccontrol.h \
+    videowidget/paintassistant.h \
+    videowidget/painttextproperties.h \
+    videowidget/videomath.h \
+    videowidget/videowidget.h \
     runningstring/runningstring.h \
     runningstring/worksock.h \
     runningstring/limitline.h 

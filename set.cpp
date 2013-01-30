@@ -230,7 +230,7 @@ QList<Camera*> Set::getActiveCameras()
     QList<Camera *> res;
     foreach(VideoWidget *v, videoList)
     {
-        if(v->playing())
+        if(v->isPlaying())
             res << v->getCamera();
     }
     return res;
@@ -468,7 +468,7 @@ int Set::amountOfPlayingWidgets()
     int k = 0;
     foreach(VideoWidget *vw, videoList)
     {
-        if(vw->playing())
+        if(vw->isPlaying())
             k++;
     }
     return k;

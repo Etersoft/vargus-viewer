@@ -1,6 +1,5 @@
 /*
 
-
 Copyright (C) 2012-2013 Etersoft <info@etersoft.ru>
 
 This file is part of VargusViewer.

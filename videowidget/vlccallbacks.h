@@ -18,19 +18,38 @@ You should have received a copy of the GNU General Public License
 along with GCC; see the file COPYING3.  If not see
 <http://www.gnu.org/licenses/>.  */
 
-#include <QString>
-#include "painttextproperties.h"
+#ifndef VLCCALLBACKS_H
+#define VLCCALLBACKS_H
 
-const int PaintTextProperties::heightForNoCoef = 480;
-PaintTextProperties::PaintTextProperties()
+#include <QMutex>
+#include <QImage>
+#include "vlc/vlc.h"
+#include "videomath.h"
+
+class VlcCallbacks : public VideoMath
 {
-    font = "Courier New";
-    size = 20;
-    coefficient = 0;
-}
+public:
+    VlcCallbacks();
+    ~VlcCallbacks();
 
-PaintTextProperties::PaintTextProperties(QString _font, int _size, qreal _coefficient):
-    font(_font), size(_size), coefficient(_coefficient)
-{
+    void calllock();
+    void callunlock();
+    void calldisplay();
+    void callSetupQImage(int* _videowidth, int* _videoheight);
+    void callReleaseQImage();
 
-}
+    uchar* getFrameBits();
+
+    virtual libvlc_media_player_t *getvlcPlayer() = 0;
+
+    void setCallbacks(int _screenwidth, int _screenheight);
+    void cleanCallbacks();
+private:
+    QMutex mutex;
+
+protected:
+    virtual void queryUpdate() = 0;
+    QImage* frame;
+};
+
+#endif // VLCCALLBACKS_H

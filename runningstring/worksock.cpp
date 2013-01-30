@@ -23,7 +23,7 @@ along with GCC; see the file COPYING3.  If not see
 #include <QtCore>
 #include <QApplication>
 #include <QWidget>
-#include "logger.h"
+#include "../logger.h"
 
 extern Logger &vargusLog;
 

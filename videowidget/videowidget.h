@@ -1,5 +1,4 @@
 /*
-Used for showing video.
 
 Copyright (C) 2012-2013 Etersoft <info@etersoft.ru>
 
@@ -21,35 +20,18 @@ along with GCC; see the file COPYING3.  If not see
 
 #ifndef VIDEOWIDGET_H
 #define VIDEOWIDGET_H
-
-#include <QWidget>
-#include <QUrl>
-#include <QDrag>
 #include <QMenu>
+#include "vlccontrol.h"
+#include "../camera.h"
 
-#include <vlc/vlc.h>
-#include "camera.h"
-#include "runningstring/runningstring.h"
-#include "videowidgetlowlevelpainting.h"
-#include <QVBoxLayout>
-#include <QLabel>
-
-class QFrame;
-
-class VideoWidget: public VideoWidgetLowLevelPainting, public PrintRunningString
+class VideoWidget: public VlcControl, public PrintRunningString
 {
     Q_OBJECT
-    QFrame *frame;
+public:
+    VideoWidget();
+    ~VideoWidget();
 
-    QTimer *poller;
-    QTimer *waitingDoubleClickTimer;
-    bool isPlaying;
-    bool isStatusNoSignal;
-
-    static libvlc_instance_t *vlcInstance;
-    libvlc_media_player_t *vlcPlayer;
-    libvlc_media_t *vlcMedia;
-
+private:
     Camera *camera;
 
     QMenu* contextMenu;
@@ -59,13 +41,13 @@ class VideoWidget: public VideoWidgetLowLevelPainting, public PrintRunningString
     void setupContextMenu();
 
     enum statusesClick{CLICK, DOUBLE_CLICK, NO_CLICK};
-    statusesClick StatusClick;
+    statusesClick statusClick;
+    QTimer *waitingDoubleClickTimer;
 
+    bool isRunningStringActive;
+
+    void printString();
 public:
-    VideoWidget();
-    ~VideoWidget();
-    static void staticDestructor();
-
     void setCamera(Camera *_camera);
 
     enum sizeVideo {BIGVIDEO, SMALLVIDEO};
@@ -73,37 +55,6 @@ public:
     void stopPlay();
     void disableTextString();
     Camera * getCamera() { return camera; }
-    bool playing() { return isPlaying; }
-
-    static void setVlcArgs( const char *const *_vlcArgs, int _numberVlcArgs);
-
-private:
-    static void clearVlc(libvlc_media_player_t *vlcPlayer, libvlc_media_t *vlcMedia);
-    void printString();
-
-    virtual void drawImage();
-    virtual libvlc_media_player_t * getvlcPlayer();
-    virtual void startvlcPlayer();
-    virtual void stoptvlcPlayer();
-
-    bool isRunningStringActive;
-
-    void disconnectAction();
-
-    static int numVlcArgs;
-    static const char **VlcArgs;
-
-    void vlcSetEvent();
-    void vlcSetOffEvent();
-
-    bool isStillPlay;
-    QVBoxLayout* layout;
-    QLabel* statusLabel;
-
-    void setNosignalMessage();
-    void setOffNosignalMessage();
-
-    int afterStart;
 
 protected:
     void mousePressEvent ( QMouseEvent * e );
@@ -117,19 +68,17 @@ protected:
     void startDrag();
 
     virtual bool isneedPrintTextEvents();
-    virtual QString getTextEvent();
+
+    virtual QString getPaintText();
+    virtual QString getTitle();
 
 public slots:
-    void updateInterface();
-    void ContextMenuAction(const QPoint& z);
+    void contextMenuAction(const QPoint& z);
     void arhiveMenuPress();
     void changeStateMessageWidgetPress();
     void changeStateMessageCameraPress();
 
     void waitingDoubleClickTimeout();
-    float getFPS() { return libvlc_media_player_get_fps(vlcPlayer);
-                /*libvlc_media_player_get_time(vlcPlayer);*/}
-    void setStillPlay();
 
 signals:
     void arhiveCall(QString cam);
@@ -138,4 +87,4 @@ signals:
     void camerasChanged(VideoWidget *,Camera *second, bool fromAnotherWidget);
 };
 
-#endif // VIDEOVIDGET_H
+#endif // VIDEOWIDGET_H

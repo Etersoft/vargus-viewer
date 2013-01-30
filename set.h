@@ -25,7 +25,7 @@ along with GCC; see the file COPYING3.  If not see
 #include <QWidget>
 #include "camera.h"
 #include "view.h"
-#include "videowidget.h"
+#include "videowidget/videowidget.h"
 #include <QVector>
 
 class MainWindow;

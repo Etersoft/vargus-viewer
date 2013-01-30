@@ -24,7 +24,7 @@ along with GCC; see the file COPYING3.  If not see
 
 #include <QObject>
 #include "runningstring/runningstring.h"
-#include "limitline/limitline.h"
+#include "runningstring/limitline.h"
 
 class Camera : public QObject, public AppendRunningString
 {
