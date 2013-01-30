@@ -21,7 +21,7 @@ along with GCC; see the file COPYING3.  If not see
 
 #include "view.h"
 #include <QPainter>
-#include <logger.h>
+#include "logger.h"
 
 extern Logger &vargusLog;
 

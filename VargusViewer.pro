@@ -13,7 +13,7 @@ TARGET = VargusViewer
 TEMPLATE = app
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
+    mainwindow.cpp \
     camera.cpp \
     set.cpp \
     view.cpp \
@@ -23,7 +23,7 @@ SOURCES += main.cpp\
     settingsdialog.cpp \
     vlcsettingsdialog.cpp \
     fontsettings.cpp \
-	videowidget/vlccallbacks.cpp \
+    videowidget/vlccallbacks.cpp \
     videowidget/vlcpainting.cpp \
     videowidget/vlccontrol.cpp \
     videowidget/paintassistant.cpp \
@@ -44,7 +44,7 @@ HEADERS  += mainwindow.h \
     settingsdialog.h \
     vlcsettingsdialog.h \
     fontsettings.h \
-	videowidget/vlccallbacks.h \
+    videowidget/vlccallbacks.h \
     videowidget/vlcpainting.h \
     videowidget/vlccontrol.h \
     videowidget/paintassistant.h \
@@ -64,7 +64,8 @@ win32 :    DEFINES += WORKDIR=\\\".\\\"
 
 
 unix: LIBS += -lvlc
-win32:  LIBS += -LC:\Program Files (x86)\VideoLan\VLC\sdk\lib -llibvlc
-win32: INCLUDEPATH += sdk/include
+win32: LIBS += -L"C:/Program Files (x86)/VideoLan/VLC/sdk/lib" -llibvlc
+win32: INCLUDEPATH += "C:/Program Files (x86)/VideoLan/VLC/sdk/include"
 win32: DEPENDPATH += sdk
 FORMS +=
+
