@@ -73,7 +73,7 @@ protected:
     void dragLeaveEvent ( QDragLeaveEvent * event );
     void startDrag();
 
-    virtual bool isneedPrintTextEvents();
+    virtual bool isNeedPaintText();
 
     virtual QString getPaintText();
     virtual QString getTitle();

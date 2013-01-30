@@ -82,7 +82,7 @@ QString VideoWidget::getTitle()
     return camera->name() + ":" + camera->description();
 }
 
-bool VideoWidget::isneedPrintTextEvents()
+bool VideoWidget::isNeedPaintText()
 {
     if(camera)
     {
