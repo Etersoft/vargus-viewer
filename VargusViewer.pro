@@ -58,9 +58,9 @@ HEADERS  += mainwindow.h \
 TRANSLATIONS += lang/lang_ru.ts
 
 unix :  DEFINES += DATADIR=\\\"/usr/share/vargus-viewer/\\\"
-win32 :    DEFINES += DATADIR=\\\".\\\"
+win32 :    DEFINES += DATADIR=\\\"./\\\"
 unix :  DEFINES += WORKDIR=\\\"$(HOME)/vargus-viewer/\\\"
-win32 :    DEFINES += WORKDIR=\\\".\\\"
+win32 :    DEFINES += WORKDIR=\\\"./log/\\\"
 
 
 unix: LIBS += -lvlc
