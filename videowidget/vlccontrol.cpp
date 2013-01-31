@@ -36,8 +36,8 @@ VlcControl::VlcControl(): vlcMedia(0)
                 vlcArgs[i] = "--no-video-title-show";
             }
         }
-
         vlcInstance = libvlc_new(numberVlcArgs, vlcArgs);
+        setStaticCallbacks();
     }
     if(!vlcInstance)
     {

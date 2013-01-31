@@ -68,6 +68,13 @@ void cleanup (void *core)
     parrent->callReleaseQImage();
 }
 
+void logwriter (void *core, int level, const char *fmt, va_list args)
+{
+    VlcCallbacks *parrent = (VlcCallbacks *)core;
+    parrent->callLog(level, fmt, args);
+}
+
+
 VlcCallbacks::VlcCallbacks():frame(NULL)
 {   
     frame = NULL;
@@ -123,6 +130,16 @@ void VlcCallbacks::callReleaseQImage()
     frame =0;
 }
 
+void VlcCallbacks::callLog(int level, const char *fmt, va_list args)
+{
+#ifdef newversionofvlc
+    if(level >= LIBVLC_WARNING)
+    {
+        setlog("vlclog: " + QString().sprintf(fmt, args));
+    }
+#endif
+}
+
 void VlcCallbacks::setCallbacks(int _screenwidth, int _screenheight)
 {
     setlog("Setup callback " + QString().sprintf("%08p", this));
@@ -130,9 +147,19 @@ void VlcCallbacks::setCallbacks(int _screenwidth, int _screenheight)
     mutex.lock();
 
     //libvlc_video_set_format(getvlcPlayer(), "RV32", screenwidth, screenheight, screenwidth * 4);
+
     libvlc_video_set_callbacks(getvlcPlayer(), lock, unlock, display, this);
     libvlc_video_set_format_callbacks(getvlcPlayer(), format , cleanup);
     mutex.unlock();
+}
+
+void VlcCallbacks::setStaticCallbacks()
+{
+//FIXME Only for vlc version 2.1.0 http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__log.html
+#ifdef newversionofvlc
+    libvlc_log_subscribe(&debug_subscriber,logwriter,this);
+    libvlc_log_message_t
+#endif
 }
 
 void VlcCallbacks::cleanCallbacks()

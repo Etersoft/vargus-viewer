@@ -24,6 +24,7 @@ along with GCC; see the file COPYING3.  If not see
 #include <QMutex>
 #include <QImage>
 #include "vlc/vlc.h"
+#include "vlc/libvlc_structures.h"
 #include "videomath.h"
 
 class VlcCallbacks : public VideoMath
@@ -37,13 +38,20 @@ public:
     void calldisplay();
     void callSetupQImage(int* _videowidth, int* _videoheight);
     void callReleaseQImage();
+    void callLog(int level, const char *fmt, va_list args);
 
     uchar* getFrameBits();
 
     virtual libvlc_media_player_t *getvlcPlayer() = 0;
 
+    #ifdef newversionofvlc
+        static libvlc_log_subscriber_t debug_subscriber;
+    #endif
+
     void setCallbacks(int _screenwidth, int _screenheight);
     void cleanCallbacks();
+
+    void setStaticCallbacks();
 private:
     QMutex mutex;
 
