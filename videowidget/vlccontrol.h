@@ -40,6 +40,8 @@ public:
     virtual bool isPlaying();
 protected:
     virtual void restart();
+
+    virtual void setlog(QString log);
 private:
     virtual libvlc_media_player_t* getvlcPlayer();
 

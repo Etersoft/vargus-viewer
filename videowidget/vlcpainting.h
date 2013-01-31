@@ -70,6 +70,8 @@ protected:
 
     virtual int getXAssistDisplacement();
     virtual int getYAssistDisplacement();
+
+    virtual void setlog(QString log);
 public slots:
     void checkScreen();
 };

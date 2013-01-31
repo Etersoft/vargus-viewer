@@ -26,6 +26,7 @@ int VlcControl::numberVlcArgs = 0;
 
 VlcControl::VlcControl(): vlcMedia(0)
 {
+    setlog("VlcControl constructor " + QString().sprintf("%08p", this));
     if(!vlcInstance)
     {
         for(int i = 0; i < numberVlcArgs; i++ )
@@ -39,7 +40,10 @@ VlcControl::VlcControl(): vlcMedia(0)
         vlcInstance = libvlc_new(numberVlcArgs, vlcArgs);
     }
     if(!vlcInstance)
+    {
+        setlog("ERROR Create vlc instance. May be needs libvlc.dll" + QString().sprintf("%08p", this));
         exit(0);
+    }
     vlcPlayer = libvlc_media_player_new(vlcInstance);
 }
 
@@ -56,6 +60,7 @@ void VlcControl::setVlcArgs( const char *const *_vlcArgs, int _numberVlcArgs)
 
 VlcControl::~VlcControl()
 {
+    setlog("VlcControl destructor " + QString().sprintf("%08p", this));
     stop();
     libvlc_media_player_release(vlcPlayer);
     if(vlcMedia)
@@ -66,6 +71,7 @@ VlcControl::~VlcControl()
 
 void VlcControl::setVideo(QString source)
 {
+    setlog("set media " + source);
     if(vlcMedia)
     {
         libvlc_media_release(vlcMedia);
@@ -76,6 +82,7 @@ void VlcControl::setVideo(QString source)
 
 void VlcControl::start()
 {
+    setlog("start " + QString().sprintf("%08p", this));
     libvlc_media_player_play(vlcPlayer);
 #ifndef TESTCALLBACKPAINT
     setPrintType(VIDEO);
@@ -86,6 +93,7 @@ void VlcControl::start()
 
 void VlcControl::stop()
 {
+    setlog("stop " + QString().sprintf("%08p", this));
 #ifndef TESTCALLBACKPAINT
     setPrintType(NOTHING);
 #endif
@@ -96,6 +104,7 @@ void VlcControl::stop()
 
 void VlcControl::restart()
 {
+    setlog("restart " + QString().sprintf("%08p", this));
     stop();
     start();
 }
@@ -117,4 +126,6 @@ bool VlcControl::isPlaying()
     }
 }
 
-
+void VlcControl::setlog(QString log)
+{
+}

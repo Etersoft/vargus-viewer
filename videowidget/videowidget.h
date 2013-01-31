@@ -78,6 +78,7 @@ protected:
     virtual QString getPaintText();
     virtual QString getTitle();
 
+    virtual void setlog(QString log);
 public slots:
     void contextMenuAction(const QPoint& z);
     void arhiveMenuPress();

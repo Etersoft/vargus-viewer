@@ -22,7 +22,6 @@ along with GCC; see the file COPYING3.  If not see
 #include <QDateTime>
 #include "vlcpainting.h"
 
-
 //const int VlcPainting::checkScreenTime = 2000;
 const int VlcPainting::checkScreenTime = 50;
 const int VlcPainting::numberValidFramesLost = 20;
@@ -95,11 +94,13 @@ bool VlcPainting::isUpdated()
 
 void VlcPainting::startCheckScreen()
 {
+    setlog("start check screen " + QString().sprintf("%08p", this));
     checkWidgetSizeTimer->start(checkScreenTime);
 }
 
 void VlcPainting::stopCheckScreen()
 {
+    setlog("stop check screen " + QString().sprintf("%08p", this));
     checkWidgetSizeTimer->stop();
 }
 
@@ -119,6 +120,7 @@ void VlcPainting::checkPaintingStatus()
 #ifndef TESTCALLBACKPAINT
         if(numberFramesLost>numberValidFramesLost)
         {
+            setlog("set NO SIGNAL screen " + QString().sprintf("%08p", this));
             setPrintType(NOSIGNAL);
         }
         update();
@@ -136,6 +138,7 @@ void VlcPainting::checkScreenSize()
 {
     if( getScreenHeight() != this->height() || getScreenWidth() != this->width())
     {
+        setlog("change screen size " + QString().sprintf("%08p", this));
         restart();
     }
 }
@@ -161,4 +164,8 @@ int VlcPainting::getYAssistDisplacement()
 #else
     return getYDisplacement();
 #endif
+}
+
+void VlcPainting::setlog(QString log)
+{
 }

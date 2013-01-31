@@ -22,6 +22,7 @@ along with GCC; see the file COPYING3.  If not see
 #include <QDateTime>
 #include "vlccallbacks.h"
 
+
 static void display(void *core, void *picture)
 {
     Q_UNUSED(picture);
@@ -106,6 +107,7 @@ uchar* VlcCallbacks::getFrameBits()
 
 void VlcCallbacks::callSetupQImage(int *_videowidth, int *_videoheight)
 {
+    setlog("Setup image for callback " + QString().sprintf("%08p", this));
     setVideoInformation(getScreenWidth(), getScreenHeight(),*_videowidth, *_videoheight);
 
     *_videowidth = getShowedWidth();
@@ -116,12 +118,14 @@ void VlcCallbacks::callSetupQImage(int *_videowidth, int *_videoheight)
 
 void VlcCallbacks::callReleaseQImage()
 {
+    setlog("Release image " + QString().sprintf("%08p", this));
     delete frame;
     frame =0;
 }
 
 void VlcCallbacks::setCallbacks(int _screenwidth, int _screenheight)
 {
+    setlog("Setup callback " + QString().sprintf("%08p", this));
     setScreenSize(_screenwidth, _screenheight);
     mutex.lock();
 
@@ -133,6 +137,7 @@ void VlcCallbacks::setCallbacks(int _screenwidth, int _screenheight)
 
 void VlcCallbacks::cleanCallbacks()
 {
+    setlog("Clean callback " + QString().sprintf("%08p", this));
     libvlc_video_set_format_callbacks(getvlcPlayer(), NULL, NULL);
     libvlc_video_set_callbacks(getvlcPlayer(), NULL, NULL, NULL, this);
 }

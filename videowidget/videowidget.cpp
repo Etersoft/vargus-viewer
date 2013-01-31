@@ -23,6 +23,8 @@ along with GCC; see the file COPYING3.  If not see
 #include <QDropEvent>
 #include <QDebug>
 #include "videowidget.h"
+#include "../logger.h"
+extern Logger &vargusLog;
 
 VideoWidget::VideoWidget(): played(FALSE)
 {
@@ -47,8 +49,8 @@ void VideoWidget::setCamera(Camera *_camera)
 
 void VideoWidget::startPlay(sizeVideo size)
 {
+    setlog("Start play " + camera->name() + ":" + camera->description() + QString().sprintf("%08p", this));
     played = TRUE;
-    camera->name() + ":" + camera->description();
     switch(size)
     {
         case BIGVIDEO:
@@ -65,6 +67,7 @@ void VideoWidget::startPlay(sizeVideo size)
 
 void VideoWidget::stopPlay()
 {
+    setlog("stopPlay play " + QString().sprintf("%08p", this));
     played = FALSE;
     stop();
 }
@@ -151,6 +154,7 @@ void VideoWidget::contextMenuAction(const QPoint& z)
 
 void VideoWidget::arhiveMenuPress()
 {
+    setlog("press call arhive " + QString().sprintf("%08p", this));
     emit arhiveCall(camera->name());
 }
 
@@ -190,11 +194,12 @@ void VideoWidget::mouseReleaseEvent (QMouseEvent *)
 
 void VideoWidget::startDrag()
 {
+    setlog("start drag " + QString().sprintf("%08p", this));
     if(camera == NULL)
         return;
     QDrag* drag = new QDrag(this);
     // The data to be transferred by the drag and drop operation is contained in a QMimeData object
-    //vargusLog.writeToFile("Drag proc " + QString::number(QCoreApplication::applicationPid()));
+    setlog("Drag proc " + QString::number(QCoreApplication::applicationPid()));
 
     QMimeData *data = new QMimeData;
     data->setText(QString("varguscamera") + QString::number(QCoreApplication::applicationPid()));
@@ -225,6 +230,7 @@ void VideoWidget::waitingDoubleClickTimeout()
 
 void VideoWidget::dropEvent(QDropEvent *de)
 {
+   setlog("drop " + QString().sprintf("%08p", this));
    VideoWidget* dragVideoWindet;
    bool fromAnotherWidget = false;
 
@@ -233,7 +239,7 @@ void VideoWidget::dropEvent(QDropEvent *de)
    QString checktext = de->mimeData()->text();
    if(checktext.compare(QString("varguscamera") + QString::number(QCoreApplication::applicationPid())))
        return;
-   //vargusLog.writeToFile("Drop proc " +  QString::number(QCoreApplication::applicationPid()));
+   setlog("Drop proc " +  QString::number(QCoreApplication::applicationPid()));
 
    dragVideoWindet = (VideoWidget*)de->mimeData()->userData(1);
    Camera *dragCamera;
@@ -260,4 +266,9 @@ void VideoWidget::printString()
 bool VideoWidget::isPlaying()
 {
     return played;
+}
+
+void VideoWidget::setlog(QString log)
+{
+    vargusLog.writeToFile(log);
 }

@@ -50,6 +50,8 @@ private:
 protected:
     virtual void queryUpdate() = 0;
     QImage* frame;
+
+    virtual void setlog(QString log) = 0;
 };
 
 #endif // VLCCALLBACKS_H
