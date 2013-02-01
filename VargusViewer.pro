@@ -60,7 +60,7 @@ TRANSLATIONS += lang/lang_ru.ts
 unix :  DEFINES += DATADIR=\\\"/usr/share/vargus-viewer/\\\"
 win32 :    DEFINES += DATADIR=\\\"./\\\"
 unix :  DEFINES += WORKDIR=\\\"$(HOME)/vargus-viewer/\\\"
-win32 :    DEFINES += WORKDIR=\\\"./log/\\\"
+win32 :    DEFINES += WORKDIR=\\\"./\\\"
 
 
 unix: LIBS += -lvlc
