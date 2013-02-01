@@ -49,7 +49,7 @@ bool Logger::makeLogFile()
         currentDir->cd(path);
     }
     QDateTime d = QDateTime::currentDateTime();
-    return openLogFile(currentDir->absolutePath() + "/log " + d.toString(Qt::ISODate) + ".txt");
+    return openLogFile(currentDir->absolutePath() + "/logs " + d.toString("yyyy_MM_ddThh_mm_ss") + ".txt");
 }
 
 bool Logger::openLogFile(const QString &filename)
@@ -76,7 +76,7 @@ bool Logger::writeToFile(const QString &text)
     }
     QDateTime d = QDateTime::currentDateTime();
     QString s;
-    s = d.toString(Qt::ISODate) + " " + text + "\n";
+    s = d.toString(Qt::ISODate) + " " + text + "\r\n";
     file->write(s.toUtf8());
     file->flush();
     locker.unlock();
