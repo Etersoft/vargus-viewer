@@ -27,8 +27,8 @@ along with GCC; see the file COPYING3.  If not see
 #include "mainwindow.h"
 #include <signal.h>
 #include "logger.h"
-#include <execinfo.h>
-#include <unistd.h>
+//#include <execinfo.h>
+//#include <unistd.h>
 
 Logger &vargusLog = Logger::instance();
 
