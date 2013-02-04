@@ -64,8 +64,15 @@ win32 :    DEFINES += WORKDIR=\\\"./\\\"
 
 
 unix: LIBS += -lvlc
-win32: LIBS += -L"C:/Program Files (x86)/VideoLan/VLC/sdk/lib" -llibvlc
-win32: INCLUDEPATH += "C:/Program Files (x86)/VideoLan/VLC/sdk/include"
-win32: DEPENDPATH += sdk
+!exists( cross-compile ) {
+    win32: LIBS += -L"C:/Program Files (x86)/VideoLan/VLC/sdk/lib" -llibvlc
+    win32: INCLUDEPATH += "C:/Program Files (x86)/VideoLan/VLC/sdk/include"
+    win32: DEPENDPATH += sdk
+}
+exists( cross-compile ) {
+    win32: LIBS += -L"/home/guest/Projects/VideoLan/VLC/sdk/lib" -llibvlc
+    win32: INCLUDEPATH += "/home/guest/Projects/VideoLan/VLC/sdk/include"
+    win32: DEPENDPATH += sdk
+}
 FORMS +=
 
