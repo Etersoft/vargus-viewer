@@ -1,5 +1,5 @@
 Name: vargus-viewer
-Version: 0.9.12
+Version: 0.9.13
 Release: alt1
 
 Summary: Qt4 client for vargus server
@@ -43,6 +43,10 @@ cp lang/lang_ru.qm %buildroot%_datadir/%name/lang/
 %_datadir/%name/
 
 %changelog
+* Tue Feb 05 2013 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.13-alt1
+- fix crashes in drag&drop video
+- add local path for cross-compile
+
 * Fri Feb 01 2013 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.12-alt1
 - refactoring of video vidget
 - fix build of windows version
