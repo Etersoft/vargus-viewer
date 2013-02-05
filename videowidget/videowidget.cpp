@@ -49,6 +49,12 @@ void VideoWidget::setCamera(Camera *_camera)
 
 void VideoWidget::startPlay(sizeVideo size)
 {
+    if(!camera)
+    {
+        setPrintType(BLANK);
+        update();
+        return;
+    }
     setlog("Start play " + camera->name() + ":" + camera->description() + QString().sprintf("%08p", this));
     played = TRUE;
     switch(size)
@@ -82,7 +88,10 @@ QString VideoWidget::getPaintText()
 
 QString VideoWidget::getTitle()
 {
-    return camera->name() + ":" + camera->description();
+    if(camera)
+        return camera->name() + ":" + camera->description();
+    else
+        return QString("");
 }
 
 bool VideoWidget::isNeedPaintText()
@@ -155,7 +164,10 @@ void VideoWidget::contextMenuAction(const QPoint& z)
 void VideoWidget::arhiveMenuPress()
 {
     setlog("press call arhive " + QString().sprintf("%08p", this));
-    emit arhiveCall(camera->name());
+    if(camera)
+    {
+        emit arhiveCall(camera->name());
+    }
 }
 
 void VideoWidget::changeStateMessageWidgetPress()
