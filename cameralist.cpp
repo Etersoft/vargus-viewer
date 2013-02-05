@@ -25,7 +25,7 @@ along with GCC; see the file COPYING3.  If not see
 #include<QMimeData>
 #include<QMouseEvent>
 #include<QApplication>
-
+#include "videowidget/videowidgetdragdata.h"
 
 CameraList::CameraList(QWidget *parent) :
     QListWidget(parent)
@@ -66,7 +66,7 @@ void CameraList::startDrag()
     if( r < 0 || r >= currentCameras.length())
         return;
     Camera * c = currentCameras.at(r);
-    data->setUserData(0, (QObjectUserData*) c);
+    data->setUserData(0, (QObjectUserData*) new VideoWidgetDragData(c));
     //Assign ownership of the QMimeData object to the QDrag object.
     drag->setMimeData(data);
     // Start the drag and drop operation

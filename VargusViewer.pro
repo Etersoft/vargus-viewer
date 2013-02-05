@@ -32,7 +32,8 @@ SOURCES += main.cpp\
     videowidget/videowidget.cpp \
     runningstring/runningstring.cpp \
     runningstring/worksock.cpp \
-    runningstring/limitline.cpp 
+    runningstring/limitline.cpp \ 
+    videowidget/videowidgetdragdata.cpp
 
 HEADERS  += mainwindow.h \
     set.h \
@@ -53,7 +54,8 @@ HEADERS  += mainwindow.h \
     videowidget/videowidget.h \
     runningstring/runningstring.h \
     runningstring/worksock.h \
-    runningstring/limitline.h 
+    runningstring/limitline.h \ 
+    videowidget/videowidgetdragdata.h
 
 TRANSLATIONS += lang/lang_ru.ts
 

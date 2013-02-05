@@ -24,6 +24,7 @@ along with GCC; see the file COPYING3.  If not see
 #include <QDebug>
 #include "videowidget.h"
 #include "../logger.h"
+#include "videowidgetdragdata.h"
 extern Logger &vargusLog;
 
 VideoWidget::VideoWidget(): played(FALSE)
@@ -214,8 +215,7 @@ void VideoWidget::startDrag()
 
     QMimeData *data = new QMimeData;
     data->setText(QString("varguscamera") + QString::number(QCoreApplication::applicationPid()));
-    data->setUserData(0, (QObjectUserData*)camera);
-    data->setUserData(1, (QObjectUserData*)this);
+    data->setUserData(0, (QObjectUserData*)new VideoWidgetDragData(camera, this));
 
     // Assign ownership of the QMimeData object to the QDrag object.
     drag->setMimeData(data);
@@ -242,8 +242,6 @@ void VideoWidget::waitingDoubleClickTimeout()
 void VideoWidget::dropEvent(QDropEvent *de)
 {
    setlog("drop " + QString().sprintf("%08p", this));
-   VideoWidget* dragVideoWindet;
-   bool fromAnotherWidget = false;
 
    if(!de->mimeData()->hasText())
        return;
@@ -252,22 +250,19 @@ void VideoWidget::dropEvent(QDropEvent *de)
        return;
    setlog("Drop proc " +  QString::number(QCoreApplication::applicationPid()));
 
-   dragVideoWindet = (VideoWidget*)de->mimeData()->userData(1);
-   Camera *dragCamera;
-   dragCamera = (Camera*)de->mimeData()->userData(0);
-   if(dragVideoWindet)
+   VideoWidgetDragData* dragData = (VideoWidgetDragData*)de->mimeData()->userData(0);
+   if(dragData->getTypeDrag() == VideoWidgetDragData::DRAG_FROM_VIDEO_WIDGET  )
    {
-       if(this == dragVideoWindet)
+       if(this == dragData->getVideoWidget())
            return;
-        dragVideoWindet->stopPlay();
-        dragVideoWindet->setCamera(camera);
-        dragVideoWindet->startPlay(SMALLVIDEO);
-        fromAnotherWidget = true;
+        dragData->getVideoWidget()->stopPlay();
+        dragData->getVideoWidget()->setCamera(camera);
+        dragData->getVideoWidget()->startPlay(SMALLVIDEO);
    }
    stopPlay();
-   camera = dragCamera;
+   camera = dragData->getCamera();
    startPlay(SMALLVIDEO);
-   emit camerasChanged(this, dragCamera, fromAnotherWidget);
+   emit camerasChanged(this, dragData->getCamera(), dragData->getTypeDrag() == VideoWidgetDragData::DRAG_FROM_VIDEO_WIDGET?TRUE:FALSE );
 }
 
 void VideoWidget::printString()
