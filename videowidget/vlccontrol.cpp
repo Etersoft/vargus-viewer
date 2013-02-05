@@ -100,6 +100,9 @@ void VlcControl::stop()
     stopCheckScreen();
     libvlc_media_player_stop(vlcPlayer);
     cleanCallbacks();
+#ifndef TESTCALLBACKPAINT
+    update();
+#endif
 }
 
 void VlcControl::restart()

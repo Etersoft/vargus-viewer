@@ -52,7 +52,6 @@ void VideoWidget::startPlay(sizeVideo size)
     if(!camera)
     {
         setPrintType(BLANK);
-        update();
         return;
     }
     setlog("Start play " + camera->name() + ":" + camera->description() + QString().sprintf("%08p", this));
