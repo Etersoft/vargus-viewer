@@ -27,10 +27,11 @@ along with GCC; see the file COPYING3.  If not see
 #include "mainwindow.h"
 #include <signal.h>
 #include "logger.h"
+
 #ifndef WIN32
     #include <execinfo.h>
+    #include <unistd.h>
 #endif /*WIN32*/
-//#include <unistd.h>
 
 Logger &vargusLog = Logger::instance();
 
