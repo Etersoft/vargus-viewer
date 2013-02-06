@@ -1,6 +1,6 @@
 Name: vargus-viewer
-Version: 0.9.13
-Release: alt2
+Version: 0.9.14
+Release: alt1
 
 Summary: Qt4 client for vargus server
 
@@ -43,6 +43,9 @@ cp lang/lang_ru.qm %buildroot%_datadir/%name/lang/
 %_datadir/%name/
 
 %changelog
+* Wed Feb 06 2013 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.14-alt1
+- some bug fixes
+
 * Wed Feb 06 2013 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.13-alt2
 - fix build with new gcc
 
