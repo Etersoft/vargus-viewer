@@ -81,6 +81,7 @@ void VideoMath::setVideoInformation(uint _screenwidth, uint _screenheight, uint 
     calcAspectRatio();
     calcShowedSize();
     calcYDisplacement();
+    calcXDisplacement();
 
 }
 
