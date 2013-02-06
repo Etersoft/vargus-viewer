@@ -53,13 +53,14 @@ void PaintAssistant::animate()
     repaint();
 }
 
-void PaintAssistant::paintEvent(QPaintEvent*)
+void PaintAssistant::paintEvent(QPaintEvent* e)
 {
-    printSelected();
+    printSelected(e);
 }
 
-void PaintAssistant::printSelected()
+void PaintAssistant::printSelected(QPaintEvent* e)
 {
+    QFrame::paintEvent(e);
     switch(printType)
     {
     case NOTHING:

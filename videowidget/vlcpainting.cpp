@@ -55,12 +55,12 @@ void VlcPainting::paintVideoFrame()
     callunlock();
 }
 
-void VlcPainting::paintEvent(QPaintEvent*)
+void VlcPainting::paintEvent(QPaintEvent* e)
 {
 #ifdef TESTCALLBACKPAINT
     printVideoFrame();
 #else
-    printSelected();
+    printSelected(e);
 #endif
 }
 

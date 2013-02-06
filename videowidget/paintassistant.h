@@ -61,7 +61,7 @@ protected:
     virtual int getXAssistDisplacement();
     virtual int getYAssistDisplacement();
 
-    void printSelected();
+    void printSelected(QPaintEvent* e);
 
     PrintType printType;
 private:
