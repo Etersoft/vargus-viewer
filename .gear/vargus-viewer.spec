@@ -1,5 +1,5 @@
 Name: vargus-viewer
-Version: 0.9.14
+Version: 1.0.0
 Release: alt1
 
 Summary: Qt4 client for vargus server
@@ -43,6 +43,9 @@ cp lang/lang_ru.qm %buildroot%_datadir/%name/lang/
 %_datadir/%name/
 
 %changelog
+* Wed Mar 13 2013 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 1.0.0-alt1
+- fix bug with bad multiline info about cameras. Now read for one camera
+
 * Wed Feb 06 2013 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 0.9.14-alt1
 - some bug fixes
 
