@@ -403,14 +403,17 @@ void MainWindow::initCameras()
     vargusLog.writeToFile("Amount of cameras " + QString::number(cameras));
     QString camerasnumbers;
     for(int i = 1; i < cameras; i++)
-        camerasnumbers += (QString::number(i) + ',');
-    camerasnumbers += QString::number(cameras);
-    socket->write(QString("query camera;" + camerasnumbers +
-                          ";name,description,view:source,view:preview,agent\n").toAscii());
-    QStringList inf = readAnswer(cameras);
-    for(int i = 0; i < cameras; i++)
     {
-        QStringList cam = inf.at(i).split(';');
+        socket->write(QString("query camera;" + QString::number(i) +
+                              ";name,description,view:source,view:preview,agent\n").toAscii());
+        QStringList inf = readAnswer(1);
+
+        QStringList cam = inf.at(0).split(';');
+        if(cam.count() != 5 )
+        {
+            vargusLog.writeToFile("Error in line count");
+            continue;
+        }
         vargusLog.writeToFile("New camera " + cam.at(0));
         Camera *c = new Camera(cam.at(0));
         vargusLog.writeToFile("Description " + cam.at(1));
