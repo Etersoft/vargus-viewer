@@ -1,14 +1,12 @@
 Name: vargus-viewer
 Version: 1.0.1
-Release: alt1
+Release: alt2
 
 Summary: Qt4 client for vargus server
 
 Group: Video
 License: GPL
 Url: http://git.etersoft.ru/projects/other/vargus-viewer.git
-
-Packager: Konstantin Kondratyuk <kondratyuk@etersoft.ru>
 
 # Source-git: http://git.etersoft.ru/projects/other/vargus-viewer.git
 Source: %name-%version.tar
@@ -17,16 +15,18 @@ Source: %name-%version.tar
 # optimized out: fontconfig libqt4-core libqt4-devel libqt4-gui libqt4-network libstdc++-devel
 BuildRequires: gcc-c++ libvlc-devel libqt4-devel
 
+BuildPreReq: rpm-macros-qt4
+
 Requires: vlc-mini vlc-plugin-ffmpeg
 
 %description
-Qt4 client for vargus server
+Qt4 client for vargus server.
 
 %prep
 %setup
 
 %build
-qmake-qt4
+%qmake_qt4
 %make_build
 lrelease-qt4 lang/lang_ru.ts
 
@@ -43,6 +43,9 @@ cp lang/lang_ru.qm %buildroot%_datadir/%name/lang/
 %_datadir/%name/
 
 %changelog
+* Mon Oct 07 2013 Vitaly Lipatov <lav@altlinux.ru> 1.0.1-alt2
+- build for ALT Linux Sisyphus
+
 * Mon Oct 07 2013 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 1.0.1-alt1
 - set video source with libvlc_media_new_location() function
 
