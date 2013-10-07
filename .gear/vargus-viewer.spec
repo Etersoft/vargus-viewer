@@ -1,5 +1,5 @@
 Name: vargus-viewer
-Version: 1.0.0
+Version: 1.0.1
 Release: alt1
 
 Summary: Qt4 client for vargus server
@@ -43,6 +43,9 @@ cp lang/lang_ru.qm %buildroot%_datadir/%name/lang/
 %_datadir/%name/
 
 %changelog
+* Mon Oct 07 2013 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 1.0.1-alt1
+- set video source with libvlc_media_new_location() function
+
 * Wed Mar 13 2013 Konstantin Kondratyuk <kondratyuk@etersoft.ru> 1.0.0-alt1
 - fix bug with bad multiline info about cameras. Now read for one camera
 
