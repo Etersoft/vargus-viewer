@@ -76,7 +76,7 @@ void VlcControl::setVideo(QString source)
     {
         libvlc_media_release(vlcMedia);
     }
-    vlcMedia = libvlc_media_new_path(vlcInstance, source.toAscii());
+    vlcMedia = libvlc_media_new_location(vlcInstance, source.toAscii());
     libvlc_media_player_set_media (vlcPlayer, vlcMedia);
 }
 
