@@ -402,7 +402,7 @@ void MainWindow::initCameras()
     int cameras = readAnswer().at(0).trimmed().toInt();
     vargusLog.writeToFile("Amount of cameras " + QString::number(cameras));
     QString camerasnumbers;
-    for(int i = 1; i < cameras; i++)
+    for(int i = 1; i <= cameras; i++)
     {
         socket->write(QString("query camera;" + QString::number(i) +
                               ";name,description,view:source,view:preview,agent\n").toAscii());
