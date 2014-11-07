@@ -10,10 +10,6 @@ QMAKE_CXXFLAGS += -O2 -Wall
 
 TARGET = testvideowidget
 TEMPLATE = app
-LIBS += -L"C:/Program Files (x86)/VideoLan/VLC/sdk/lib" -llibvlc
-
-
-INCLUDEPATH += "C:/Program Files (x86)/VideoLan/VLC/sdk/include"
 
 
 SOURCES += main.cpp\
@@ -49,7 +45,21 @@ HEADERS  += mainwindow.h \
             dragtextedit.h \
             ../camera.h
 
-unix|win32: LIBS += -lvlc
-DEFINES += WORKDIR=\\\"./\\\"
-DEFINES += DATADIR=\\\"./\\\"
+unix :  DEFINES += DATADIR=\\\"/usr/share/vargus-viewer/\\\"
+win32 :    DEFINES += DATADIR=\\\"./\\\"
+unix :  DEFINES += WORKDIR=\\\"$(HOME)/vargus-viewer/\\\"
+win32 :    DEFINES += WORKDIR=\\\"./\\\"
+
+
+unix: LIBS += -lvlc
+!exists( cross-compile ) {
+    win32: LIBS += -L"C:/Program Files (x86)/VideoLan/VLC/sdk/lib" -llibvlc
+    win32: INCLUDEPATH += "C:/Program Files (x86)/VideoLan/VLC/sdk/include"
+    win32: DEPENDPATH += sdk
+}
+exists( cross-compile ) {
+    win32: LIBS += -L"/home/guest/Projects/VideoLan/VLC/sdk/lib" -llibvlc
+    win32: INCLUDEPATH += "/home/guest/Projects/VideoLan/VLC/sdk/include"
+    win32: DEPENDPATH += sdk
+}
 FORMS    += mainwindow.ui
