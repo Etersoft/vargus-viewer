@@ -9,8 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    Camera* cam1 = new Camera();
-    cam1->setName("Name");
+    Camera* cam1 = new Camera("Name");
     cam1->setDescription("Desription");
     cam1->setPreview("1.avi");
     cam1->setSource("1.avi");
@@ -25,8 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(vw1,SIGNAL(arhiveCall()),this,SLOT(openArhive()));
     connect(vw1,SIGNAL(bigSizeCall()),this,SLOT(showBigSize()));
 
-    Camera* cam2 = new Camera();
-    cam2->setName("Name");
+    Camera* cam2 = new Camera("Name");
     cam2->setDescription("Desription");
     cam2->setPreview("2.avi");
     cam2->setSource("2.avi");
@@ -66,7 +64,6 @@ MainWindow::~MainWindow()
         delete vw3;
     if(vw4)
         delete vw4;
-    VideoWidget::staticDestructor();
     delete ui;
 }
 
@@ -86,7 +83,7 @@ void MainWindow::showBigSize()
 void MainWindow::time2AddString()
 {
     QString readingString = file4TestWriteTextEvent->readLine();
-    vw1->writeTextString(readingString.remove(QChar('\n'),Qt::CaseInsensitive));
+    //vw1->writeTextString(readingString.remove(QChar('\n'),Qt::CaseInsensitive));
 }
 
 

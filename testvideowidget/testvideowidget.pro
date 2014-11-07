@@ -4,24 +4,52 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
+QMAKE_CXXFLAGS += -O2 -Wall
+
 
 TARGET = testvideowidget
 TEMPLATE = app
-LIBS += /usr/lib64/libvlc.so
-LIBS += -L/usr/lib64/libvlc/
+LIBS += -L"C:/Program Files (x86)/VideoLan/VLC/sdk/lib" -llibvlc
+
+
+INCLUDEPATH += "C:/Program Files (x86)/VideoLan/VLC/sdk/include"
+
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    ../videowidget.cpp \
-    dragtextedit.cpp \
-    ../camera.cpp
+        ../logger.cpp \
+        ../videowidget/vlccallbacks.cpp \
+        ../videowidget/vlcpainting.cpp \
+        ../videowidget/vlccontrol.cpp \
+        ../videowidget/paintassistant.cpp \
+        ../videowidget/painttextproperties.cpp \
+        ../videowidget/videomath.cpp \
+        ../videowidget/videowidget.cpp \
+        ../videowidget/videowidgetdragdata.cpp \
+        ../runningstring/runningstring.cpp \
+        ../runningstring/worksock.cpp \
+        ../runningstring/limitline.cpp \
+        dragtextedit.cpp \
+        ../camera.cpp
 
 HEADERS  += mainwindow.h \
-    ../videowidget.h \
-    dragtextedit.h \
-    ../camera.h
+            ../logger.h \
+            ../videowidget/vlccallbacks.h \
+            ../videowidget/vlcpainting.h \
+            ../videowidget/vlccontrol.h \
+            ../videowidget/paintassistant.h \
+            ../videowidget/painttextproperties.h \
+            ../videowidget/videomath.h \
+            ../videowidget/videowidget.h \
+            ../videowidget/videowidgetdragdata.h \
+            ../runningstring/runningstring.h \
+            ../runningstring/worksock.h \
+            ../runningstring/limitline.h \
+            dragtextedit.h \
+            ../camera.h
 
 unix|win32: LIBS += -lvlc
-
+DEFINES += WORKDIR=\\\"./\\\"
+DEFINES += DATADIR=\\\"./\\\"
 FORMS    += mainwindow.ui

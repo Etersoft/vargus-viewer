@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QFile>
-#include "../videowidget.h"
+#include "../videowidget/videowidget.h"
 #include "../camera.h"
 
 namespace Ui {

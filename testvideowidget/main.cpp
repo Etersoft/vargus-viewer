@@ -1,5 +1,7 @@
 #include <QtGui/QApplication>
 #include "mainwindow.h"
+#include "../logger.h"
+Logger &vargusLog = Logger::instance();
 
 int main(int argc, char *argv[])
 {
